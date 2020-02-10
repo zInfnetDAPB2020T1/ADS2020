@@ -7,9 +7,7 @@ Desenvolvimento Android
 
 # Integrantes
 
-Anderson Oliveira Mendonça
-Marcelo Vergara
-Osvaldo Neves Neto
+Anderson Oliveira Mendonça, Marcelo Vergara, Osvaldo Neves Neto
 
 # Assunto
 
