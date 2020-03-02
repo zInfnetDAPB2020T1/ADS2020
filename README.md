@@ -32,3 +32,14 @@ Um aplicativo que implemente funcionalidades para estabelecimentos e clientes de
 4 - Integração com aplicativo PDV do estabelecimento
 
 5 - Histórico de consumo no estabelecimento
+
+# PO
+Osvaldo Neves
+
+# Product Backlog (esboço)
+
+- Definir a API que sera utilizada/discutir funcionalidades
+- Organizar as tarefas de cada membro (visando onde cada um se encaixa melhor)
+- Definir horários para o desenvolvimento semanal da aplicação até o prazo da entrega(reunião de planejamento)
+- Design da aplicação
+- ...
