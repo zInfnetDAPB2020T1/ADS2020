@@ -9,5 +9,30 @@
         android:id="@+id/homeMenuFragment"
         android:name="android.inflabnet.infsocial.fragments.HomeMenuFragment"
         android:label="fragment_home_menu"
-        tools:layout="@layout/fragment_home_menu" />
+        tools:layout="@layout/fragment_home_menu" >
+        <action
+            android:id="@+id/action_homeMenuFragment_to_criarSalaFragment"
+            app:destination="@id/criarSalaFragment" />
+        <action
+            android:id="@+id/action_homeMenuFragment_to_dividirContaFragment"
+            app:destination="@id/dividirContaFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/criarSalaFragment"
+        android:name="android.inflabnet.infsocial.fragments.CriarSalaFragment"
+        android:label="fragment_criar_sala"
+        tools:layout="@layout/fragment_criar_sala" >
+        <action
+            android:id="@+id/action_criarSalaFragment_to_homeMenuFragment"
+            app:destination="@id/homeMenuFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/dividirContaFragment"
+        android:name="android.inflabnet.infsocial.fragments.DividirContaFragment"
+        android:label="fragment_dividir_conta"
+        tools:layout="@layout/fragment_dividir_conta" >
+        <action
+            android:id="@+id/action_dividirContaFragment_to_homeMenuFragment"
+            app:destination="@id/homeMenuFragment" />
+    </fragment>
 </navigation>

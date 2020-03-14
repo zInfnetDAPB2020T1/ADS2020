@@ -9,6 +9,7 @@ import android.view.ViewGroup
 
 import android.inflabnet.infsocial.R
 import android.inflabnet.infsocial.maps.MapsActivity
+import androidx.navigation.fragment.findNavController
 import kotlinx.android.synthetic.main.fragment_home_menu.*
 
 /**
@@ -30,6 +31,14 @@ class HomeMenuFragment : Fragment() {
         btnMapsMenu.setOnClickListener {
             var intt = Intent(this.context!!.applicationContext, MapsActivity::class.java)
             startActivity(intt)
+        }
+
+        btnSalas.setOnClickListener {
+            findNavController().navigate(R.id.action_homeMenuFragment_to_criarSalaFragment)
+        }
+
+        btnDividirConta.setOnClickListener {
+            findNavController().navigate(R.id.action_homeMenuFragment_to_dividirContaFragment)
         }
     }
 }
