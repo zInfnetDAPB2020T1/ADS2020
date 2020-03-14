@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">infsocial</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
+
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="places_api_key">AIzaSyAJOYxFiU6ZlJ0CH66q8yaPCEgu2qCmhBQ</string>
 </resources>
