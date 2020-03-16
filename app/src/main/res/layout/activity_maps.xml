@@ -39,8 +39,23 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/edt_place_likelihoods"
+                android:textColor="@android:color/darker_gray"
                 android:hint="Place Likelihoods"/>
         </com.google.android.material.textfield.TextInputLayout>
+
+        <Button
+            android:id="@+id/btn_get_photo"
+            android:text="GET PHOTO"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="300dp"
+            android:id="@+id/image_view"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/txt_detail"/>
 
         <fragment
             android:id="@+id/map"

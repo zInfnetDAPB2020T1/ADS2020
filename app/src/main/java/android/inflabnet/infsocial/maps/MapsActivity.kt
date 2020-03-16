@@ -6,6 +6,8 @@ import android.inflabnet.infsocial.R
 import android.os.AsyncTask
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.TextUtils
+import android.util.Log
 import android.webkit.PermissionRequest
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
@@ -19,6 +21,8 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.model.Place
+import com.google.android.libraries.places.api.net.FetchPhotoRequest
+import com.google.android.libraries.places.api.net.FetchPlaceRequest
 import com.google.android.libraries.places.api.net.FindCurrentPlaceRequest
 import com.google.android.libraries.places.api.net.PlacesClient
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment
@@ -54,8 +58,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         requestPermission()
         initPlaces()
         setupPlacesAutocomplete()
-        //setupCurrentPlace()
+        setupCurrentPlace()
+        setupGetPhotoandDetail()
     }
+
 
     /**
      * Manipulates the map once available.
@@ -107,45 +113,88 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             }
         })
     }
-    private fun setupCurrentPlace(){
+
+    private fun setupCurrentPlace() {
         val request = FindCurrentPlaceRequest.builder(placeFields).build()
 
-        btn_get_current_place.setOnClickListener{
-            if(ActivityCompat.checkSelfPermission(this@MapsActivity,
-                    android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)
-            {
+        btn_get_current_place.setOnClickListener {
+            if (ActivityCompat.checkSelfPermission(
+                    this@MapsActivity,
+                    android.Manifest.permission.ACCESS_FINE_LOCATION
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
                 return@setOnClickListener;
-            }
             }
 
             val placeResponse = placesClient.findCurrentPlace(request)
-            placeResponse.addOnCompleteListener{ task ->
-                if(task.isSuccessful)
+
+            placeResponse.addOnCompleteListener { task ->
+                if (task.isSuccessful)
                 {
                     val response = task.result
-
-                    response!!.placeLikelihoods.sortWith(Comparator {placeChildhood,t1 ->
-                     placeChildhood.likelihood.toDouble().compareTo(t1.likelihood.toDouble())
-
-                    })
-                    Collections.reverse(response.placeLikelihoods)
-                    placeId = response.placeLikelihoods[0].place.id!!
+                    Log.i("MAPSERRO", response.toString())
+//                    response!!.placeLikelihoods.sortWith()
+//                    { placeChildhood, t1 ->
+//                        placeChildhood.likelihood.toDouble().compareTo(t1.likelihood.toDouble())
+//
+//                    })
+//                    Collections.reverse(response.placeLikelihoods)
+                    placeId = response!!.placeLikelihoods[0].place.id!!
                     val likehoods = StringBuilder("")
                     edt_address.setText(StringBuilder(response.placeLikelihoods[0].place.address!!))
 
-                    for(placeLikelihood in response.placeLikelihoods){
-                        likehoods.append(String.format("Place '%s' has likelihood: %f",
-                            placeLikelihood.place.name,
-                            placeLikelihood.likelihood))
+                    for (placeLikelihood in response.placeLikelihoods)
+                    {
+                        likehoods.append(
+                            String.format(
+                                "Place '%s' has likelihood: %f",
+                                placeLikelihood.place.name,
+                                placeLikelihood.likelihood))
                             .append("\n")
                     }
                     edt_place_likelihoods.setText(likehoods.toString())
                 }
-                else{
-                    Toast.makeText(this,"Place not found!", Toast.LENGTH_LONG).show()
+                else
+                {
+                    Toast.makeText(this, "Place not found!", Toast.LENGTH_LONG).show()
                 }
+            }
         }
     }
+
+    private fun setupGetPhotoandDetail() {
+        btn_get_photo.setOnClickListener {
+            if (TextUtils.isEmpty(placeId)) {
+                Toast.makeText(this@MapsActivity, "Place ID não pode ser nulo", Toast.LENGTH_SHORT)
+                    .show()
+                return@setOnClickListener
+            }
+            getPhoto(placeId)
+        }
+    }
+    private fun getPhoto(placeId: String) {
+        val placeRequest = FetchPlaceRequest.builder(placeId!!,
+            Arrays.asList(Place.Field.PHOTO_METADATAS,
+                Place.Field.LAT_LNG)).build()
+
+        placesClient.fetchPlace(placeRequest).addOnSuccessListener { fetchPlaceResponse ->
+            val place = fetchPlaceResponse.place
+
+            //get Lang Lat
+            txt_detail.text = StringBuilder(place.latLng!!.latitude.toString())
+                .append("/")
+                .append(place.latLng!!.longitude.toString())
+            //Get photo
+            val photoMetaData = place.photoMetadatas!![0]
+            //Criar a requesição
+            val photoRequest = FetchPhotoRequest.builder(photoMetaData).build()
+            placesClient.fetchPhoto(photoRequest).addOnSuccessListener { fetchPhotoResponse ->
+                val bitmap = fetchPhotoResponse.bitmap
+                image_view.setImageBitmap(bitmap)
+            }
+        }
+    }
+
 
     //mapa abaixo
     override fun onMapReady(p0: GoogleMap) {
@@ -189,3 +238,5 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         mMap!!.animateCamera(CameraUpdateFactory.zoomTo(15f))
     }
 }
+
+
