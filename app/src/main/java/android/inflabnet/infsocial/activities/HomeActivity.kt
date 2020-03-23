@@ -1,5 +1,6 @@
-package android.inflabnet.infsocial
+package android.inflabnet.infsocial.activities
 
+import android.inflabnet.infsocial.R
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 

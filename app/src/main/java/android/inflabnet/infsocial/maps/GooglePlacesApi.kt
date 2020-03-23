@@ -19,12 +19,10 @@ class GooglePlacesApi {
             connection.setRequestProperty("Content-Type", "application/json")
             connection.requestMethod = "GET"
             connection.doInput = true
-
+            Log.i("TARTAR", connection.toString())
             val br = connection.inputStream.bufferedReader()
 
             result = br.use {br.readText()}
-
-            Log.i("TAGRESULT", result)
 
             connection.disconnect()
 

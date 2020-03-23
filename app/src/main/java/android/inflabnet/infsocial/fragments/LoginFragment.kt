@@ -1,7 +1,7 @@
 package android.inflabnet.infsocial.fragments
 
 import android.content.Intent
-import android.inflabnet.infsocial.HomeActivity
+import android.inflabnet.infsocial.activities.HomeActivity
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater

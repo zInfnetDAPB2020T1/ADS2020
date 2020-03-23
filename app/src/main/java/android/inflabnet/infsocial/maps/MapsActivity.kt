@@ -222,7 +222,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
         override fun onPostExecute(result: String?) {
             super.onPostExecute(result)
+
             val gson = GsonBuilder().create()
+
             val root = gson.fromJson(result, PlacesRootClass::class.java)
             addMarkers(root)
         }
@@ -238,5 +240,3 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         mMap!!.animateCamera(CameraUpdateFactory.zoomTo(15f))
     }
 }
-
-
