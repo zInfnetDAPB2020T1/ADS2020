@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "717440360106",
+    "firebase_url": "https://infsocial-4275c.firebaseio.com",
+    "project_id": "infsocial-4275c",
+    "storage_bucket": "infsocial-4275c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:717440360106:android:200d3c1afc04c6f03c7ad3",
+        "android_client_info": {
+          "package_name": "android.inflabnet.infsocial"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "717440360106-kretkot1t43de06mcnccs1jre8ma1ufp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBY4D_t_DQew7TjrT7tthtdj27Lphl028Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "717440360106-kretkot1t43de06mcnccs1jre8ma1ufp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

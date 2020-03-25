@@ -5,6 +5,7 @@ import android.inflabnet.infsocial.viewmodel.UserViewModel
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.lifecycle.ViewModelProviders
+import com.google.firebase.FirebaseApp
 
 class MainActivity : AppCompatActivity() {
 
@@ -12,5 +13,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         var userViewModel = ViewModelProviders.of(this)[UserViewModel::class.java]
+
+        FirebaseApp.initializeApp(this)
     }
 }

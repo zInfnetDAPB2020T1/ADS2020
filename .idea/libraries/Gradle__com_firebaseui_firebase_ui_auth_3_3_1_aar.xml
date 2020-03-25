@@ -1,0 +1,17 @@
+<component name="libraryTable">
+  <library name="Gradle: com.firebaseui:firebase-ui-auth:3.3.1@aar">
+    <ANNOTATIONS>
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/8978427ba83232e28b2152e7d1485f24/jetified-firebase-ui-auth-3.3.1/annotations.zip!/" />
+    </ANNOTATIONS>
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/8978427ba83232e28b2152e7d1485f24/jetified-firebase-ui-auth-3.3.1/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/8978427ba83232e28b2152e7d1485f24/jetified-firebase-ui-auth-3.3.1/res" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.firebaseui/firebase-ui-auth/3.3.1/d75125e2c84b348dbd0734dc7f6c311065a63a08/firebase-ui-auth-3.3.1-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.firebaseui/firebase-ui-auth/3.3.1/8b63db27940f7a6896a2966ccbe8de55fc32f93c/firebase-ui-auth-3.3.1-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

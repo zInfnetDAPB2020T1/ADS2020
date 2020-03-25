@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 
 import android.inflabnet.infsocial.R
+import android.inflabnet.infsocial.chat.SplashActivity
 import android.inflabnet.infsocial.maps.MapsActivity
 import androidx.navigation.fragment.findNavController
 import kotlinx.android.synthetic.main.fragment_home_menu.*
@@ -39,6 +40,11 @@ class HomeMenuFragment : Fragment() {
 
         btnDividirConta.setOnClickListener {
             findNavController().navigate(R.id.action_homeMenuFragment_to_dividirContaFragment)
+        }
+
+        btnChat.setOnClickListener {
+            val intt = Intent(this.context!!.applicationContext, SplashActivity::class.java)
+            startActivity(intt)
         }
     }
 }
