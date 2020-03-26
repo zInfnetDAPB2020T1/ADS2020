@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.inflabnet.infsocial.R
 import android.inflabnet.infsocial.activities.MainActivity
+import android.inflabnet.infsocial.chat.util.FirestoreUtil
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
@@ -46,8 +47,11 @@ class SignActivity : AppCompatActivity() {
 
             if (resultCode == Activity.RESULT_OK) {
                 val progressDialog = indeterminateProgressDialog("Setting up your account")
-                startActivity(intentFor<MainActivity>().newTask().clearTask())
-                progressDialog.dismiss()
+                FirestoreUtil.initCurrentUserIfFirstTime{
+                    startActivity(intentFor<FireMessage>().newTask().clearTask())
+                    progressDialog.dismiss()
+                }
+
 
             }
             else if (resultCode == Activity.RESULT_CANCELED) {

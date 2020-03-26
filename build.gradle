@@ -24,7 +24,9 @@ allprojects {
         
     }
 }
-
+project.ext {
+    excludeAppGlideModule = true
+}
 task clean(type: Delete) {
     delete rootProject.buildDir
 }

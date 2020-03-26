@@ -1,30 +1,33 @@
 package android.inflabnet.infsocial.chat
 
+import android.app.Fragment
 import android.inflabnet.infsocial.R
 import android.os.Bundle
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.setupActionBarWithNavController
-import androidx.navigation.ui.setupWithNavController
+import androidx.fragment.app.replace
+import com.resocoder.firemessage.fragment.MyAccountFragment
 import kotlinx.android.synthetic.main.activity_fire_message.*
+import kotlinx.android.synthetic.main.activity_main.*
 
 class FireMessage : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_fire_message)
-        val navView: BottomNavigationView = findViewById(R.id.nav_view)
 
-        nav_view.setOnNavigationItemReselectedListener {
+        nav_view.setOnNavigationItemSelectedListener {
             when(it.itemId){
                 R.id.navigation_people ->{
-                    //todo show people fragment
+                    //replaceFragment(PeopleFragment())
                     true
                 }
                 R.id.navigation_my_account ->{
-                    //todo show myaccount fragment
+                    val fragmentManager = supportFragmentManager
+                    val transaction = fragmentManager.beginTransaction()
+
+                    transaction.replace(R.id.fragment_layout,MyAccountFragment())
+                    transaction.commit()
+
                     true
                 }
                 else -> false
@@ -32,4 +35,12 @@ class FireMessage : AppCompatActivity() {
 
         }
     }
+
+//    private fun replaceFragment(fragment: Fragment) {
+//        supportFragmentManager.beginTransaction()
+//            .replace(R.id.fragment_layout, fragment)
+//            .commit()
+//    }
 }
+
+

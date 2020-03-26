@@ -19,9 +19,7 @@
         android:theme="@style/AppTheme">
         <activity android:name=".chat.SplashActivity" />
         <activity android:name=".chat.SignActivity" />
-        <activity
-            android:name=".chat.FireMessage"
-            android:label="@string/title_activity_fire_message" />
+        <activity android:name=".chat.FireMessage"/>
         <activity android:name=".activities.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
