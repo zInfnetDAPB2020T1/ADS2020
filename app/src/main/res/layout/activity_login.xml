@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".login.LoginActivity">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <ProgressBar
+            android:id="@+id/progressbar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/framelauout"
+            android:layout_marginTop="-7dp"
+            android:backgroundTint="@color/colorPrimary"
+            android:indeterminate="true"
+            android:indeterminateTint="#1a09d6"
+            android:max="100"
+            android:visibility="gone" />
+        <EditText
+            android:id="@+id/et_email"
+            style="@style/viewCustom"
+            android:ems="10"
+            android:hint="Email"
+            android:inputType="textEmailAddress" />
+        <EditText
+            android:id="@+id/et_password"
+            style="@style/viewCustom"
+            android:layout_below="@id/et_email"
+            android:ems="10"
+            android:hint="Password"
+            android:inputType="textPassword" />
+        <Button
+            android:id="@+id/btn_login"
+            style="@style/viewCustom"
+            android:layout_below="@id/et_password"
+            android:background="@color/colorAccent"
+            android:text="@string/login_title"
+            android:textColor="@android:color/white"
+            android:textStyle="bold" />
+        <TextView
+            android:id="@+id/tv_forgot_password"
+            style="@style/viewCustom"
+            android:layout_below="@id/btn_login"
+            android:clickable="true"
+            android:gravity="center_horizontal"
+            android:text="Forgot Password?"
+            android:textSize="20sp" />
+        <Button
+            android:id="@+id/btn_register_account"
+            style="@style/viewCustom"
+            android:layout_alignParentBottom="true"
+            android:background="@color/colorAccent"
+            android:text="@string/create_act"
+            android:textColor="@android:color/white"
+            android:textStyle="bold" />
+
+
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
