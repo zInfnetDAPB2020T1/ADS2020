@@ -1,7 +1,7 @@
-package android.inflabnet.mytest.chat.adapter
+package android.inflabnet.mytest.mesas.adapter
 
 import android.inflabnet.mytest.R
-import android.inflabnet.mytest.chat.model.Message
+import android.inflabnet.mytest.mesas.model.Message
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup

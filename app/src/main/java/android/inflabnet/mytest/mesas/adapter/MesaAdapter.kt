@@ -1,8 +1,7 @@
-package android.inflabnet.mytest.chat.adapter
+package android.inflabnet.mytest.mesas.adapter
 
 import android.inflabnet.mytest.R
-import android.inflabnet.mytest.chat.model.Mesa
-import android.inflabnet.mytest.chat.model.Message
+import android.inflabnet.mytest.mesas.model.Mesa
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -30,7 +29,8 @@ class MesaAdapter (val mesa: ArrayList<Mesa>, val itemClick: (Mesa) -> Unit) :
             with(mesa) {
                 itemView.txtMesa.text = mesa.nameMesa
                 itemView.txtProp.text = mesa.proprietarioMesa
-                itemView.setOnClickListener { itemClick(this) }
+                //itemView.setOnClickListener { itemClick(this) }
+                itemView.btnDividirConta.setOnClickListener { itemClick(this) }
             }
         }
     }

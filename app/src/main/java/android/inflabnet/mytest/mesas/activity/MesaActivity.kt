@@ -1,19 +1,16 @@
-package android.inflabnet.mytest.chat.activity
+package android.inflabnet.mytest.mesas.activity
 
 import android.content.Intent
 import android.inflabnet.mytest.R
-import android.inflabnet.mytest.chat.adapter.MesaAdapter
-import android.inflabnet.mytest.chat.adapter.MessageAdapter
-import android.inflabnet.mytest.chat.model.Mesa
-import android.inflabnet.mytest.chat.model.MesaData
-import android.inflabnet.mytest.chat.model.Message
+import android.inflabnet.mytest.mesas.adapter.MesaAdapter
+import android.inflabnet.mytest.mesas.model.Mesa
+import android.inflabnet.mytest.mesas.model.MesaData
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
-import kotlinx.android.synthetic.main.activity_main_chat.*
 import kotlinx.android.synthetic.main.activity_mesa.*
 import kotlinx.android.synthetic.main.mesa_item.*
 
@@ -98,7 +95,8 @@ class MesaActivity : AppCompatActivity() {
     private fun act (data : Mesa) : Unit {
         Toast.makeText(this, "${data.nameMesa} clicked", Toast.LENGTH_SHORT).show()
         //ao clicar ira para a tela do chat da referida mesa
-        val intt = Intent(this, MesaChatActivity::class.java)
+        //val intt = Intent(this, MesaChatActivity::class.java)
+        val intt = Intent(this, ContaChatActivity::class.java)
         val mesaData = MesaData(data.nameMesa.toString(),data.proprietarioMesa.toString())
         intt.putExtra("mesa",mesaData)
         startActivity(intt)

@@ -3,10 +3,7 @@ package android.inflabnet.mytest.fragments
 import android.content.Intent
 import android.inflabnet.mytest.maps.MapsActivity
 import android.inflabnet.mytest.R
-import android.inflabnet.mytest.chat.activity.MainActivityChat
-import android.inflabnet.mytest.chat.activity.MesaActivity
-import android.inflabnet.mytest.login.MainActivity
-import android.inflabnet.mytest.login.SplashActivity
+import android.inflabnet.mytest.mesas.activity.MesaActivity
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -38,17 +35,10 @@ class HomeMenuFragment : Fragment() {
             startActivity(intt)
         }
 
-        btnSalas.setOnClickListener {
-            findNavController().navigate(R.id.action_homeMenuFragment_to_criarSalaFragment)
-        }
-
-        btnDividirConta.setOnClickListener {
-            findNavController().navigate(R.id.action_homeMenuFragment_to_dividirContaFragment)
-        }
-
-        btnChat.setOnClickListener {
+        btnMesas.setOnClickListener {
             val intt = Intent(this.context!!.applicationContext, MesaActivity::class.java)
             startActivity(intt)
         }
+
     }
 }

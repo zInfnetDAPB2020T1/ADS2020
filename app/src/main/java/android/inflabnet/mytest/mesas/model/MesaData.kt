@@ -1,4 +1,4 @@
-package android.inflabnet.mytest.chat.model
+package android.inflabnet.mytest.mesas.model
 
 import java.io.Serializable
 

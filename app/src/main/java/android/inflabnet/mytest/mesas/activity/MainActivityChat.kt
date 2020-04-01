@@ -1,9 +1,9 @@
-package android.inflabnet.mytest.chat.activity
+package android.inflabnet.mytest.mesas.activity
 
 import android.content.Intent
 import android.inflabnet.mytest.R
-import android.inflabnet.mytest.chat.adapter.MessageAdapter
-import android.inflabnet.mytest.chat.model.Message
+import android.inflabnet.mytest.mesas.adapter.MessageAdapter
+import android.inflabnet.mytest.mesas.model.Message
 import android.inflabnet.mytest.login.LoginActivity
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle

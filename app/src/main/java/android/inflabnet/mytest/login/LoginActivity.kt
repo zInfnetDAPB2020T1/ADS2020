@@ -59,7 +59,7 @@ class LoginActivity : AppCompatActivity() {
         password = et_password?.text.toString()
         if (!TextUtils.isEmpty(email) && !TextUtils.isEmpty(password)) {
             progressbar.visibility = View.VISIBLE
-            Log.d(TAG, "Logging in user.")
+            Log.d(TAG, "Entrando.....")
             mAuth!!.signInWithEmailAndPassword(email!!, password!!)
                 .addOnCompleteListener(this) { task ->
                     progressbar.visibility = View.GONE
@@ -70,7 +70,7 @@ class LoginActivity : AppCompatActivity() {
                     } else {
                         // If sign in fails, display a message to the user.
                         Log.e(TAG, "signInWithEmail:failure", task.exception)
-                        Toast.makeText(this@LoginActivity, "Authentication failed.",
+                        Toast.makeText(this@LoginActivity, "Falha de autenticação!",
                             Toast.LENGTH_SHORT).show()
                     }
                 }
