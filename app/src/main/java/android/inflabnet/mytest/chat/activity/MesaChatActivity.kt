@@ -3,6 +3,7 @@ package android.inflabnet.mytest.chat.activity
 import android.content.Intent
 import android.inflabnet.mytest.R
 import android.inflabnet.mytest.chat.adapter.MessageAdapter
+import android.inflabnet.mytest.chat.model.MesaData
 import android.inflabnet.mytest.chat.model.Message
 import android.inflabnet.mytest.login.LoginActivity
 import androidx.appcompat.app.AppCompatActivity
@@ -11,62 +12,73 @@ import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
-import kotlinx.android.synthetic.main.activity_main_chat.*
+import kotlinx.android.synthetic.main.activity_mesa_chat.*
 
-class MainActivityChat : AppCompatActivity() {
+class MesaChatActivity : AppCompatActivity() {
 
     //Firebase references
     private var mDatabaseReference: DatabaseReference? = null
     private var mDatabase: FirebaseDatabase? = null
     private var mAuth: FirebaseAuth? = null
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main_chat)
+        setContentView(R.layout.activity_mesa_chat)
+
+        //Recebendo os Valores da activity MesaActivity
+        val mesaData = intent.getSerializableExtra("mesa") as MesaData
+        txtNomedaMesa.text = mesaData.nameMesa.toString()
+        txtProp.text = mesaData.proprietarioMesa.toString()
+        val pathStr = mesaData.nameMesa.toString()
+
+        Toast.makeText(this,pathStr,Toast.LENGTH_SHORT).show()
 
         mAuth = FirebaseAuth.getInstance()
         mDatabase = FirebaseDatabase.getInstance()
-        mDatabaseReference = mDatabase!!.reference.child("messages")
-        createFirebaseListener()
+        mDatabaseReference = mDatabase!!.reference.child(pathStr.toString())
+
+        createFirebaseListener(pathStr)
         btnEnviarMsg.setOnClickListener { setupSendButton() }
+
     }
 
     //ao clicar para enviar mensagem
     private fun setupSendButton() {
-            if (!mainActivityEditText.text.toString().isEmpty()){
-                sendData()
-            }else{
-                Toast.makeText(this, "Por favor, escreva uma mensagem!", Toast.LENGTH_SHORT).show()
-            }
+        if (!mainChatEditText2.text.toString().isEmpty()){
+            sendData(txtNomedaMesa.text.toString())
+        }else{
+            Toast.makeText(this, "Por favor, escreva uma mensagem!", Toast.LENGTH_SHORT).show()
+        }
     }
 
     //enviar dados para firebase
-    private fun sendData(){
+    private fun sendData(pathStr: String){
         //pegar o usuário
         val userEmail = mAuth?.currentUser?.email
         val user: String
         if (userEmail != null) {
-            if (userEmail!!.contains("@")) {
+            if (userEmail.contains("@")) {
                 user =
                     userEmail.split("@".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[0]
             } else {
                 user = userEmail
             }
             mDatabaseReference?.
-                child("messages")?.
+                child(pathStr.toString())?.
                 child(java.lang.String.valueOf(System.currentTimeMillis()))?.
-                setValue(Message("$user - ${mainActivityEditText.text.toString()}"))
+                setValue(Message("$user - ${mainChatEditText2.text.toString()}"))
 
         }else {
-            var intt = Intent(this, LoginActivity::class.java)
+            val intt = Intent(this, LoginActivity::class.java)
             startActivity(intt)
         }
 
         //limpar a entrada de dados
-        mainActivityEditText.setText("")
+        mainChatEditText2.setText("")
     }
 
-    private fun createFirebaseListener(){
+    private fun createFirebaseListener(pathStr : String){
         val postListener = object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
 
@@ -93,7 +105,7 @@ class MainActivityChat : AppCompatActivity() {
                 //log error
             }
         }
-        mDatabaseReference?.child("messages")?.addValueEventListener(postListener)
+        mDatabaseReference?.child(pathStr)?.addValueEventListener(postListener)
     }
 
     //mostrar os dados

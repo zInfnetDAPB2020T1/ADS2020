@@ -40,11 +40,11 @@ class CreateAccountActivity : AppCompatActivity() {
         mDatabaseReference = mDatabase!!.reference.child("Users")
         mAuth = FirebaseAuth.getInstance()
         mProgressBar = ProgressDialog(this)
-        btn_register!!.setOnClickListener { createNewAccount() }
+        btnCriarMesa!!.setOnClickListener { createNewAccount() }
     }
 
     private fun createNewAccount() {
-        firstName = et_first_name?.text.toString()
+        firstName = etNomeMesa?.text.toString()
         lastName = et_last_name?.text.toString()
         email = et_email?.text.toString()
         password = et_password?.text.toString()

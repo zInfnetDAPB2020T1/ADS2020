@@ -5,19 +5,13 @@
     <string name="title_activity_maps">Map</string>
     <string name="places_api_key">AIzaSyBEpAQAPbzc-D466l3kdv8cq6Ee51B7LeY</string>
     <string name="apresenta_o_da_logo">Apresentação da Logo</string>
-    <string name="title_activity_fire_message">FireMessage</string>
-    <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
-    <string name="Galera">Galera</string>
-    <string name="MinhasParadas">Minhas Paradas</string>
 
     <string name="email">Email</string>
     <string name="password">Password</string>
-    <string name="first_name">First Name</string>
-    <string name="last_name">Last Name</string>
+    <string name="first_name">Primeiro Nome</string>
+    <string name="last_name">Sobrenome</string>
     <string name="login_title">Login</string>
-    <string name="create_act">Create Account</string>
+    <string name="create_act">Criar Conta</string>
     <string name="google_maps_key">AIzaSyBEpAQAPbzc-D466l3kdv8cq6Ee51B7LeY</string>
 
 </resources>

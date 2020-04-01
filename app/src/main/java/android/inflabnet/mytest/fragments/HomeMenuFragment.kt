@@ -4,6 +4,7 @@ import android.content.Intent
 import android.inflabnet.mytest.maps.MapsActivity
 import android.inflabnet.mytest.R
 import android.inflabnet.mytest.chat.activity.MainActivityChat
+import android.inflabnet.mytest.chat.activity.MesaActivity
 import android.inflabnet.mytest.login.MainActivity
 import android.inflabnet.mytest.login.SplashActivity
 import android.os.Bundle
@@ -46,7 +47,7 @@ class HomeMenuFragment : Fragment() {
         }
 
         btnChat.setOnClickListener {
-            val intt = Intent(this.context!!.applicationContext, MainActivityChat::class.java)
+            val intt = Intent(this.context!!.applicationContext, MesaActivity::class.java)
             startActivity(intt)
         }
     }
