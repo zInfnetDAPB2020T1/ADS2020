@@ -113,7 +113,7 @@ class MesaChatActivity : AppCompatActivity() {
         val linearLayoutManager = LinearLayoutManager(this)
         mainActivityRecyclerView.layoutManager = linearLayoutManager
         mainActivityRecyclerView.adapter = MessageAdapter(data) {
-            Toast.makeText(this, "${it.text} clicked", Toast.LENGTH_SHORT).show()
+            //Toast.makeText(this, "${it.text} clicked", Toast.LENGTH_SHORT).show()
         }
 
         //scroll to bottom

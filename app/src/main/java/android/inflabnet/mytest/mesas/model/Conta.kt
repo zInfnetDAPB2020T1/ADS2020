@@ -7,15 +7,15 @@ class Conta {
     var quem: String? = null
     var oque: String? = null
     var quanto: Int? = null
-    var timestamp: Long? =null
+    var timestamp: String? = null
     constructor() {
         // Default constructor required for calls to DataSnapshot.getValue(User.class)
     }
 
-    constructor(username: String?, item: String?, valor: Int?) {
+    constructor(username: String?, item: String?, valor: Int?, timestamp: String) {
         this.quem = username
         this.oque = item
         this.quanto = valor
-        var timestamp: Long = System.currentTimeMillis()
+        this.timestamp = timestamp
     }
 }

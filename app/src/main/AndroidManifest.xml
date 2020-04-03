@@ -12,11 +12,7 @@
         <activity android:name=".mesas.activity.ContaChatActivity"></activity>
         <activity android:name=".mesas.activity.MesaChatActivity" />
         <activity android:name=".mesas.activity.MesaActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity android:name=".mesas.activity.MainActivityChat" />
         <activity android:name=".HomeActivity" />
@@ -30,7 +26,13 @@
             android:value="@string/google_maps_key" />
 
         <activity android:name=".maps.MapsActivity" />
-        <activity android:name=".login.SplashActivity"></activity>
+        <activity android:name=".login.SplashActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity android:name=".login.MainActivity" />
     </application>
 

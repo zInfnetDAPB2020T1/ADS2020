@@ -10,13 +10,11 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
+import kotlinx.android.synthetic.main.activity_forgot_password.*
 
 class ForgotPasswordActivity : AppCompatActivity() {
 
     private val TAG = "ForgotPasswordActivity"
-    //UI elements
-    private var etEmail: EditText? = null
-    private var btnSubmit: Button? = null
     //Firebase references
     private var mAuth: FirebaseAuth? = null
 
@@ -29,27 +27,27 @@ class ForgotPasswordActivity : AppCompatActivity() {
     private fun initialise() {
 
         mAuth = FirebaseAuth.getInstance()
-        btnSubmit!!.setOnClickListener { sendPasswordResetEmail() }
+        btn_submit!!.setOnClickListener { sendPasswordResetEmail() }
     }
 
     private fun sendPasswordResetEmail() {
-        val email = etEmail?.text.toString()
+        val email = et_email?.text.toString()
         if (!TextUtils.isEmpty(email)) {
             mAuth!!
                 .sendPasswordResetEmail(email)
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
-                        val message = "Email sent."
+                        val message = "Email enviado."
                         Log.d(TAG, message)
                         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
                         updateUI()
                     } else {
                         Log.w(TAG, task.exception!!.message)
-                        Toast.makeText(this, "No user found with this email.", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, "Não foi encontrado usuário para esse e-mail.", Toast.LENGTH_SHORT).show()
                     }
                 }
         } else {
-            Toast.makeText(this, "Enter Email", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Coloque seu e-mail", Toast.LENGTH_SHORT).show()
         }
     }
     private fun updateUI() {

@@ -46,7 +46,7 @@ class MainActivityChat : AppCompatActivity() {
         val userEmail = mAuth?.currentUser?.email
         val user: String
         if (userEmail != null) {
-            if (userEmail!!.contains("@")) {
+            if (userEmail.contains("@")) {
                 user =
                     userEmail.split("@".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[0]
             } else {

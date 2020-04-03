@@ -29,6 +29,7 @@ class ContaAdapter(val conta: ArrayList<Conta>, private val itemClick: (Conta) -
                 itemView.txtQuem.text = conta.quem
                 itemView.txtQuanto.text = conta.quanto.toString()
                 itemView.txtOq.text = conta.oque
+                itemView.txtTimestamp.text = conta.timestamp.toString()
                 itemView.setOnClickListener { itemClick(this) }
             }
         }
