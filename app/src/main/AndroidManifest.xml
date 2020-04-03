@@ -9,7 +9,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".mesas.activity.ContaChatActivity"></activity>
+        <activity android:name=".mesas.activity.ContaActivity"></activity>
         <activity android:name=".mesas.activity.MesaChatActivity" />
         <activity android:name=".mesas.activity.MesaActivity">
 

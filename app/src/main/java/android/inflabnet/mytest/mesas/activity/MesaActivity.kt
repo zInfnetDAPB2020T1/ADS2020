@@ -5,6 +5,7 @@ import android.inflabnet.mytest.R
 import android.inflabnet.mytest.mesas.adapter.MesaAdapter
 import android.inflabnet.mytest.mesas.model.Mesa
 import android.inflabnet.mytest.mesas.model.MesaData
+import android.inflabnet.mytest.mesas.model.User
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
@@ -12,7 +13,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import kotlinx.android.synthetic.main.activity_mesa.*
-import kotlinx.android.synthetic.main.mesa_item.*
 
 class MesaActivity : AppCompatActivity() {
 
@@ -46,6 +46,7 @@ class MesaActivity : AppCompatActivity() {
         //pegar o usuário
         val userEmail = mAuth?.currentUser?.email
         val user: String
+
         if (userEmail != null) {
             if (userEmail.contains("@")) {
                 user =
@@ -53,10 +54,11 @@ class MesaActivity : AppCompatActivity() {
             } else {
                 user = userEmail
             }
-        //pegar nome da mesa
+        val participantes = mutableListOf(User(user,userEmail))
+        //inserir mesa
             mDatabaseReference?.child("mesas")
                 ?.child(java.lang.String.valueOf(System.currentTimeMillis()))
-                ?.setValue(Mesa("${etNomeMesa.text}", user))
+                ?.setValue(Mesa("${etNomeMesa.text}",user,participantes))
         }
         //limpar o campo
         etNomeMesa.setText("")
@@ -66,7 +68,7 @@ class MesaActivity : AppCompatActivity() {
         val postListener = object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
 
-                val toReturn: ArrayList<Mesa> = ArrayList();
+                val toReturn: ArrayList<Mesa> = ArrayList()
                 for(data in dataSnapshot.children){
                     val mesaData = data.getValue<Mesa>(Mesa::class.java)
                     //unwrap
@@ -89,16 +91,22 @@ class MesaActivity : AppCompatActivity() {
         val linearLayoutManager = LinearLayoutManager(this)
         mesaRecyclerView.layoutManager = linearLayoutManager
         mesaRecyclerView.adapter = MesaAdapter(data, this::act)
-        //scroll to bottom
+        //scroll para o final
         mesaRecyclerView.scrollToPosition(data.size - 1)
     }
     private fun act (data : Mesa) : Unit {
-        Toast.makeText(this, "${data.nameMesa} clicked", Toast.LENGTH_SHORT).show()
-        //ao clicar ira para a tela do chat da referida mesa
-        //val intt = Intent(this, MesaChatActivity::class.java)
-        val intt = Intent(this, ContaChatActivity::class.java)
+        //Toast.makeText(this, "${data.nameMesa} clicked", Toast.LENGTH_SHORT).show()
+
+        //ao clicar ira para a tela da comanda da mesa
+        //antes inserir na lista de participantes
+        insereParticip()
+        val intt = Intent(this, ContaActivity::class.java)
         val mesaData = MesaData(data.nameMesa.toString(),data.proprietarioMesa.toString())
         intt.putExtra("mesa",mesaData)
         startActivity(intt)
+    }
+
+    fun insereParticip(){
+
     }
 }

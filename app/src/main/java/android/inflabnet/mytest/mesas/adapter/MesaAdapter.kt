@@ -29,6 +29,9 @@ class MesaAdapter (val mesa: ArrayList<Mesa>, val itemClick: (Mesa) -> Unit) :
             with(mesa) {
                 itemView.txtMesa.text = mesa.nameMesa
                 itemView.txtProp.text = mesa.proprietarioMesa
+                for (i in 0..participantes.size) {
+                    itemView.txtParticipants.text = mesa.participantes[i].name
+                }
                 //itemView.setOnClickListener { itemClick(this) }
                 itemView.btnDividirConta.setOnClickListener { itemClick(this) }
             }

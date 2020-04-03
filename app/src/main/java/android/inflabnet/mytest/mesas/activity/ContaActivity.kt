@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -20,7 +21,7 @@ import com.google.firebase.database.*
 import kotlinx.android.synthetic.main.activity_conta_chat.*
 import kotlinx.android.synthetic.main.item_consumido.view.*
 
-class ContaChatActivity : AppCompatActivity() {
+class ContaActivity : AppCompatActivity() {
 
     lateinit var orcaDBHelper : OrcDBHelper
 
@@ -57,36 +58,10 @@ class ContaChatActivity : AppCompatActivity() {
             startActivity(intt)
         }
 
-        //swipe para remover um item
-        val itemtouchhelper = ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(
-            0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
-        ) {
-            override fun onMove(
-                recyclerView: RecyclerView,
-                viewHolder: RecyclerView.ViewHolder,
-                target: RecyclerView.ViewHolder
-            ): Boolean = false
-
-            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                val position = viewHolder.adapterPosition
-                val item = viewHolder.itemView
-                val qmCons = item.txtQuem.toString()
-                val itemCons = item.txtOq.toString()
-                val valor = Integer.parseInt(item.txtQuanto.getText().toString())
-                val ts = item.txtTimestamp.toString()
-                val itemClass = Conta(qmCons,itemCons,valor,ts)
-                removeItem(itemClass)
-                rvConta.adapter
-            }
-
-        })
-        itemtouchhelper.attachToRecyclerView(rvConta)
-
         pegarUser()
         createFirebaseListener(pathStr)
         contaListener(pathStr)
         btnOk.setOnClickListener { setupSendButton(pathStr) }
-
 
     }
     private fun pegarUser(){
@@ -106,12 +81,17 @@ class ContaChatActivity : AppCompatActivity() {
         }
     }
 
-    //ao clicar para enviar mensagem
+    //ao clicar para enviar um item para comanda
     private fun setupSendButton(pathStr: String) {
-        if (!edtItem.text.toString().isEmpty() || edtValor.text.toString().isEmpty()){
+        if (edtItem.text.toString().isEmpty() && edtValor.text.toString().isEmpty()){
+            Toast.makeText(this, "Por favor, inserir um item e seu valor.", Toast.LENGTH_SHORT).show()
+        }else if (edtItem.text.toString().isEmpty()){
+            Toast.makeText(this, "Por favor, inserir um item.", Toast.LENGTH_SHORT).show()
+        } else if (edtValor.text.toString().isEmpty()){
+            Toast.makeText(this, "Por favor, colocar o valor do item", Toast.LENGTH_SHORT).show()
+        }
+        else{
             sendData(pathStr, edtItem.text.toString(),edtValor.text.toString())
-        }else{
-            Toast.makeText(this, "Por favor, colocar um item e seu valor", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -212,17 +192,32 @@ class ContaChatActivity : AppCompatActivity() {
         }
     }
 
-    //mostrar os dados
+    //mostrar os dados e deletar no toque
     private fun setupAdapter(data: ArrayList<Conta>) {
         val linearLayoutManager = LinearLayoutManager(this)
         rvConta.layoutManager = linearLayoutManager
         rvConta.adapter = ContaAdapter(data) {
-            Toast.makeText(this, "${it.timestamp} clicked", Toast.LENGTH_SHORT).show()
-            removeItem(it)
+            val txtTitulo = "${it.oque} de ${it.quem} no valor de ${it.quanto}?"
+            val dialogBuilder = AlertDialog.Builder(this)
+            dialogBuilder.setMessage("Tem certeza que gostaria de deletar $txtTitulo ?")
+                .setCancelable(false)
+                .setPositiveButton("Sim"){_, _ ->
+                    //segue a deleção do item
+                    removeItem(it)
+                    Toast.makeText(this, "${it.oque} removido da comanda", Toast.LENGTH_SHORT).show()
+                }
+                .setNegativeButton("Não") { _, _ ->
+                    Toast.makeText(this,"${it.oque} não foi removido",Toast.LENGTH_SHORT).show()
+                }
+                .setNeutralButton("Cancelar") {_, _ ->
+                    Toast.makeText(this,"Operação cancelada",Toast.LENGTH_SHORT).show()
+                }
+                val alert = dialogBuilder.create()
+                alert.setTitle("Deletar Item da Comanda")
+                alert.show()
         }
             //scroll to bottom
             rvConta.scrollToPosition(data.size - 1)
-
     }
 
     private fun removeItem(item: Conta){
@@ -256,7 +251,6 @@ class ContaChatActivity : AppCompatActivity() {
             }
         }
         mDatabaseReference?.child(pathStr)?.addValueEventListener(postListener)
-
-
     }
+
 }
