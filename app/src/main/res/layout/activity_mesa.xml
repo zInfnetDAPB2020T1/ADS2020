@@ -14,19 +14,12 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:id="@+id/textView7"
+        <ProgressBar
+            android:id="@+id/note_list_progress"
+            style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Mesas da Galera:"
-            android:textSize="18sp" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/mesaRecyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="450dp">
-
-        </androidx.recyclerview.widget.RecyclerView>
+            android:visibility="invisible" />
 
         <TextView
             android:id="@+id/textView12"
@@ -52,11 +45,19 @@
             android:textColor="@android:color/white"
             android:textStyle="bold" />
 
-        <ProgressBar
-            android:id="@+id/note_list_progress"
+        <TextView
+            android:id="@+id/textView7"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="gone" />
+            android:text="Mesas da Galera:"
+            android:textSize="18sp" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/mesaRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="450dp">
+
+        </androidx.recyclerview.widget.RecyclerView>
 
 
     </LinearLayout>

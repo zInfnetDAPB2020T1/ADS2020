@@ -6,6 +6,7 @@ import android.inflabnet.mytest.database.OrcDBHelper
 import android.inflabnet.mytest.login.LoginActivity
 import android.inflabnet.mytest.mesas.adapter.ContaAdapter
 import android.inflabnet.mytest.mesas.model.Conta
+import android.inflabnet.mytest.mesas.model.MembrosMesa
 import android.inflabnet.mytest.mesas.model.MesaData
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -40,15 +41,15 @@ class ContaActivity : AppCompatActivity() {
 
         //Recebendo os Valores da activity MesaActivity
         val mesaData = intent.getSerializableExtra("mesa") as MesaData
-        txtMesaConta.text = mesaData.nameMesa.toString()
-        txtProprit.text = mesaData.proprietarioMesa.toString()
-        pathStr = mesaData.nameMesa.toString()+"conta"
+        txtMesaConta.text = mesaData.nameMesa
+        txtProprit.text = mesaData.proprietarioMesa
+        pathStr = mesaData.nameMesa+"conta"
         //Toast.makeText(this,pathStr.toString(),Toast.LENGTH_SHORT).show()
 
         //instanciando o banco
         mAuth = FirebaseAuth.getInstance()
         mDatabase = FirebaseDatabase.getInstance()
-        mDatabaseReference = mDatabase!!.reference.child(pathStr)
+        mDatabaseReference = mDatabase!!.reference
 
         //chama o chat
         btnChatinho.setOnClickListener {
@@ -56,6 +57,36 @@ class ContaActivity : AppCompatActivity() {
             val mesaData = MesaData(mesaData.nameMesa.toString(),mesaData.proprietarioMesa.toString())
             intt.putExtra("mesa",mesaData)
             startActivity(intt)
+        }
+        btnEntrar.setOnClickListener {
+            //entrar no grupo da mesa
+            Toast.makeText(this,user.toString(),Toast.LENGTH_SHORT).show()
+            txtMembros.append("${user.toString()}\n")
+            btnEntrar.visibility = View.GONE
+            var mesa = user?.let { it1 -> MembrosMesa(mesaData.nameMesa, it1) }
+            val key = mDatabaseReference!!.child("membros").push().key
+            if (mesa != null) {
+                if (key != null) {
+                    mesa.id = key
+                }
+            }
+            if (key != null) {
+                mDatabaseReference!!.child("membros").child(key).setValue(mesa)
+            }
+
+            val membroListener = object : ValueEventListener {
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    txtMembros.setText("")
+                    dataSnapshot.children.forEach{
+                    txtMembros.text = it.getValue<MembrosMesa>(MembrosMesa::class.java).toString()
+                    }
+
+                }
+                override fun onCancelled(p0: DatabaseError) {
+                    Toast.makeText(applicationContext, "Errroooo",Toast.LENGTH_SHORT ).show()
+                }
+            }
+            mDatabaseReference!!.child("membros").addListenerForSingleValueEvent(membroListener)
         }
 
         pegarUser()
@@ -98,10 +129,11 @@ class ContaActivity : AppCompatActivity() {
     //enviar dados para firebase
     private fun sendData(pathStr: String, item:String, valor: String){
         val itemTimestamp = System.currentTimeMillis().toString()
+        val conta = Conta(user, item,valor.toInt(), itemTimestamp)
         mDatabaseReference?.
             child(pathStr)?.
             child(itemTimestamp)?.
-            setValue(Conta(user, item,valor.toInt(), itemTimestamp))
+            setValue(conta)
         //limpar a entrada de dados
         edtItem.setText("")
         edtValor.setText("")
@@ -122,6 +154,7 @@ class ContaActivity : AppCompatActivity() {
                     conta.timestamp
                 }
                 setupAdapter(toReturn)
+
             }
             override fun onCancelled(databaseError: DatabaseError) {
                 //log error
@@ -149,7 +182,7 @@ class ContaActivity : AppCompatActivity() {
                 toReturn.sortBy { conta ->
                     conta.timestamp
                 }
-                setupTxtView(toReturn)
+
             }
             override fun onCancelled(databaseError: DatabaseError) {
                 //log error
@@ -175,11 +208,13 @@ class ContaActivity : AppCompatActivity() {
             txtTotEu.visibility = View.GONE
             txtTotEuText.visibility = View.GONE
         }else {
+            txtTotEu.visibility = View.VISIBLE
+            txtTotEuText.visibility = View.VISIBLE
             txtTotEu.text = totEu.toString()
         }
         val percentage = (totEu/orcamento!!) *100.0
-//        Toast.makeText(this,"totEu: ${totEu.toString()}",Toast.LENGTH_SHORT).show()
-//        Toast.makeText(this,"orcamento: ${orcamento.toString()}",Toast.LENGTH_SHORT).show()
+        //Toast.makeText(this,"totEu: ${totEu.toString()}",Toast.LENGTH_SHORT).show()
+       // Toast.makeText(this,"orcamento: ${orcamento.toString()}",Toast.LENGTH_SHORT).show()
         if (percentage < 75.0){
             txtTotEu.setTextColor(ContextCompat.getColor(applicationContext, R.color.green))
             txtTotEuText.setTextColor(ContextCompat.getColor(applicationContext, R.color.green))
@@ -216,8 +251,10 @@ class ContaActivity : AppCompatActivity() {
                 alert.setTitle("Deletar Item da Comanda")
                 alert.show()
         }
-            //scroll to bottom
-            rvConta.scrollToPosition(data.size - 1)
+        setupTxtView(data)
+        //scroll to bottom
+        rvConta.scrollToPosition(data.size - 1)
+
     }
 
     private fun removeItem(item: Conta){
@@ -244,7 +281,7 @@ class ContaActivity : AppCompatActivity() {
                     conta.timestamp
                 }
                 setupAdapter(toReturn)
-                setupTxtView(toReturn)
+
             }
             override fun onCancelled(databaseError: DatabaseError) {
                 //log error
