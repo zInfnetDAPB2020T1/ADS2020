@@ -76,9 +76,10 @@ class ContaActivity : AppCompatActivity() {
 
             val membroListener = object : ValueEventListener {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
-                    txtMembros.setText("")
+                    //txtMembros.setText("")
                     dataSnapshot.children.forEach{
-                    txtMembros.text = it.getValue<MembrosMesa>(MembrosMesa::class.java).toString()
+                        if(it.getValue<MembrosMesa>(MembrosMesa::class.java)?.nomeMesa.toString() == mesaData.nameMesa)
+                            txtMembros.append("${it.getValue<MembrosMesa>(MembrosMesa::class.java)?.membro.toString()}\n")
                     }
 
                 }
