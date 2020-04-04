@@ -78,9 +78,9 @@ class MesaActivity : AppCompatActivity() {
     private fun criarMesa(){
         //array de mesas para o adapter do RV
         note_list_progress.visibility = View.VISIBLE
-        val toReturn: ArrayList<Mesa> = ArrayList()
         val postListener = object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
+                val toReturn: ArrayList<Mesa> = ArrayList()
                 for(data in dataSnapshot.children){
                     val mesaData = data.getValue<Mesa>(Mesa::class.java)
                     //unwrap
@@ -98,21 +98,22 @@ class MesaActivity : AppCompatActivity() {
             }
         }
         mDatabaseReference?.child("Mesas")?.addValueEventListener(postListener)
-
     }
 
     private fun setupMesaAdapter(data: ArrayList<Mesa>){
+        mesaRecyclerView.clearOnChildAttachStateChangeListeners()
         val linearLayoutManager = LinearLayoutManager(this)
         mesaRecyclerView.layoutManager = linearLayoutManager
         mesaRecyclerView.adapter = MesaAdapter(data, this::act)
         //scroll to bottom
+
         mesaRecyclerView.scrollToPosition(data.size - 1)
         note_list_progress.visibility = View.GONE
     }
     private fun act (data : Mesa) : Unit {
         //Toast.makeText(this, "${data.nameMesa} clicked", Toast.LENGTH_SHORT).show()
         //ao clicar ira para a tela da comanda da mesa
-         val intt = Intent(this, ContaActivity::class.java)
+        val intt = Intent(this, ContaActivity::class.java)
         val mesaData = MesaData(data.nameMesa.toString(),data.proprietarioMesa.toString())
         intt.putExtra("mesa",mesaData)
         startActivity(intt)

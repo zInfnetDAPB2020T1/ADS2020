@@ -30,7 +30,7 @@ class MesaAdapter (val mesa: ArrayList<Mesa>, val itemClick: (Mesa) -> Unit) :
                 itemView.txtMesa.text = mesa.nameMesa
                 itemView.txtProp.text = mesa.proprietarioMesa
                 itemView.txtTS.text = mesa.timestamp
-                itemView.setOnClickListener { itemClick(this) }
+                //itemView.setOnClickListener { itemClick(this) }
                 itemView.btnDividirConta.setOnClickListener { itemClick(this) }
             }
         }
