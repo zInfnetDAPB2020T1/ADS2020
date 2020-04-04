@@ -58,44 +58,55 @@ class ContaActivity : AppCompatActivity() {
             intt.putExtra("mesa",mesaData)
             startActivity(intt)
         }
+        //apaga a lista de produtos até entrar na conta
         btnEntrar.setOnClickListener {
             //entrar no grupo da mesa
-            Toast.makeText(this,user.toString(),Toast.LENGTH_SHORT).show()
-            txtMembros.append("${user.toString()}\n")
+            //aparece a conta
             btnEntrar.visibility = View.GONE
-            var mesa = user?.let { it1 -> MembrosMesa(mesaData.nameMesa, it1) }
-            val key = mDatabaseReference!!.child("membros").push().key
-            if (mesa != null) {
-                if (key != null) {
-                    mesa.id = key
-                }
-            }
-            if (key != null) {
-                mDatabaseReference!!.child("membros").child(key).setValue(mesa)
-            }
-
-            val membroListener = object : ValueEventListener {
-                override fun onDataChange(dataSnapshot: DataSnapshot) {
-                    //txtMembros.setText("")
-                    dataSnapshot.children.forEach{
-                        if(it.getValue<MembrosMesa>(MembrosMesa::class.java)?.nomeMesa.toString() == mesaData.nameMesa)
-                            txtMembros.append("${it.getValue<MembrosMesa>(MembrosMesa::class.java)?.membro.toString()}\n")
+            if (user.toString() in txtMembros.text){
+                Toast.makeText(this,"Cliente já está na mesa", Toast.LENGTH_SHORT).show()
+            }else {
+                //coloca o user na tela
+                txtMembros.append(user)
+                //atiualizar firebase com nome da mesa e membro
+                val mesa = user?.let { it1 -> MembrosMesa(mesaData.nameMesa, it1) }
+                val key = mDatabaseReference!!.child("membros").push().key
+                if (mesa != null) {
+                    if (key != null) {
+                        mesa.id = key
                     }
-
                 }
-                override fun onCancelled(p0: DatabaseError) {
-                    Toast.makeText(applicationContext, "Errroooo",Toast.LENGTH_SHORT ).show()
+                if (key != null) {
+                    mDatabaseReference!!.child("membros").child(key).setValue(mesa)
                 }
             }
-            mDatabaseReference!!.child("membros").addListenerForSingleValueEvent(membroListener)
         }
 
         pegarUser()
         createFirebaseListener(pathStr)
         contaListener(pathStr)
         btnOk.setOnClickListener { setupSendButton(pathStr) }
-
+        membrosLista(mesaData.nameMesa)
     }
+    //atualiza os membros da mesa
+    private fun membrosLista(mesa: String) {
+        val membroListener = object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                //varre a lista membros do FBase procurando o nome da mesa
+                //se encontrar adiciona o membro no txtMembros
+                dataSnapshot.children.forEach{
+                    if(it.getValue<MembrosMesa>(MembrosMesa::class.java)?.nomeMesa.toString() == mesa )
+                        txtMembros.append("${it.getValue<MembrosMesa>(MembrosMesa::class.java)?.membro.toString()}\n")
+                }
+            }
+            override fun onCancelled(p0: DatabaseError) {
+                Toast.makeText(applicationContext, "Errroooo",Toast.LENGTH_SHORT ).show()
+            }
+        }
+        mDatabaseReference!!.child("membros").addListenerForSingleValueEvent(membroListener)
+    }
+
+    //não precisa falar
     private fun pegarUser(){
         //pegar o usuário
         val userEmail = mAuth?.currentUser?.email
@@ -193,7 +204,10 @@ class ContaActivity : AppCompatActivity() {
     }
     //colocar os Txts de valores da conta
     private fun setupTxtView(data: ArrayList<Conta>){
-        val orcStr = orcaDBHelper.readOrcamentos().last()
+        var orcStr: String = "500000.0"
+        if(!orcaDBHelper.readOrcamentos().last().isBlank()) {
+            orcStr = orcaDBHelper.readOrcamentos().last()
+        }
         val orcamento = orcStr.toDouble()
         var totEu: Double = 0.0
         val tot = data.sumBy { conta ->
