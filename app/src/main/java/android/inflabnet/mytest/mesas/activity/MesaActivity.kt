@@ -3,11 +3,13 @@ package android.inflabnet.mytest.mesas.activity
 import android.content.Intent
 import android.inflabnet.mytest.R
 import android.inflabnet.mytest.mesas.adapter.MesaAdapter
+import android.inflabnet.mytest.mesas.model.MembrosMesa
 import android.inflabnet.mytest.mesas.model.Mesa
 import android.inflabnet.mytest.mesas.model.MesaData
 import android.inflabnet.mytest.mesas.model.User
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.auth.FirebaseAuth
@@ -74,11 +76,11 @@ class MesaActivity : AppCompatActivity() {
     }
     //mostrar mesas no RV
     private fun criarMesa(){
-
+        //array de mesas para o adapter do RV
+        note_list_progress.visibility = View.VISIBLE
+        val toReturn: ArrayList<Mesa> = ArrayList()
         val postListener = object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
-
-                val toReturn: ArrayList<Mesa> = ArrayList()
                 for(data in dataSnapshot.children){
                     val mesaData = data.getValue<Mesa>(Mesa::class.java)
                     //unwrap
@@ -96,6 +98,7 @@ class MesaActivity : AppCompatActivity() {
             }
         }
         mDatabaseReference?.child("Mesas")?.addValueEventListener(postListener)
+
     }
 
     private fun setupMesaAdapter(data: ArrayList<Mesa>){
@@ -104,6 +107,7 @@ class MesaActivity : AppCompatActivity() {
         mesaRecyclerView.adapter = MesaAdapter(data, this::act)
         //scroll to bottom
         mesaRecyclerView.scrollToPosition(data.size - 1)
+        note_list_progress.visibility = View.GONE
     }
     private fun act (data : Mesa) : Unit {
         //Toast.makeText(this, "${data.nameMesa} clicked", Toast.LENGTH_SHORT).show()

@@ -87,7 +87,70 @@ class ContaActivity : AppCompatActivity() {
         contaListener(pathStr)
         btnOk.setOnClickListener { setupSendButton(pathStr) }
         membrosLista(mesaData.nameMesa)
+        btnFinalizar.setOnClickListener { finalizar() }
     }
+    //finalizar a conta individual
+    private fun finalizar() {
+        var totalConta: Int = 0
+        val txtTitulo = "FINALIZAR SUA PARTE NA CONTA?"
+        val dialogBuilder = AlertDialog.Builder(this)
+        dialogBuilder.setMessage("Tem certeza que gostaria de pagar sua parte?")
+                .setCancelable(false)
+                .setPositiveButton("Sim"){_, _ ->
+                    //segue a deleção do item
+                    val postListener = object : ValueEventListener {
+                        override fun onDataChange(dataSnapshot: DataSnapshot) {
+
+                            val toReturn: ArrayList<Conta> = ArrayList();
+
+                            for(data in dataSnapshot.children){
+                                val contaData = data.getValue<Conta>(Conta::class.java)
+                                val ts = data.getValue<Conta>(Conta::class.java)?.timestamp
+                                //unwrap
+                                val conta = contaData?.let { it } ?: continue
+                                //montando o array
+                                if(conta.quem == user) {
+                                    conta?.let {
+                                        if (ts != null) {
+                                            mDatabaseReference?.child(pathStr)?.child(ts)?.removeValue()
+                                            totalConta += (conta.quanto!!)
+                                        }
+                                    }
+
+                                }else{
+                                    toReturn.add(conta)
+                                }
+                            }
+                            Toast.makeText(applicationContext," $totalConta  total da conta",Toast.LENGTH_SHORT).show()
+                            txtFinalizado.text = totalConta.toString()
+                            btnOk.visibility = View.GONE
+                            //sort so newest at bottom
+                            toReturn.sortBy { conta ->
+                                conta.timestamp
+                            }
+                            setupAdapter(toReturn)
+
+                        }
+                        override fun onCancelled(databaseError: DatabaseError) {
+                            //log error
+                        }
+                    }
+                    mDatabaseReference?.child(pathStr)?.addValueEventListener(postListener)
+
+                    //removeItem(conta)
+                    //Toast.makeText(this, "${it.oque} removido da comanda", Toast.LENGTH_SHORT).show()
+                }
+                .setNegativeButton("Não") { _, _ ->
+                    Toast.makeText(this,"Ok, a noite é uma criança!",Toast.LENGTH_SHORT).show()
+                }
+                .setNeutralButton("Cancelar") {_, _ ->
+                    Toast.makeText(this,"Operação cancelada",Toast.LENGTH_SHORT).show()
+                }
+        val alert = dialogBuilder.create()
+        alert.setTitle("Deletar Item da Comanda")
+        alert.show()
+    }
+
     //atualiza os membros da mesa
     private fun membrosLista(mesa: String) {
         val membroListener = object : ValueEventListener {

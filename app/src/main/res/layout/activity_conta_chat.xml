@@ -113,15 +113,15 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvConta"
         android:layout_width="413dp"
-        android:layout_height="254dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="1dp"
         android:layout_marginRight="1dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edtItem" />
+        app:layout_constraintTop_toBottomOf="@+id/btnFinalizar" />
 
     <Button
         android:id="@+id/btnOk"
@@ -195,5 +195,27 @@
         android:layout_marginLeft="30dp"
         app:layout_constraintBaseline_toBaselineOf="@+id/txtParticipantes"
         app:layout_constraintStart_toEndOf="@+id/txtParticipantes" />
+
+    <Button
+        android:id="@+id/btnFinalizar"
+        android:layout_width="0dp"
+        android:layout_height="41dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginTop="6dp"
+        android:text="Finalizar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edtItem" />
+
+    <TextView
+        android:id="@+id/txtFinalizado"
+        android:layout_width="wrap_content"
+        android:layout_height="21dp"
+        android:layout_marginStart="28dp"
+        android:layout_marginLeft="28dp"
+        android:layout_marginTop="17dp"
+        android:text="a pagar"
+        app:layout_constraintStart_toEndOf="@+id/btnFinalizar"
+        app:layout_constraintTop_toBottomOf="@+id/edtItem" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

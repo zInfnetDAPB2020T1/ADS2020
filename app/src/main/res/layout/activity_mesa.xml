@@ -14,19 +14,12 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <ProgressBar
-            android:id="@+id/note_list_progress"
-            style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="invisible" />
-
         <TextView
             android:id="@+id/textView12"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Cadastrar Nova Mesa:"
-            android:textSize="18sp" />
+            android:textSize="22sp" />
 
         <EditText
             android:id="@+id/etNomeMesa"
@@ -34,7 +27,8 @@
             android:autofillHints=""
             android:ems="10"
             android:hint="Nome da Nova Mesa"
-            android:inputType="textPersonName" />
+            android:inputType="textPersonName"
+            android:textSize="16sp" />
 
         <Button
             android:id="@+id/btnCriarMesa"
@@ -43,14 +37,24 @@
             android:background="@color/colorAccent"
             android:text="Criar Mesa"
             android:textColor="@android:color/white"
+            android:textSize="16sp"
             android:textStyle="bold" />
+
+        <ProgressBar
+            android:id="@+id/note_list_progress"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:indeterminate="true"
+            android:max="100"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/textView7"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Mesas da Galera:"
-            android:textSize="18sp" />
+            android:textSize="22sp" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/mesaRecyclerView"
