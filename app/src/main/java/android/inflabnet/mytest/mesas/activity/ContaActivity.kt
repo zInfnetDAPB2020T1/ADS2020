@@ -70,44 +70,22 @@ class ContaActivity : AppCompatActivity() {
         jaFinalizados()
     }
 
-    private fun jaFinalizados() {
-        val japagouListener = object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                //varre a lista membros do FBase procurando o nome da mesa
-                //se encontrar no grupo dos aPagar adicionar ao TXT
-                dataSnapshot.children.forEach{
-
-                    if(it.getValue<fechouConta>(fechouConta::class.java)?.mesa.toString() == txtMesaConta.text.toString()) {
-
-//                        Toast.makeText(applicationContext, "Do banco mesa: ${it.getValue<fechouConta>(fechouConta::class.java)?.mesa.toString()}",Toast.LENGTH_SHORT ).show()
-//                        Toast.makeText(applicationContext, "Do banco user: ${it.getValue<fechouConta>(fechouConta::class.java)?.user.toString()}",Toast.LENGTH_SHORT ).show()
-//                        Toast.makeText(applicationContext, "Da tela mesa: ${txtMesaConta.text.toString()}",Toast.LENGTH_SHORT ).show()
-//                        Toast.makeText(applicationContext, "Da tela user: ${user}",Toast.LENGTH_SHORT ).show()
-
-                        //val id = it.getValue<MembrosMesa>(MembrosMesa::class.java)?.id.toString()
-                        //mDatabaseReference?.child("membros")?.child(id)?.removeValue()
-                        //txtMembros.append("${it.getValue<MembrosMesa>(MembrosMesa::class.java)?.membro.toString()}\n")
-                        txtFinalizado.append(" ${it.getValue<fechouConta>(fechouConta::class.java)?.user.toString()} : ${it.getValue<fechouConta>(fechouConta::class.java)?.totConta.toString()}\n").toString()
-                    }
-                }
+    //não precisa falar. Ok pega o usuário que está logado
+    private fun pegarUser(){
+        //pegar o usuário
+        val userEmail = mAuth?.currentUser?.email
+        //val user: String
+        if (userEmail != null) {
+            if (userEmail.contains("@")) {
+                user =
+                        userEmail.split("@".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[0]
+            } else {
+                user = userEmail
             }
-            override fun onCancelled(p0: DatabaseError) {
-                Toast.makeText(applicationContext, "Errroooo",Toast.LENGTH_SHORT ).show()
-            }
+        }else {
+            val intt = Intent(this, LoginActivity::class.java)
+            startActivity(intt)
         }
-        mDatabaseReference!!.child("aPagar").addValueEventListener(japagouListener)
-    }
-
-    private fun aPagar(userP: String, totConta: Int) {
-        val mesaP = txtMesaConta.text.toString()
-        //atiualizar firebase com os que fecharam a conta
-        //referencia do caminho
-        val dbRefe = mDatabaseReference!!.child("aPagar")
-        //gerar a key
-        val apTimestamp = System.currentTimeMillis().toString()
-        //montar o objeto
-        val aPagarObj =fechouConta(userP,mesaP,totConta,apTimestamp)
-        dbRefe.child(apTimestamp).setValue(aPagarObj)
     }
 
     //finalizar a conta individual
@@ -116,7 +94,7 @@ class ContaActivity : AppCompatActivity() {
         dialogBuilder.setMessage("Tem certeza que gostaria de pagar sua parte?")
                 .setCancelable(false)
                 .setPositiveButton("Sim"){_, _ ->
-                    //segue a deleção dos itens de quem fechou a conta e a soma do total dos itens
+                    //segue a deleção dos itens de quem fechou a conta e a soma do total dos seus itens
                     val postListener = object : ValueEventListener {
                         var totalConta: Int = 0
                         override fun onDataChange(dataSnapshot: DataSnapshot) {
@@ -126,7 +104,7 @@ class ContaActivity : AppCompatActivity() {
                                 val ts = data.getValue<Conta>(Conta::class.java)?.timestamp
                                 //unwrap
                                 val conta = contaData?.let { it } ?: continue
-                                //montando o array
+                                //montando o array removendo os itens de quem está finalizando a comanda
                                 if(conta.quem == user) {
                                     conta.let {
                                         if (ts != null) {
@@ -139,12 +117,11 @@ class ContaActivity : AppCompatActivity() {
                                     toReturn.add(conta)
                                 }
                             }
-                            //Toast.makeText(applicationContext," $totalConta  total da conta",Toast.LENGTH_SHORT).show()
-                            //coloca o valor na tela
-                            txtFinalizado.append("${user} deve pagar ${totalConta}\n").toString()
+                            //coloca user que saiu no txt dos que já correram
+                            //txtFinalizado.append("${user} : ${totalConta}\n").toString()
                             //não deixa colocar mais produtos
                             btnOk.visibility = View.GONE
-                            Toast.makeText(this@ContaActivity," ${totalConta}  a pagar",Toast.LENGTH_SHORT).show()
+                            //Toast.makeText(this@ContaActivity," ${totalConta}  a pagar",Toast.LENGTH_SHORT).show()
                             //criar um grupo no Fbase aPagar de quem já fechou e seus valores
                             user?.let { aPagar(it,totalConta) }
                             //sort so newest at bottom
@@ -152,6 +129,7 @@ class ContaActivity : AppCompatActivity() {
                                 conta.timestamp
                             }
                             setupAdapter(toReturn)
+                            //jaFinalizados() //atializa o txt
                         }
                         override fun onCancelled(databaseError: DatabaseError) {
                             //log error
@@ -161,7 +139,7 @@ class ContaActivity : AppCompatActivity() {
                     mDatabaseReference?.child(pathStr)?.addListenerForSingleValueEvent(postListener)
 
 
-                    //remover user do grupo
+                    //remover user do grupo membros
                     val membroListener = object : ValueEventListener {
                         override fun onDataChange(dataSnapshot: DataSnapshot) {
                             //varre a lista membros do FBase procurando o nome da mesa
@@ -181,9 +159,6 @@ class ContaActivity : AppCompatActivity() {
                     }
                     mDatabaseReference!!.child("membros").addListenerForSingleValueEvent(membroListener)
 
-
-                    //removeItem(conta)
-                    //Toast.makeText(this, "${it.oque} removido da comanda", Toast.LENGTH_SHORT).show()
                 }
                 .setNegativeButton("Não") { _, _ ->
                     Toast.makeText(this,"Ok, a noite é uma criança!",Toast.LENGTH_SHORT).show()
@@ -195,11 +170,46 @@ class ContaActivity : AppCompatActivity() {
         alert.setTitle("Fechar conta?")
         alert.show()
     }
+    //listener para quem já finalizou
 
-    //atualiza os membros da mesa
+    //cria um child no Fbase "aPagar" para guardar quem já finalizou a comanda
+    //função chamda depois de clicar em finalizar
+    private fun aPagar(userP: String, totConta: Int) {
+        val mesaP = txtMesaConta.text.toString()
+        //atiualizar firebase com os que fecharam a conta
+        //referencia do caminho
+        val dbRefe = mDatabaseReference!!.child("aPagar")
+        //gerar a key
+        val apTimestamp = System.currentTimeMillis().toString()
+        //montar o objeto
+        val aPagarObj =fechouConta(userP,mesaP,totConta,apTimestamp)
+        dbRefe.child(apTimestamp).setValue(aPagarObj)
+    }
+
+    //popular o txt com quem já saiu do grupo
+    private fun jaFinalizados() {
+        val japagouListener = object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                //varre a lista membros do FBase procurando o nome da mesa
+                //se encontrar no grupo dos aPagar adicionar ao TXT
+                dataSnapshot.children.forEach{
+                    if(it.getValue<fechouConta>(fechouConta::class.java)?.mesa.toString() == txtMesaConta.text.toString()) {
+                        txtFinalizado.append(" ${it.getValue<fechouConta>(fechouConta::class.java)?.user.toString()} : ${it.getValue<fechouConta>(fechouConta::class.java)?.totConta.toString()}\n").toString()
+                    }
+                }
+            }
+            override fun onCancelled(p0: DatabaseError) {
+                Toast.makeText(applicationContext, "Errroooo",Toast.LENGTH_SHORT ).show()
+            }
+        }
+        mDatabaseReference!!.child("aPagar").addValueEventListener(japagouListener)
+    }
+
+    //atualiza os membros da mesa em txtMembros
     private fun membrosLista(mesa: String) {
         val membroListener = object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
+                txtMembros.setText("")
                 //varre a lista membros do FBase procurando o nome da mesa
                 //se encontrar adiciona o membro no txtMembros
                 dataSnapshot.children.forEach{
@@ -211,28 +221,10 @@ class ContaActivity : AppCompatActivity() {
                 Toast.makeText(applicationContext, "Errroooo",Toast.LENGTH_SHORT ).show()
             }
         }
-        mDatabaseReference!!.child("membros").addListenerForSingleValueEvent(membroListener)
+        mDatabaseReference!!.child("membros").addValueEventListener(membroListener)
     }
 
-    //não precisa falar
-    private fun pegarUser(){
-        //pegar o usuário
-        val userEmail = mAuth?.currentUser?.email
-        //val user: String
-        if (userEmail != null) {
-            if (userEmail.contains("@")) {
-                user =
-                    userEmail.split("@".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[0]
-            } else {
-                user = userEmail
-            }
-        }else {
-            val intt = Intent(this, LoginActivity::class.java)
-            startActivity(intt)
-        }
-    }
-
-    //ao clicar para enviar um item para comanda
+    //ao clicar para enviar um item para comanda e entrar no grupo da mesa, caso já não esteja
     private fun setupSendButton(pathStr: String) {
         if (edtItem.text.toString().isEmpty() && edtValor.text.toString().isEmpty()){
             Toast.makeText(this, "Por favor, inserir um item e seu valor.", Toast.LENGTH_SHORT).show()
@@ -247,8 +239,6 @@ class ContaActivity : AppCompatActivity() {
             if (user.toString() in txtMembros.text){
                 Toast.makeText(this,"Cliente já está na mesa", Toast.LENGTH_SHORT).show()
             }else {
-                //coloca o user na tela
-                txtMembros.append(user)
                 //atiualizar firebase com nome da mesa e novo membro
                 val mesa = user?.let { it1 -> MembrosMesa(txtMesaConta.text.toString(), it1) }
                 val key = mDatabaseReference!!.child("membros").push().key
@@ -259,14 +249,17 @@ class ContaActivity : AppCompatActivity() {
                 }
                 if (key != null) {
                     mDatabaseReference!!.child("membros").child(key).setValue(mesa)
+                    //coloca o user no grupo membros da mesa
+                    //txtMembros.append(user)
+
                 }
             }
-            //enviar dados para banco
+            //enviar dados do item consumido para banco
             sendData(pathStr, edtItem.text.toString(),edtValor.text.toString())
         }
     }
 
-    //enviar dados para firebase
+    //envia dados para firebase
     private fun sendData(pathStr: String, item:String, valor: String){
         val itemTimestamp = System.currentTimeMillis().toString()
         val conta = Conta(user, item,valor.toInt(), itemTimestamp)
@@ -294,7 +287,6 @@ class ContaActivity : AppCompatActivity() {
                     conta.timestamp
                 }
                 setupAdapter(toReturn)
-
             }
             override fun onCancelled(databaseError: DatabaseError) {
                 //log error
@@ -305,12 +297,9 @@ class ContaActivity : AppCompatActivity() {
     }
     //listener para valor da conta pessoal
     private fun contaListener(pathStr: String){
-
         val postListener = object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
-
                 val toReturn: ArrayList<Conta> = ArrayList();
-
                 for(data in dataSnapshot.children){
                     val contaData = data.getValue<Conta>(Conta::class.java)
                     //unwrap
@@ -322,7 +311,6 @@ class ContaActivity : AppCompatActivity() {
                 toReturn.sortBy { conta ->
                     conta.timestamp
                 }
-
             }
             override fun onCancelled(databaseError: DatabaseError) {
                 //log error
@@ -370,10 +358,12 @@ class ContaActivity : AppCompatActivity() {
         }
     }
 
-    //mostrar os dados e deletar no toque
+    //mostrar os dados e deletar no evento toque
     private fun setupAdapter(data: ArrayList<Conta>) {
         val linearLayoutManager = LinearLayoutManager(this)
         rvConta.layoutManager = linearLayoutManager
+        //scroll to bottom
+        rvConta.scrollToPosition(data.size - 1)
         rvConta.adapter = ContaAdapter(data) {
             val txtTitulo = "${it.oque} de ${it.quem} no valor de ${it.quanto}?"
             val dialogBuilder = AlertDialog.Builder(this)
@@ -395,11 +385,9 @@ class ContaActivity : AppCompatActivity() {
                 alert.show()
         }
         setupTxtView(data)
-        //scroll to bottom
-        rvConta.scrollToPosition(data.size - 1)
-
     }
 
+    //remove item na comanda
     private fun removeItem(item: Conta){
         val postListener = object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
