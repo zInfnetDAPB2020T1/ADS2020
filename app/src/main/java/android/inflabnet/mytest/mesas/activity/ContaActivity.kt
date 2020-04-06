@@ -150,13 +150,18 @@ class ContaActivity : AppCompatActivity() {
             val userOrigem: String? = user
             val userDestino  = membroSelected.text.toString()
             val itemAdividir = itemSelected.text.toString()
-            Toast.makeText(this,itemAdividir.toString(),Toast.LENGTH_SHORT).show()
+
             val mesaIAD = txtMesaConta.text.toString()
             //status: Pergunta, Aceito, NaoAceito
             val statusItem:String = "Pergunta"
             //gerar a key
             val IADTimestamp = System.currentTimeMillis().toString()
-            val itemADObj = userOrigem?.let { ItemDividirAlert(it,userDestino,"itemAdividir","itemValor",mesaIAD,statusItem,IADTimestamp) }
+
+            val itemADV = itemAdividir.split(",".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[0]
+            val valorADV = itemAdividir.split("no valor de ".toRegex()).dropWhile { it.isEmpty() }.toTypedArray()[1]
+            //Toast.makeText(this,"${itemADV} e ${valorADV}" ,Toast.LENGTH_SHORT).show()
+
+            val itemADObj = userOrigem?.let { ItemDividirAlert(it,userDestino,itemADV,valorADV,mesaIAD,statusItem,IADTimestamp) }
             //colocar no FBase o item a dividir
             //referencia do caminho
             val dbRefe = mDatabaseReference!!.child("itemADividir")
