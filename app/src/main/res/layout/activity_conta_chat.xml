@@ -67,28 +67,28 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
         android:layout_marginLeft="32dp"
-        android:layout_marginTop="28dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:ems="10"
         android:hint="Valor"
         android:inputType="number"
+        app:layout_constraintBaseline_toBaselineOf="@+id/edtItem"
         app:layout_constraintEnd_toStartOf="@+id/btnOk"
-        app:layout_constraintStart_toEndOf="@+id/edtItem"
-        app:layout_constraintTop_toBottomOf="@+id/divider3" />
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/edtItem" />
 
     <EditText
         android:id="@+id/edtItem"
         android:layout_width="146dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
-        android:layout_marginLeft="4dp"
-        android:layout_marginTop="28dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="8dp"
         android:ems="10"
         android:hint="Item consumido"
         android:inputType="textPersonName"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/divider3" />
+        app:layout_constraintTop_toBottomOf="@+id/divider5" />
 
     <Button
         android:id="@+id/btnChatinho"
@@ -103,7 +103,7 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvConta"
         android:layout_width="0dp"
-        android:layout_height="260dp"
+        android:layout_height="340dp"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
@@ -128,34 +128,32 @@
         android:id="@+id/textView13"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="23dp"
-        android:layout_marginLeft="23dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="8dp"
         android:text="Total Conta: "
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/rvConta" />
+        app:layout_constraintTop_toBottomOf="@+id/divider3" />
 
     <TextView
         android:id="@+id/txtTotConta"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginLeft="15dp"
         android:text="valor"
-        app:layout_constraintStart_toEndOf="@+id/textView13"
-        app:layout_constraintTop_toBottomOf="@+id/rvConta" />
+        app:layout_constraintBaseline_toBaselineOf="@+id/textView13"
+        app:layout_constraintStart_toEndOf="@+id/textView13" />
 
     <TextView
         android:id="@+id/txtTotEuText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginLeft="32dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginLeft="40dp"
         android:text="Minha Parte:"
-        app:layout_constraintStart_toEndOf="@+id/txtTotConta"
-        app:layout_constraintTop_toBottomOf="@+id/rvConta" />
+        app:layout_constraintBaseline_toBaselineOf="@+id/txtTotConta"
+        app:layout_constraintStart_toEndOf="@+id/txtTotConta" />
 
     <TextView
         android:id="@+id/txtTotEu"
@@ -182,17 +180,17 @@
         android:id="@+id/txtMembros"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="190dp"
-        android:layout_marginRight="190dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
         app:layout_constraintBaseline_toBaselineOf="@+id/txtParticipantes"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintStart_toEndOf="@+id/txtParticipantes" />
 
     <Button
         android:id="@+id/btnFinalizar"
         android:layout_width="0dp"
         android:layout_height="41dp"
-        android:layout_marginStart="4dp"
-        android:layout_marginLeft="4dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
         android:layout_marginTop="6dp"
         android:text="Finalizar"
         app:layout_constraintStart_toStartOf="parent"
@@ -211,17 +209,17 @@
         android:id="@+id/txtFinalizado"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="190dp"
-        android:layout_marginRight="190dp"
+        android:layout_marginStart="9dp"
+        android:layout_marginLeft="9dp"
         app:layout_constraintBaseline_toBaselineOf="@+id/textView14"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintStart_toEndOf="@+id/textView14" />
 
     <TextView
         android:id="@+id/textView14"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
+        android:layout_marginStart="36dp"
+        android:layout_marginLeft="36dp"
         android:layout_marginTop="8dp"
         android:text="Já saíram:"
         app:layout_constraintStart_toStartOf="parent"

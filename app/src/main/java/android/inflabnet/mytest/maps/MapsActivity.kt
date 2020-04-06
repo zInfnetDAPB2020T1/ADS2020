@@ -22,6 +22,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.model.Place
+import com.google.android.libraries.places.api.model.PlaceLikelihood
 import com.google.android.libraries.places.api.net.FetchPhotoRequest
 import com.google.android.libraries.places.api.net.FetchPlaceRequest
 import com.google.android.libraries.places.api.net.FindCurrentPlaceRequest
@@ -134,6 +135,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 {
                     val response = task.result
                     Log.i("MAPSERRO", response.toString())
+
 //                    response!!.placeLikelihoods.sortWith()
 //                    { placeChildhood, t1 ->
 //                        placeChildhood.likelihood.toDouble().compareTo(t1.likelihood.toDouble())
@@ -162,7 +164,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             }
         }
     }
+    private fun sortByLikelihood(placeLikelihoods: MutableList<PlaceLikelihood>) {
 
+        placeLikelihoods.sortByDescending { it.likelihood }
+
+    }
     private fun setupGetPhotoandDetail() {
         btn_get_photo.setOnClickListener {
             if (TextUtils.isEmpty(placeId)) {
@@ -187,12 +193,16 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 .append("/")
                 .append(place.latLng!!.longitude.toString())
             //Get photo
-            val photoMetaData = place.photoMetadatas!![0]
-            //Criar a requesição
-            val photoRequest = FetchPhotoRequest.builder(photoMetaData).build()
-            placesClient.fetchPhoto(photoRequest).addOnSuccessListener { fetchPhotoResponse ->
-                val bitmap = fetchPhotoResponse.bitmap
-                image_view.setImageBitmap(bitmap)
+            try {
+                val photoMetaData = place.photoMetadatas!![0]
+                //Criar a requesição
+                val photoRequest = FetchPhotoRequest.builder(photoMetaData).build()
+                placesClient.fetchPhoto(photoRequest).addOnSuccessListener { fetchPhotoResponse ->
+                    val bitmap = fetchPhotoResponse.bitmap
+                    image_view.setImageBitmap(bitmap)
+                }
+            } catch (e: Exception){
+                Toast.makeText(this,"Foto não disponível para esse local",Toast.LENGTH_SHORT).show()
             }
         }
     }

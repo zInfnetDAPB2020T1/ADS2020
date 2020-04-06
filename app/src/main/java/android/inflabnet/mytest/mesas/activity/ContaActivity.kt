@@ -190,6 +190,7 @@ class ContaActivity : AppCompatActivity() {
     private fun jaFinalizados() {
         val japagouListener = object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
+                txtFinalizado.setText("")
                 //varre a lista membros do FBase procurando o nome da mesa
                 //se encontrar no grupo dos aPagar adicionar ao TXT
                 dataSnapshot.children.forEach{
@@ -320,10 +321,13 @@ class ContaActivity : AppCompatActivity() {
     }
     //colocar os Txts de valores da conta
     private fun setupTxtView(data: ArrayList<Conta>){
-        var orcStr: String = "500000.0"
-        if(!orcaDBHelper.readOrcamentos().last().isBlank()) {
-            orcStr = orcaDBHelper.readOrcamentos().last()
+        var orcStr: String? = null
+        orcStr = try{
+            orcaDBHelper.readOrcamentos().last()
+        }catch (e: Exception){
+            "500000.0"
         }
+
         val orcamento = orcStr.toDouble()
         var totEu: Double = 0.0
         val tot = data.sumBy { conta ->
@@ -343,7 +347,7 @@ class ContaActivity : AppCompatActivity() {
             txtTotEuText.visibility = View.VISIBLE
             txtTotEu.text = totEu.toString()
         }
-        val percentage = (totEu/orcamento!!) *100.0
+        val percentage = (totEu/ orcamento) *100.0
         //Toast.makeText(this,"totEu: ${totEu.toString()}",Toast.LENGTH_SHORT).show()
        // Toast.makeText(this,"orcamento: ${orcamento.toString()}",Toast.LENGTH_SHORT).show()
         if (percentage < 75.0){

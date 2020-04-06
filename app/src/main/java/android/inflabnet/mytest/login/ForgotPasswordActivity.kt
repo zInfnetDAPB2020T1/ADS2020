@@ -37,7 +37,7 @@ class ForgotPasswordActivity : AppCompatActivity() {
                 .sendPasswordResetEmail(email)
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
-                        val message = "Email enviado."
+                        val message = "Email enviado para troca da senha."
                         Log.d(TAG, message)
                         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
                         updateUI()
