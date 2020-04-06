@@ -5,14 +5,18 @@ import android.inflabnet.mytest.R
 import android.inflabnet.mytest.database.OrcDBHelper
 import android.inflabnet.mytest.login.LoginActivity
 import android.inflabnet.mytest.mesas.adapter.ContaAdapter
-import android.inflabnet.mytest.mesas.model.Conta
-import android.inflabnet.mytest.mesas.model.MembrosMesa
-import android.inflabnet.mytest.mesas.model.MesaData
-import android.inflabnet.mytest.mesas.model.fechouConta
+import android.inflabnet.mytest.mesas.model.*
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import android.widget.LinearLayout
+import android.widget.RadioButton
+import android.widget.RadioGroup
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -21,6 +25,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import kotlinx.android.synthetic.main.activity_conta_chat.*
+import kotlinx.android.synthetic.main.alert_compartilha_item.*
+import kotlinx.android.synthetic.main.alert_compartilha_item.view.*
 import kotlinx.android.synthetic.main.item_consumido.view.*
 
 class ContaActivity : AppCompatActivity() {
@@ -68,7 +74,172 @@ class ContaActivity : AppCompatActivity() {
         membrosLista(mesaData.nameMesa)
         btnFinalizar.setOnClickListener { finalizar() }
         jaFinalizados()
+        btnCompartilhar.setOnClickListener { enviaAlert() }
     }
+    private fun enviaAlert () {
+        //apresentar o layout de pergunta
+        val mDialogView = LayoutInflater.from(this).inflate(R.layout.alert_compartilha_item, null)
+        //verifica os itens que estão na comanda para montar o Radiogroup
+        val itensDaContaListener = object : ValueEventListener {
+            @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                val contaItens: ArrayList<Conta> = ArrayList();
+                for(data in dataSnapshot.children){
+                    val contaData = data.getValue<Conta>(Conta::class.java)
+                    //unwrap
+                    val conta = contaData?.let { it } ?: continue
+                    if(conta.quem == user && conta.mesa == txtMesaConta.text.toString()){
+                        contaItens.add(conta)
+                    }
+                }
+                //sort so newest at bottom
+                contaItens.sortBy { conta ->
+                    conta.timestamp
+                }
+                Log.i("ALERTA", contaItens.toString())
+
+                //llGroup.addView(rg)
+                montaRG(contaItens,mDialogView)
+                //setupAdapter(toReturn)
+            }
+            override fun onCancelled(databaseError: DatabaseError) {
+                Toast.makeText(this@ContaActivity,"Erro ao conectar com o banco", Toast.LENGTH_SHORT).show()
+            }
+        }
+        mDatabaseReference?.child(pathStr)?.addListenerForSingleValueEvent(itensDaContaListener)
+
+        //verifica quem está na comanda para montar o Radiogroup
+        val membrosDaContaListener = object : ValueEventListener {
+            @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                val membrosMesas: ArrayList<MembrosMesa> = ArrayList();
+                for(data in dataSnapshot.children){
+                    val membroData = data.getValue<MembrosMesa>(MembrosMesa::class.java)
+                    //unwrap
+                    val membro = membroData?.let { it } ?: continue
+                    if(membro.membro != user && membro.nomeMesa == txtMesaConta.text.toString()){
+                        membrosMesas.add(membro)
+                    }
+                }
+                //sort so newest at bottom
+                membrosMesas.sortBy { membro ->
+                    membro.id
+                }
+                Log.i("ALERTA", membrosMesas.toString())
+                //llGroup.addView(rg)
+                montaMembrosRG(membrosMesas,mDialogView)
+                //setupAdapter(toReturn)
+            }
+            override fun onCancelled(databaseError: DatabaseError) {
+                Toast.makeText(this@ContaActivity,"Erro ao conectar com o banco", Toast.LENGTH_SHORT).show()
+            }
+        }
+        mDatabaseReference?.child("membros")?.addListenerForSingleValueEvent(membrosDaContaListener)
+
+        //builder do alertdialog
+        val mBuilder = AlertDialog.Builder(this)
+                .setView(mDialogView)
+                .setTitle("Compartilhar Custo de Iem")
+        val  mAlertDialog = mBuilder.show()
+        mDialogView.btnPerguntar.setOnClickListener {
+            //mAlertDialog.dismiss()
+            //pegar os itens do user que ele quer compartilhar
+            //começa a pegar os valores para inserir no FBase
+            val itemSelected: RadioButton  = mDialogView.findViewById(mDialogView.rg.checkedRadioButtonId)
+            val membroSelected: RadioButton = mDialogView.findViewById(mDialogView.rdGroup.checkedRadioButtonId)
+            val userOrigem: String? = user
+            val userDestino  = membroSelected.text.toString()
+            val itemAdividir = itemSelected.text.toString()
+            Toast.makeText(this,itemAdividir.toString(),Toast.LENGTH_SHORT).show()
+            val mesaIAD = txtMesaConta.text.toString()
+            //status: Pergunta, Aceito, NaoAceito
+            val statusItem:String = "Pergunta"
+            //gerar a key
+            val IADTimestamp = System.currentTimeMillis().toString()
+            val itemADObj = userOrigem?.let { ItemDividirAlert(it,userDestino,"itemAdividir","itemValor",mesaIAD,statusItem,IADTimestamp) }
+            //colocar no FBase o item a dividir
+            //referencia do caminho
+            val dbRefe = mDatabaseReference!!.child("itemADividir")
+            //montar o objeto
+            dbRefe.child(IADTimestamp).setValue(itemADObj)
+        }
+            mDialogView.btnCancelar.setOnClickListener {
+                //dismiss dialog
+                mAlertDialog.dismiss()
+            }
+    }
+    //monta o RadioGroup dos itens da conta
+    @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
+    private fun montaRG(contaItens: ArrayList<Conta>, mDialogView: View?) {
+        //val rg = RadioGroup(this)
+        if (mDialogView != null) {
+            mDialogView.rg.orientation = RadioGroup.VERTICAL
+        }
+        for(i in 0 until contaItens.size){
+            val rb = RadioButton(applicationContext)
+            val produto: String = "${contaItens[i].oque.toString()}, no valor de ${contaItens[i].quanto.toString()}"
+            rb.text = produto
+            rb.id = View.generateViewId()
+            if (mDialogView != null) {
+                mDialogView.rg.addView(rb)
+            }
+        }
+    }
+    //monta o RadioGroup dos membros da mesa
+    @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
+    private fun montaMembrosRG(membroNomes: ArrayList<MembrosMesa>, mDialogView: View?) {
+        //val rg = RadioGroup(this)
+        if (mDialogView != null) {
+            mDialogView.rdGroup.orientation = RadioGroup.VERTICAL
+        }
+        for(i in 0 until membroNomes.size){
+            val rb = RadioButton(applicationContext)
+            rb.text = membroNomes[i].membro.toString()
+            rb.id = View.generateViewId()
+            if (mDialogView != null) {
+                mDialogView.rdGroup.addView(rb)
+            }
+        }
+    }
+
+    private fun checkItensACompartilhar(){
+        val alertListener = object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                //varre a lista membros do FBase procurando o nome da mesa
+                //se encontrar remover o membro no Fbase
+                dataSnapshot.children.forEach{
+                    if(it.getValue<ItemDividirAlert>(ItemDividirAlert::class.java)?.mesaIAD == txtMesaConta.text.toString() &&
+                            it.getValue<ItemDividirAlert>(ItemDividirAlert::class.java)?.userDestino.toString() == user) {
+                        val id = it.getValue<ItemDividirAlert>(ItemDividirAlert::class.java)?.id.toString()
+                        val dialogBuilder = AlertDialog.Builder(this@ContaActivity)
+                        dialogBuilder.setMessage("Tem certeza que gostaria de pagar sua parte?")
+                                .setCancelable(false)
+                                .setPositiveButton("Sim"){_, _ ->
+                                    mDatabaseReference?.child("itemADividir")?.child(id)?.removeValue()
+
+                                }
+                                .setNegativeButton("Não") { _, _ ->
+                                    Toast.makeText(this@ContaActivity,"Ok, não será dividido!",Toast.LENGTH_SHORT).show()
+                                }
+                                .setNeutralButton("Cancelar") {_, _ ->
+                                    Toast.makeText(this@ContaActivity,"Operação cancelada",Toast.LENGTH_SHORT).show()
+                                }
+                        val alert = dialogBuilder.create()
+                        alert.setTitle("Compartilhar Item?")
+                        alert.show()
+
+
+                        //txtMembros.append("${it.getValue<MembrosMesa>(MembrosMesa::class.java)?.membro.toString()}\n")
+                    }
+                }
+            }
+            override fun onCancelled(p0: DatabaseError) {
+                Toast.makeText(applicationContext, "Errroooo",Toast.LENGTH_SHORT ).show()
+            }
+        }
+        mDatabaseReference!!.child("itemADividir").addValueEventListener(alertListener)
+    }
+
 
     //não precisa falar. Ok pega o usuário que está logado
     private fun pegarUser(){
@@ -238,7 +409,7 @@ class ContaActivity : AppCompatActivity() {
             //entrar no grupo da mesa
             //aparece a conta
             if (user.toString() in txtMembros.text){
-                Toast.makeText(this,"Cliente já está na mesa", Toast.LENGTH_SHORT).show()
+                //Toast.makeText(this,"Cliente já está na mesa", Toast.LENGTH_SHORT).show()
             }else {
                 //atiualizar firebase com nome da mesa e novo membro
                 val mesa = user?.let { it1 -> MembrosMesa(txtMesaConta.text.toString(), it1) }
@@ -263,11 +434,11 @@ class ContaActivity : AppCompatActivity() {
     //envia dados para firebase
     private fun sendData(pathStr: String, item:String, valor: String){
         val itemTimestamp = System.currentTimeMillis().toString()
-        val conta = Conta(user, item,valor.toInt(), itemTimestamp)
+        val conta = Conta(user, item,valor.toInt(), itemTimestamp,txtMesaConta.text.toString())
         mDatabaseReference?.
-            child(pathStr)?.
-            child(itemTimestamp)?.
-            setValue(conta)
+                child(pathStr)?.
+                child(itemTimestamp)?.
+                setValue(conta)
         //limpar a entrada de dados
         edtItem.setText("")
         edtValor.setText("")
@@ -349,7 +520,7 @@ class ContaActivity : AppCompatActivity() {
         }
         val percentage = (totEu/ orcamento) *100.0
         //Toast.makeText(this,"totEu: ${totEu.toString()}",Toast.LENGTH_SHORT).show()
-       // Toast.makeText(this,"orcamento: ${orcamento.toString()}",Toast.LENGTH_SHORT).show()
+        // Toast.makeText(this,"orcamento: ${orcamento.toString()}",Toast.LENGTH_SHORT).show()
         if (percentage < 75.0){
             txtTotEu.setTextColor(ContextCompat.getColor(applicationContext, R.color.green))
             txtTotEuText.setTextColor(ContextCompat.getColor(applicationContext, R.color.green))
@@ -372,21 +543,21 @@ class ContaActivity : AppCompatActivity() {
             val txtTitulo = "${it.oque} de ${it.quem} no valor de ${it.quanto}?"
             val dialogBuilder = AlertDialog.Builder(this)
             dialogBuilder.setMessage("Tem certeza que gostaria de deletar $txtTitulo ?")
-                .setCancelable(false)
-                .setPositiveButton("Sim"){_, _ ->
-                    //segue a deleção do item
-                    removeItem(it)
-                    Toast.makeText(this, "${it.oque} removido da comanda", Toast.LENGTH_SHORT).show()
-                }
-                .setNegativeButton("Não") { _, _ ->
-                    Toast.makeText(this,"${it.oque} não foi removido",Toast.LENGTH_SHORT).show()
-                }
-                .setNeutralButton("Cancelar") {_, _ ->
-                    Toast.makeText(this,"Operação cancelada",Toast.LENGTH_SHORT).show()
-                }
-                val alert = dialogBuilder.create()
-                alert.setTitle("Deletar Item da Comanda")
-                alert.show()
+                    .setCancelable(false)
+                    .setPositiveButton("Sim"){_, _ ->
+                        //segue a deleção do item
+                        removeItem(it)
+                        Toast.makeText(this, "${it.oque} removido da comanda", Toast.LENGTH_SHORT).show()
+                    }
+                    .setNegativeButton("Não") { _, _ ->
+                        Toast.makeText(this,"${it.oque} não foi removido",Toast.LENGTH_SHORT).show()
+                    }
+                    .setNeutralButton("Cancelar") {_, _ ->
+                        Toast.makeText(this,"Operação cancelada",Toast.LENGTH_SHORT).show()
+                    }
+            val alert = dialogBuilder.create()
+            alert.setTitle("Deletar Item da Comanda")
+            alert.show()
         }
         setupTxtView(data)
     }
@@ -407,7 +578,7 @@ class ContaActivity : AppCompatActivity() {
                         toReturn.add(conta)
                     }else{
                         conta.timestamp?.let { mDatabaseReference?.child(pathStr)?.child(it)
-                            ?.removeValue() }
+                                ?.removeValue() }
                         Toast.makeText(applicationContext," ${conta.oque} removido",Toast.LENGTH_SHORT).show()
                     }
                 }
