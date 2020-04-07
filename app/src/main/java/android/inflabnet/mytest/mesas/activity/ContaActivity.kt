@@ -80,7 +80,7 @@ class ContaActivity : AppCompatActivity() {
     private fun enviaPerguntaAlert () {
         //apresentar o layout de pergunta
         val mDialogView = LayoutInflater.from(this).inflate(R.layout.alert_compartilha_item, null)
-        //verifica os itens que estão na comanda para montar o Radiogroup
+        //verifica ITENS que estão na comanda para montar o Radiogroup
         val itensDaContaListener = object : ValueEventListener {
             @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
             override fun onDataChange(dataSnapshot: DataSnapshot) {
@@ -109,7 +109,7 @@ class ContaActivity : AppCompatActivity() {
         }
         mDatabaseReference?.child(pathStr)?.addListenerForSingleValueEvent(itensDaContaListener)
 
-        //verifica quem está na comanda para montar o Radiogroup
+        //verifica QUEM está na comanda para montar o Radiogroup
         val membrosDaContaListener = object : ValueEventListener {
             @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
             override fun onDataChange(dataSnapshot: DataSnapshot) {
@@ -170,9 +170,9 @@ class ContaActivity : AppCompatActivity() {
             dbRefe.child(IADTimestamp).setValue(itemADObj)
             mAlertDialog.dismiss()
         }
-            mDialogView.btnCancelar.setOnClickListener {
-                //dismiss dialog
-                mAlertDialog.dismiss()
+        mDialogView.btnCancelar.setOnClickListener {
+            //dismiss dialog
+            mAlertDialog.dismiss()
             }
     }
     //monta o RadioGroup dos itens da conta
@@ -209,6 +209,7 @@ class ContaActivity : AppCompatActivity() {
         }
     }
 
+    //ao abrir a tela da mesa, verifica no banco se há requisição ("Pergunta") para dividir item
     private fun checkItensACompartilhar(){
         val alertListener = object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
@@ -229,8 +230,7 @@ class ContaActivity : AppCompatActivity() {
                             dialogBuilder.setMessage("${solicitanteCompart} gostaria de compartilhar o valor de ${valorIACompartilhar} referente ao item ${itemACompartilhar}. Aceita compartilhar esse item?")
                                     .setCancelable(false)
                                     .setPositiveButton("Sim") { _, _ ->
-                                    //aí fudeu!
-
+                                    //aceitou compartilhar
                                         val itemListener = object : ValueEventListener {
                                             override fun onDataChange(dataSnapshot: DataSnapshot) {
                                                 var contaADVSol: Conta? = null
@@ -325,7 +325,7 @@ class ContaActivity : AppCompatActivity() {
                 Toast.makeText(applicationContext, "Errroooo",Toast.LENGTH_SHORT ).show()
             }
         }
-        mDatabaseReference!!.child("itemADividir").addValueEventListener(alertListener)
+        mDatabaseReference!!.child("itemADividir").addListenerForSingleValueEvent(alertListener)
     }
 
 
