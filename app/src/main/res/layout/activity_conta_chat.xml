@@ -67,8 +67,8 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
         android:layout_marginLeft="32dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
         android:ems="10"
         android:hint="Valor"
         android:inputType="number"
@@ -100,19 +100,28 @@
         app:layout_constraintBaseline_toBaselineOf="@+id/txtp"
         app:layout_constraintEnd_toEndOf="parent" />
 
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="4dp"
+        android:background="?android:attr/listDivider"
+        app:layout_constraintTop_toBottomOf="@+id/edtItem"
+        tools:layout_editor_absoluteX="0dp" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvConta"
-        android:layout_width="0dp"
-        android:layout_height="340dp"
+        android:layout_width="386dp"
+        android:layout_height="290dp"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="54dp"
         android:layout_marginEnd="1dp"
         android:layout_marginRight="1dp"
         android:scrollbars="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnFinalizar" />
+        app:layout_constraintTop_toBottomOf="@+id/divider" />
 
     <Button
         android:id="@+id/btnOk"

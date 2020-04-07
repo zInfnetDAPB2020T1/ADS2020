@@ -75,7 +75,9 @@ class ContaActivity : AppCompatActivity() {
         btnFinalizar.setOnClickListener { finalizar() }
         jaFinalizados()
         btnCompartilhar.setOnClickListener { enviaPerguntaAlert() }
-        checkItensACompartilhar()
+        //checkItensACompartilhar()
+        itemADividirListener()
+
     }
     private fun enviaPerguntaAlert () {
         //apresentar o layout de pergunta
@@ -203,13 +205,26 @@ class ContaActivity : AppCompatActivity() {
             val rb = RadioButton(applicationContext)
             rb.text = membroNomes[i].membro.toString()
             rb.id = View.generateViewId()
-            if (mDialogView != null) {
-                mDialogView.rdGroup.addView(rb)
-            }
+            mDialogView?.rdGroup?.addView(rb)
         }
     }
+    //ficar ouvindo a classe Item A Dividir
+    private fun itemADividirListener(){
+        val iadListener = object : ValueEventListener{
+            override fun onCancelled(p0: DatabaseError) {
+                Toast.makeText(applicationContext, "Errroooo na conexão com o banco",Toast.LENGTH_SHORT ).show()
+            }
 
-    //ao abrir a tela da mesa, verifica no banco se há requisição ("Pergunta") para dividir item
+            override fun onDataChange(p0: DataSnapshot) {
+                checkItensACompartilhar()
+            }
+
+
+        }
+        mDatabaseReference!!.child("itemADividir").addValueEventListener(iadListener)
+    }
+
+    //chamada a partir de itemADividirListener() , verifica no banco se há requisição ("Pergunta") para dividir item
     private fun checkItensACompartilhar(){
         val alertListener = object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
