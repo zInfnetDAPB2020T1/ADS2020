@@ -52,10 +52,10 @@ class MainActivityChat : AppCompatActivity() {
             } else {
                 user = userEmail
             }
-            mDatabaseReference?.
-                child("messages")?.
-                child(java.lang.String.valueOf(System.currentTimeMillis()))?.
-                setValue(Message("$user - ${mainActivityEditText.text.toString()}"))
+//            mDatabaseReference?.
+//                child("messages")?.
+//                child(java.lang.String.valueOf(System.currentTimeMillis()))?.
+//                setValue(Message("$user - ${mainActivityEditText.text.toString()}"))
 
         }else {
             var intt = Intent(this, LoginActivity::class.java)

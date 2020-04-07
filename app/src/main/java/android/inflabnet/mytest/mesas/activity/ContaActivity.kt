@@ -107,7 +107,7 @@ class ContaActivity : AppCompatActivity() {
                 Toast.makeText(this@ContaActivity,"Erro ao conectar com o banco", Toast.LENGTH_SHORT).show()
             }
         }
-        mDatabaseReference?.child(pathStr)?.addListenerForSingleValueEvent(itensDaContaListener)
+        mDatabaseReference?.child("Conta")?.child(pathStr)?.addListenerForSingleValueEvent(itensDaContaListener)
 
         //verifica QUEM está na comanda para montar o Radiogroup
         val membrosDaContaListener = object : ValueEventListener {
@@ -135,7 +135,7 @@ class ContaActivity : AppCompatActivity() {
                 Toast.makeText(this@ContaActivity,"Erro ao conectar com o banco", Toast.LENGTH_SHORT).show()
             }
         }
-        mDatabaseReference?.child("membros")?.addListenerForSingleValueEvent(membrosDaContaListener)
+        mDatabaseReference?.child("Membros")?.addListenerForSingleValueEvent(membrosDaContaListener)
 
         //builder do alertdialog com itens da comanda e membros para dividir (Pergunta)
         val mBuilder = AlertDialog.Builder(this)
@@ -258,16 +258,16 @@ class ContaActivity : AppCompatActivity() {
                                                         contaADVAceitou = Conta(destinoCompart,itemACompartilhar, divValor?.toInt(),TS2,txtMesaConta.text.toString())
                                                         Toast.makeText(applicationContext, divValor.toString(), Toast.LENGTH_SHORT).show()
                                                         if (ts != null) {
-                                                            mDatabaseReference?.child(pathStr)?.child(ts)?.removeValue()
+                                                            mDatabaseReference?.child("Conta")?.child(pathStr)?.child(ts)?.removeValue()
                                                         }
                                                     }
                                                 }
                                                 //inserindo a conta dividida como duas novas contas no FBase
                                                 if (TS1 != null) {
-                                                    mDatabaseReference?.child(pathStr)?.child(TS1)?.setValue(contaADVSol)
+                                                    mDatabaseReference?.child("Conta")?.child(pathStr)?.child(TS1)?.setValue(contaADVSol)
                                                 }
                                                 if (TS2 != null) {
-                                                    mDatabaseReference?.child(pathStr)?.child(TS2)?.setValue(contaADVAceitou)
+                                                    mDatabaseReference?.child("Conta")?.child(pathStr)?.child(TS2)?.setValue(contaADVAceitou)
                                                 }
                                                 //remover o item dos itens a dividir
                                                 mDatabaseReference!!.child("itemADividir").child(id).removeValue()
@@ -276,7 +276,7 @@ class ContaActivity : AppCompatActivity() {
                                             //log error
                                         }
                                     }
-                            mDatabaseReference?.child(pathStr)?.addListenerForSingleValueEvent(itemListener)
+                            mDatabaseReference?.child("Conta")?.child(pathStr)?.addListenerForSingleValueEvent(itemListener)
 
                                     }
                                     .setNegativeButton("Não") { _, _ ->
@@ -367,7 +367,7 @@ class ContaActivity : AppCompatActivity() {
                                 if(conta.quem == user) {
                                     conta.let {
                                         if (ts != null) {
-                                            mDatabaseReference?.child(pathStr)?.child(ts)?.removeValue()
+                                            mDatabaseReference?.child("Conta")?.child(pathStr)?.child(ts)?.removeValue()
                                             totalConta += (conta.quanto!!)
                                         }
                                     }
@@ -380,6 +380,8 @@ class ContaActivity : AppCompatActivity() {
                             //txtFinalizado.append("${user} : ${totalConta}\n").toString()
                             //não deixa colocar mais produtos
                             btnOk.visibility = View.GONE
+                            btnFinalizar.visibility = View.GONE
+                            btnCompartilhar.visibility = View.GONE
                             //Toast.makeText(this@ContaActivity," ${totalConta}  a pagar",Toast.LENGTH_SHORT).show()
                             //criar um grupo no Fbase aPagar de quem já fechou e seus valores
                             user?.let { aPagar(it,totalConta) }
@@ -395,7 +397,7 @@ class ContaActivity : AppCompatActivity() {
                         }
                     }
                     //mDatabaseReference?.child(pathStr)?.addValueEventListener(postListener)
-                    mDatabaseReference?.child(pathStr)?.addListenerForSingleValueEvent(postListener)
+                    mDatabaseReference?.child("Conta")?.child(pathStr)?.addListenerForSingleValueEvent(postListener)
 
 
                     //remover user do grupo membros
@@ -407,7 +409,7 @@ class ContaActivity : AppCompatActivity() {
                                 if(it.getValue<MembrosMesa>(MembrosMesa::class.java)?.nomeMesa.toString() == txtMesaConta.text.toString() &&
                                         it.getValue<MembrosMesa>(MembrosMesa::class.java)?.membro.toString() == user) {
                                     val id = it.getValue<MembrosMesa>(MembrosMesa::class.java)?.id.toString()
-                                    mDatabaseReference?.child("membros")?.child(id)?.removeValue()
+                                    mDatabaseReference?.child("Membros")?.child(id)?.removeValue()
                                     //txtMembros.append("${it.getValue<MembrosMesa>(MembrosMesa::class.java)?.membro.toString()}\n")
                                 }
                             }
@@ -416,7 +418,7 @@ class ContaActivity : AppCompatActivity() {
                             Toast.makeText(applicationContext, "Errroooo",Toast.LENGTH_SHORT ).show()
                         }
                     }
-                    mDatabaseReference!!.child("membros").addListenerForSingleValueEvent(membroListener)
+                    mDatabaseReference!!.child("Membros").addListenerForSingleValueEvent(membroListener)
 
                 }
                 .setNegativeButton("Não") { _, _ ->
@@ -481,7 +483,7 @@ class ContaActivity : AppCompatActivity() {
                 Toast.makeText(applicationContext, "Errroooo",Toast.LENGTH_SHORT ).show()
             }
         }
-        mDatabaseReference!!.child("membros").addValueEventListener(membroListener)
+        mDatabaseReference!!.child("Membros").addValueEventListener(membroListener)
     }
 
     //ao clicar para enviar um item para comanda e entrar no grupo da mesa, caso já não esteja
@@ -501,14 +503,14 @@ class ContaActivity : AppCompatActivity() {
             }else {
                 //atiualizar firebase com nome da mesa e novo membro
                 val mesa = user?.let { it1 -> MembrosMesa(txtMesaConta.text.toString(), it1) }
-                val key = mDatabaseReference!!.child("membros").push().key
+                val key = mDatabaseReference!!.child("Membros").push().key
                 if (mesa != null) {
                     if (key != null) {
                         mesa.id = key
                     }
                 }
                 if (key != null) {
-                    mDatabaseReference!!.child("membros").child(key).setValue(mesa)
+                    mDatabaseReference!!.child("Membros").child(key).setValue(mesa)
                     //coloca o user no grupo membros da mesa
                     //txtMembros.append(user)
 
@@ -523,8 +525,7 @@ class ContaActivity : AppCompatActivity() {
     private fun sendData(pathStr: String, item:String, valor: String){
         val itemTimestamp = System.currentTimeMillis().toString()
         val conta = Conta(user, item,valor.toInt(), itemTimestamp,txtMesaConta.text.toString())
-        mDatabaseReference?.
-                child(pathStr)?.
+        mDatabaseReference?.child("Conta")?.child(pathStr)?.
                 child(itemTimestamp)?.
                 setValue(conta)
         //limpar a entrada de dados
@@ -552,7 +553,7 @@ class ContaActivity : AppCompatActivity() {
                 //log error
             }
         }
-        mDatabaseReference?.child(pathStr)?.addValueEventListener(postListener)
+        mDatabaseReference?.child("Conta")?.child(pathStr)?.addValueEventListener(postListener)
 
     }
     //listener para valor da conta pessoal
@@ -576,7 +577,7 @@ class ContaActivity : AppCompatActivity() {
                 //log error
             }
         }
-        mDatabaseReference?.child(pathStr)?.addValueEventListener(postListener)
+        mDatabaseReference?.child("Conta")?.child(pathStr)?.addValueEventListener(postListener)
     }
     //colocar os Txts de valores da conta
     private fun setupTxtView(data: ArrayList<Conta>){
@@ -665,7 +666,7 @@ class ContaActivity : AppCompatActivity() {
                     if(item.timestamp != conta.timestamp) {
                         toReturn.add(conta)
                     }else{
-                        conta.timestamp?.let { mDatabaseReference?.child(pathStr)?.child(it)
+                        conta.timestamp?.let { mDatabaseReference?.child("Conta")?.child(pathStr)?.child(it)
                                 ?.removeValue() }
                         Toast.makeText(applicationContext," ${conta.oque} removido",Toast.LENGTH_SHORT).show()
                     }
@@ -681,7 +682,7 @@ class ContaActivity : AppCompatActivity() {
                 //log error
             }
         }
-        mDatabaseReference?.child(pathStr)?.addValueEventListener(postListener)
+        mDatabaseReference?.child("Conta")?.child(pathStr)?.addValueEventListener(postListener)
     }
 
 }
