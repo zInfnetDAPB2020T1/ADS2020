@@ -74,9 +74,10 @@ class ContaActivity : AppCompatActivity() {
         membrosLista(mesaData.nameMesa)
         btnFinalizar.setOnClickListener { finalizar() }
         jaFinalizados()
-        btnCompartilhar.setOnClickListener { enviaAlert() }
+        btnCompartilhar.setOnClickListener { enviaPerguntaAlert() }
+        checkItensACompartilhar()
     }
-    private fun enviaAlert () {
+    private fun enviaPerguntaAlert () {
         //apresentar o layout de pergunta
         val mDialogView = LayoutInflater.from(this).inflate(R.layout.alert_compartilha_item, null)
         //verifica os itens que estão na comanda para montar o Radiogroup
@@ -86,13 +87,13 @@ class ContaActivity : AppCompatActivity() {
                 val contaItens: ArrayList<Conta> = ArrayList();
                 for(data in dataSnapshot.children){
                     val contaData = data.getValue<Conta>(Conta::class.java)
-                    //unwrap
+                    //abrindo
                     val conta = contaData?.let { it } ?: continue
                     if(conta.quem == user && conta.mesa == txtMesaConta.text.toString()){
                         contaItens.add(conta)
                     }
                 }
-                //sort so newest at bottom
+                //ordenando o mais novo no final
                 contaItens.sortBy { conta ->
                     conta.timestamp
                 }
@@ -115,13 +116,13 @@ class ContaActivity : AppCompatActivity() {
                 val membrosMesas: ArrayList<MembrosMesa> = ArrayList();
                 for(data in dataSnapshot.children){
                     val membroData = data.getValue<MembrosMesa>(MembrosMesa::class.java)
-                    //unwrap
+                    //abrindo
                     val membro = membroData?.let { it } ?: continue
                     if(membro.membro != user && membro.nomeMesa == txtMesaConta.text.toString()){
                         membrosMesas.add(membro)
                     }
                 }
-                //sort so newest at bottom
+                //ordenando o mais novo no final
                 membrosMesas.sortBy { membro ->
                     membro.id
                 }
@@ -136,10 +137,10 @@ class ContaActivity : AppCompatActivity() {
         }
         mDatabaseReference?.child("membros")?.addListenerForSingleValueEvent(membrosDaContaListener)
 
-        //builder do alertdialog
+        //builder do alertdialog com itens da comanda e membros para dividir (Pergunta)
         val mBuilder = AlertDialog.Builder(this)
                 .setView(mDialogView)
-                .setTitle("Compartilhar Custo de Iem")
+                .setTitle("Compartilhar Custo de Item")
         val  mAlertDialog = mBuilder.show()
         mDialogView.btnPerguntar.setOnClickListener {
             //mAlertDialog.dismiss()
@@ -167,6 +168,7 @@ class ContaActivity : AppCompatActivity() {
             val dbRefe = mDatabaseReference!!.child("itemADividir")
             //montar o objeto
             dbRefe.child(IADTimestamp).setValue(itemADObj)
+            mAlertDialog.dismiss()
         }
             mDialogView.btnCancelar.setOnClickListener {
                 //dismiss dialog
@@ -213,28 +215,109 @@ class ContaActivity : AppCompatActivity() {
                 //varre a lista membros do FBase procurando o nome da mesa
                 //se encontrar remover o membro no Fbase
                 dataSnapshot.children.forEach{
-                    if(it.getValue<ItemDividirAlert>(ItemDividirAlert::class.java)?.mesaIAD == txtMesaConta.text.toString() &&
-                            it.getValue<ItemDividirAlert>(ItemDividirAlert::class.java)?.userDestino.toString() == user) {
-                        val id = it.getValue<ItemDividirAlert>(ItemDividirAlert::class.java)?.id.toString()
-                        val dialogBuilder = AlertDialog.Builder(this@ContaActivity)
-                        dialogBuilder.setMessage("Tem certeza que gostaria de pagar sua parte?")
-                                .setCancelable(false)
-                                .setPositiveButton("Sim"){_, _ ->
-                                    mDatabaseReference?.child("itemADividir")?.child(id)?.removeValue()
+                    if(it.getValue<ItemDividirAlert>(ItemDividirAlert::class.java)?.mesaIAD == txtMesaConta.text.toString())  {
+                        //se é pergunta
+                        if ((it.getValue<ItemDividirAlert>(ItemDividirAlert::class.java)?.status.toString() == "Pergunta") &&
+                                it.getValue<ItemDividirAlert>(ItemDividirAlert::class.java)?.userDestino.toString() == user) {
+                            val id = it.getValue<ItemDividirAlert>(ItemDividirAlert::class.java)?.id.toString()
+                            val dialogBuilder = AlertDialog.Builder(this@ContaActivity)
+                            val solicitanteCompart = it.getValue<ItemDividirAlert>(ItemDividirAlert::class.java)?.userOrigem.toString()
+                            val destinoCompart = it.getValue<ItemDividirAlert>(ItemDividirAlert::class.java)?.userDestino.toString()
+                            val itemACompartilhar = it.getValue<ItemDividirAlert>(ItemDividirAlert::class.java)?.itemAdividir.toString()
+                            val valorIACompartilhar = it.getValue<ItemDividirAlert>(ItemDividirAlert::class.java)?.itemValor.toString()
 
-                                }
-                                .setNegativeButton("Não") { _, _ ->
-                                    Toast.makeText(this@ContaActivity,"Ok, não será dividido!",Toast.LENGTH_SHORT).show()
-                                }
-                                .setNeutralButton("Cancelar") {_, _ ->
-                                    Toast.makeText(this@ContaActivity,"Operação cancelada",Toast.LENGTH_SHORT).show()
-                                }
-                        val alert = dialogBuilder.create()
-                        alert.setTitle("Compartilhar Item?")
-                        alert.show()
+                            dialogBuilder.setMessage("${solicitanteCompart} gostaria de compartilhar o valor de ${valorIACompartilhar} referente ao item ${itemACompartilhar}. Aceita compartilhar esse item?")
+                                    .setCancelable(false)
+                                    .setPositiveButton("Sim") { _, _ ->
+                                    //aí fudeu!
 
+                                        val itemListener = object : ValueEventListener {
+                                            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                                                var contaADVSol: Conta? = null
+                                                var contaADVAceitou: Conta? = null
+                                                var TS1: String? = null
+                                                var TS2: String? = null
+                                                val toReturn: ArrayList<Conta> = ArrayList();
+                                                for (data in dataSnapshot.children) {
+                                                    val contaData = data.getValue<Conta>(Conta::class.java)
+                                                    val ts = data.getValue<Conta>(Conta::class.java)?.timestamp
+                                                    val newTs = System.currentTimeMillis().toString()
+                                                    //abrindo a bagaça
+                                                    val conta = contaData?.let { it } ?: continue
+                                                    //encontrando o item
+                                                    if ((conta.quem == solicitanteCompart)
+                                                            && (conta.quanto.toString() == valorIACompartilhar)
+                                                            && (conta.oque == itemACompartilhar)
+                                                            && (conta.mesa == txtMesaConta.text.toString())) {
+                                                        //dividir o valor e criar "a metade" do item para cada um dos dois que dividiram o item
+                                                        val itemADVDouble = conta.quanto?.toDouble()
+                                                        val divValor: Double? = itemADVDouble?.div(2)
+                                                        TS1 = System.currentTimeMillis().toString()
+                                                        contaADVSol = Conta(solicitanteCompart,itemACompartilhar, divValor?.toInt(),TS1,txtMesaConta.text.toString())
+                                                        TS2 =(System.currentTimeMillis()+1).toString()
+                                                        contaADVAceitou = Conta(destinoCompart,itemACompartilhar, divValor?.toInt(),TS2,txtMesaConta.text.toString())
+                                                        Toast.makeText(applicationContext, divValor.toString(), Toast.LENGTH_SHORT).show()
+                                                        if (ts != null) {
+                                                            mDatabaseReference?.child(pathStr)?.child(ts)?.removeValue()
+                                                        }
+                                                    }
+                                                }
+                                                //inserindo a conta dividida como duas novas contas no FBase
+                                                if (TS1 != null) {
+                                                    mDatabaseReference?.child(pathStr)?.child(TS1)?.setValue(contaADVSol)
+                                                }
+                                                if (TS2 != null) {
+                                                    mDatabaseReference?.child(pathStr)?.child(TS2)?.setValue(contaADVAceitou)
+                                                }
+                                                //remover o item dos itens a dividir
+                                                mDatabaseReference!!.child("itemADividir").child(id).removeValue()
+                                            }
+                                        override fun onCancelled(databaseError: DatabaseError) {
+                                            //log error
+                                        }
+                                    }
+                            mDatabaseReference?.child(pathStr)?.addListenerForSingleValueEvent(itemListener)
 
-                        //txtMembros.append("${it.getValue<MembrosMesa>(MembrosMesa::class.java)?.membro.toString()}\n")
+                                    }
+                                    .setNegativeButton("Não") { _, _ ->
+                                        mDatabaseReference?.child("itemADividir")?.child(id)?.child("status")?.setValue("Negado")
+                                        it.getValue<ItemDividirAlert>(ItemDividirAlert::class.java)?.status = "Negado"
+                                        //checar se há mais itens
+                                        checkItensACompartilhar()
+                                        Toast.makeText(this@ContaActivity, "Ok, não será dividido!", Toast.LENGTH_SHORT).show()
+                                    }
+                                    .setNeutralButton("Cancelar") { _, _ ->
+                                        Toast.makeText(this@ContaActivity, "Operação cancelada", Toast.LENGTH_SHORT).show()
+                                    }
+                            val alert = dialogBuilder.create()
+                            alert.setTitle("Compartilhar Item?")
+                            alert.show()
+                        }
+                        //se a resposta for negativa, apresentar para quem pediu o resultado negativo
+                        if ((it.getValue<ItemDividirAlert>(ItemDividirAlert::class.java)?.status.toString() == "Negado")
+                                &&
+                                it.getValue<ItemDividirAlert>(ItemDividirAlert::class.java)?.userOrigem.toString() == user
+                                &&
+                                it.getValue<ItemDividirAlert>(ItemDividirAlert::class.java)?.userDestino.toString() != user){
+                            val id = it.getValue<ItemDividirAlert>(ItemDividirAlert::class.java)?.id.toString()
+                            val dialogBuilder = AlertDialog.Builder(this@ContaActivity)
+                            val solicitanteCompart = it.getValue<ItemDividirAlert>(ItemDividirAlert::class.java)?.userDestino.toString()
+                            val itemACompartilhar = it.getValue<ItemDividirAlert>(ItemDividirAlert::class.java)?.itemAdividir.toString()
+                            val valorIACompartilhar = it.getValue<ItemDividirAlert>(ItemDividirAlert::class.java)?.itemValor.toString()
+
+                            dialogBuilder.setMessage("${solicitanteCompart} recusou compartilhar  ${itemACompartilhar} no valor de ${valorIACompartilhar}. Se vira aí!")
+                                    .setCancelable(false)
+                                    .setPositiveButton("Ok") { _, _ ->
+                                        //remover item dos itens a compartilhar
+                                        mDatabaseReference?.child("itemADividir")?.child(id)?.removeValue()
+
+                                    }
+
+                            val alert = dialogBuilder.create()
+                            alert.setTitle("Compartilhamento Negado!")
+                            alert.show()
+
+                    }
                     }
                 }
             }
@@ -278,7 +361,7 @@ class ContaActivity : AppCompatActivity() {
                             for(data in dataSnapshot.children){
                                 val contaData = data.getValue<Conta>(Conta::class.java)
                                 val ts = data.getValue<Conta>(Conta::class.java)?.timestamp
-                                //unwrap
+                                //abrindo
                                 val conta = contaData?.let { it } ?: continue
                                 //montando o array removendo os itens de quem está finalizando a comanda
                                 if(conta.quem == user) {
@@ -300,7 +383,7 @@ class ContaActivity : AppCompatActivity() {
                             //Toast.makeText(this@ContaActivity," ${totalConta}  a pagar",Toast.LENGTH_SHORT).show()
                             //criar um grupo no Fbase aPagar de quem já fechou e seus valores
                             user?.let { aPagar(it,totalConta) }
-                            //sort so newest at bottom
+                            //ordenando o mais novo no final
                             toReturn.sortBy { conta ->
                                 conta.timestamp
                             }
@@ -455,11 +538,11 @@ class ContaActivity : AppCompatActivity() {
                 val toReturn: ArrayList<Conta> = ArrayList();
                 for(data in dataSnapshot.children){
                     val contaData = data.getValue<Conta>(Conta::class.java)
-                    //unwrap
+                    //abrindo
                     val conta = contaData?.let { it } ?: continue
                     toReturn.add(conta)
                 }
-                //sort so newest at bottom
+                //ordenando o mais novo no final
                 toReturn.sortBy { conta ->
                     conta.timestamp
                 }
@@ -479,12 +562,12 @@ class ContaActivity : AppCompatActivity() {
                 val toReturn: ArrayList<Conta> = ArrayList();
                 for(data in dataSnapshot.children){
                     val contaData = data.getValue<Conta>(Conta::class.java)
-                    //unwrap
+                    //abrindo
                     val conta = contaData?.let { it } ?: continue
                     //montando o array
                     toReturn.add(conta)
                 }
-                //sort so newest at bottom
+                //ordenando o mais novo no final
                 toReturn.sortBy { conta ->
                     conta.timestamp
                 }
@@ -576,7 +659,7 @@ class ContaActivity : AppCompatActivity() {
 
                 for(data in dataSnapshot.children){
                     val contaData = data.getValue<Conta>(Conta::class.java)
-                    //unwrap
+                    //abrindo
                     val conta = contaData?.let { it } ?: continue
                     //montando o array
                     if(item.timestamp != conta.timestamp) {
@@ -587,7 +670,7 @@ class ContaActivity : AppCompatActivity() {
                         Toast.makeText(applicationContext," ${conta.oque} removido",Toast.LENGTH_SHORT).show()
                     }
                 }
-                //sort so newest at bottom
+                //ordenando o mais novo no final
                 toReturn.sortBy { conta ->
                     conta.timestamp
                 }
