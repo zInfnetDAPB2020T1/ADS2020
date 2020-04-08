@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/quantum_white_100"
+    android:background="@android:color/white"
+    android:fitsSystemWindows="true"
     tools:context=".mesas.activity.MesaChatActivity">
 
     <TextView
@@ -69,12 +70,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginLeft="@dimen/places_autocomplete_prediction_horizontal_margin"
+        android:layout_marginStart="@dimen/places_autocomplete_prediction_horizontal_margin"
+        android:layout_marginLeft="28dp"
         android:orientation="horizontal"
         android:weightSum="10"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent">
 
 
@@ -83,6 +85,7 @@
             android:layout_width="308dp"
             android:layout_height="wrap_content"
             android:autofillHints=""
+            android:fitsSystemWindows="true"
             android:hint="Enter text to send..."
             android:inputType="text" />
 
@@ -91,6 +94,7 @@
             android:id="@+id/btnEnviarMsg"
             android:layout_width="52dp"
             android:layout_height="match_parent"
+            android:layout_marginRight="@dimen/places_autocomplete_powered_by_google_start"
             android:layout_weight="2"
             android:contentDescription="Botão para enviar mensagem"
             android:src="@android:drawable/ic_menu_send" />

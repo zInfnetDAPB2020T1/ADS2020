@@ -86,7 +86,7 @@ class MesaChatActivity : AppCompatActivity() {
         val postListener = object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 val toReturn: ArrayList<Message> = ArrayList()
-                var newMessage: Message? = null
+                var newMessage: Message?
                 for(data in dataSnapshot.children){
                     val messageData = data.getValue<Message>(Message::class.java)
                     //abrir

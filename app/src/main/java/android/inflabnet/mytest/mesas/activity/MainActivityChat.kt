@@ -41,10 +41,10 @@ class MainActivityChat : AppCompatActivity() {
     }
 
     //enviar dados para firebase
-    private fun sendData(){
+    private fun sendData(): String? {
         //pegar o usuário
         val userEmail = mAuth?.currentUser?.email
-        val user: String
+        var user: String? = null
         if (userEmail != null) {
             if (userEmail.contains("@")) {
                 user =
@@ -64,6 +64,7 @@ class MainActivityChat : AppCompatActivity() {
 
         //limpar a entrada de dados
         mainActivityEditText.setText("")
+        return user
     }
 
     private fun createFirebaseListener(){

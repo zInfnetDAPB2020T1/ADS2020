@@ -91,6 +91,7 @@ class MesaActivity : AppCompatActivity() {
                 toReturn.sortBy { mesa ->
                     mesa.timestamp
                 }
+                note_list_progress.visibility = View.GONE
                 setupMesaAdapter(toReturn)
             }
             override fun onCancelled(databaseError: DatabaseError) {
@@ -108,7 +109,7 @@ class MesaActivity : AppCompatActivity() {
         //scroll to bottom
 
         mesaRecyclerView.scrollToPosition(data.size - 1)
-        note_list_progress.visibility = View.GONE
+
     }
     private fun act (data : Mesa) : Unit {
         //Toast.makeText(this, "${data.nameMesa} clicked", Toast.LENGTH_SHORT).show()

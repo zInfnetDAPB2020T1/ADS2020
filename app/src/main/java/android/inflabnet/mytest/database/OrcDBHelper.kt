@@ -27,12 +27,12 @@ class OrcDBHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, n
     @Throws(SQLiteConstraintException::class)
     fun insertOrcamento(orcamento: String): Boolean {
         // Gets the data repository in write mode
-        val db = writableDatabase
+        //val db = writableDatabase
         // Create a new map of values, where column names are the keys
         val values = ContentValues()
         values.put(DBContract.OsOrcamentos.COLUMN_VALOR, orcamento)
         // Insert the new row, returning the primary key value of the new row
-        val newRowId = db.insert(DBContract.OsOrcamentos.TABLE_NAME, null, values)
+        //val newRowId = db.insert(DBContract.OsOrcamentos.TABLE_NAME, null, values)
 
         return true
     }
@@ -40,7 +40,7 @@ class OrcDBHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, n
     fun readOrcamentos(): ArrayList<String> {
         val orcamentos = ArrayList<String>()
         val db = writableDatabase
-        var cursor: Cursor? = null
+        var cursor: Cursor?
         try {
             cursor = db.rawQuery("select * from " + DBContract.OsOrcamentos.TABLE_NAME, null)
         } catch (e: SQLiteException) {

@@ -27,29 +27,25 @@ class MessageAdapter (val messages: ArrayList<Message>, val itemClick: (Message)
         fun bindForecast(message: Message) {
             with(message) {
                 if(message.self == false) {
-                    itemView.txtUserChat.text = message.userChat
-                    itemView.messageAdapterMessageItem.text = message.text
+                    itemView.msgOutrosQuem.text = message.userChat
+                    itemView.msgOutros.text = message.text
                     //itemView.setOnClickListener { itemClick(this) }
-                    itemView.txtUserChat.visibility = View.VISIBLE
-                    itemView.messageAdapterMessageItem.visibility = View.VISIBLE
-                    itemView.txtSelf.visibility = View.GONE
-                    itemView.txtSelMessage.visibility = View.GONE
-                    itemView.cView1.visibility = View.GONE
-                    itemView.cView2.visibility = View.GONE
-                    itemView.cView3.visibility = View.VISIBLE
-                    itemView.cView4.visibility = View.VISIBLE
+                    itemView.msgOutrosQuem.visibility = View.VISIBLE
+                    itemView.msgOutros.visibility = View.VISIBLE
+                    itemView.msgMeu.visibility = View.GONE
+                    itemView.txtMsgMeu.visibility = View.GONE
+                    itemView.textView28.visibility = View.VISIBLE
+                    itemView.textView27.visibility = View.GONE
                 }else{
-                    itemView.txtSelf.text = message.userChat
-                    itemView.txtSelMessage.text = message.text
+                    itemView.msgMeu.text = message.userChat
+                    itemView.txtMsgMeu.text = message.text
                     //itemView.setOnClickListener { itemClick(this) }
-                    itemView.txtUserChat.visibility = View.GONE
-                    itemView.messageAdapterMessageItem.visibility = View.GONE
-                    itemView.txtSelf.visibility = View.VISIBLE
-                    itemView.txtSelMessage.visibility = View.VISIBLE
-                    itemView.cView1.visibility = View.VISIBLE
-                    itemView.cView2.visibility = View.VISIBLE
-                    itemView.cView3.visibility = View.GONE
-                    itemView.cView4.visibility = View.GONE
+                    itemView.msgOutrosQuem.visibility = View.GONE
+                    itemView.msgOutros.visibility = View.GONE
+                    itemView.msgMeu.visibility = View.VISIBLE
+                    itemView.txtMsgMeu.visibility = View.VISIBLE
+                    itemView.textView28.visibility = View.GONE
+                    itemView.textView27.visibility = View.VISIBLE
             }
             }
         }

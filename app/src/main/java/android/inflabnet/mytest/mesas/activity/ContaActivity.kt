@@ -295,8 +295,7 @@ class ContaActivity : AppCompatActivity() {
                                                 for (data in dataSnapshot.children) {
                                                     val contaData = data.getValue<Conta>(Conta::class.java)
                                                     val ts = data.getValue<Conta>(Conta::class.java)?.timestamp
-                                                    val newTs = System.currentTimeMillis().toString()
-                                                    //abrindo a bagaça
+                                                     //abrindo a bagaça
                                                     val conta = contaData?.let { it } ?: continue
                                                     //encontrando o item
                                                     if ((conta.quem == solicitanteCompart)
@@ -616,7 +615,7 @@ class ContaActivity : AppCompatActivity() {
     }
     //colocar os Txts de valores da conta
     private fun setupTxtView(data: ArrayList<Conta>){
-        var orcStr: String? = null
+        var orcStr: String?
         orcStr = try{
             orcaDBHelper.readOrcamentos().last()
         }catch (e: Exception){
