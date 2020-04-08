@@ -13,5 +13,6 @@
     <string name="login_title">Login</string>
     <string name="create_act">Criar Conta</string>
     <string name="google_maps_key"></string>
+    <string name="cadastrar_nova_mesa">Cadastrar Nova Mesa:</string>
 
 </resources>

@@ -10,7 +10,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".mesas.activity.ContaActivity"/>
-        <activity android:name=".mesas.activity.MesaChatActivity" />
+        <activity android:name=".mesas.activity.MesaChatActivity"
+            android:windowSoftInputMode="adjustResize"/>
         <activity android:name=".mesas.activity.MesaActivity">
 
         </activity>

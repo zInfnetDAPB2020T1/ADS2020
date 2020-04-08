@@ -1,5 +1,6 @@
 package android.inflabnet.mytest.mesas.activity
 
+import android.content.Context
 import android.content.Intent
 import android.inflabnet.mytest.R
 import android.inflabnet.mytest.mesas.adapter.MessageAdapter
@@ -8,6 +9,7 @@ import android.inflabnet.mytest.mesas.model.Message
 import android.inflabnet.mytest.login.LoginActivity
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.auth.FirebaseAuth
@@ -79,6 +81,9 @@ class MesaChatActivity : AppCompatActivity() {
         }
         //limpar a entrada de dados
         mainChatEditText2.setText("")
+        // Hide the keyboard.
+        val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.hideSoftInputFromWindow(btnEnviarMsg.windowToken, 0)
     }
 
     //listener para colocar as mensagens na tela

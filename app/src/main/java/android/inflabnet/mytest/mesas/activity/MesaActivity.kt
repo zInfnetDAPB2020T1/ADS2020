@@ -7,10 +7,14 @@ import android.inflabnet.mytest.mesas.model.MembrosMesa
 import android.inflabnet.mytest.mesas.model.Mesa
 import android.inflabnet.mytest.mesas.model.MesaData
 import android.inflabnet.mytest.mesas.model.User
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
@@ -24,6 +28,7 @@ class MesaActivity : AppCompatActivity() {
     private var mDatabase: FirebaseDatabase? = null
     private var mAuth: FirebaseAuth? = null
 
+    @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_mesa)
@@ -33,8 +38,60 @@ class MesaActivity : AppCompatActivity() {
         //mDatabaseReference = mDatabase!!.reference.child("mesas")
         mDatabaseReference = mDatabase!!.reference
         criarMesa()
-        btnCriarMesa.setOnClickListener {cadastrarMesa() }
+        btnCriarMesa.setOnClickListener { cadastrarMesa() }
 
+        //autocomplete
+        note_list_progress.visibility = View.VISIBLE
+        val toReturn: ArrayList<Mesa> = arrayListOf()
+        val postListener = object : ValueEventListener {
+
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+
+                for (data in dataSnapshot.children) {
+                    val mesaData = data.getValue<Mesa>(Mesa::class.java)
+                    //unwrap
+                    val mesa = mesaData?.let { it } ?: continue
+                    mesa?.let { toReturn.add(it) }
+                }
+                note_list_progress.visibility = View.GONE
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                //log error
+            }
+        }
+        mDatabaseReference?.child("Mesas")?.addValueEventListener(postListener)
+
+        val adapter = ArrayAdapter<Mesa>(this, android.R.layout.simple_expandable_list_item_1, toReturn)
+        ACTVMesas.setAdapter(adapter)
+        ACTVMesas.threshold = 1
+        ACTVMesas.text.toString()
+
+        ACTVMesas.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
+            val selectedItem = parent.getItemAtPosition(position) as Mesa
+
+            //Toast.makeText(applicationContext, "Mesa : $selectedItem", Toast.LENGTH_SHORT).show()
+            val intt = Intent(this, ContaActivity::class.java)
+            val mesaData = MesaData(selectedItem.nameMesa.toString(),selectedItem.proprietarioMesa.toString())
+            intt.putExtra("mesa",mesaData)
+            startActivity(intt)
+        }
+        // Fecha o autocomplite
+        ACTVMesas.setOnDismissListener {
+            //Toast.makeText(applicationContext, "Sugestões fechadas", Toast.LENGTH_SHORT).show()
+        }
+        // Listener do layout
+        rootLL.setOnClickListener {
+            val text = ACTVMesas.text
+            Toast.makeText(applicationContext, "Entrado : $text", Toast.LENGTH_SHORT).show()
+        }
+        // Listender para mudança de foco
+        ACTVMesas.onFocusChangeListener = View.OnFocusChangeListener { view, b ->
+            if (b) {
+                // Display the suggestion dropdown on focus
+                ACTVMesas.showDropDown()
+            }
+        }
     }
 
     private fun cadastrarMesa(){
