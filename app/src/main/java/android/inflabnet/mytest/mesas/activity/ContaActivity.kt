@@ -217,11 +217,50 @@ class ContaActivity : AppCompatActivity() {
 
             override fun onDataChange(p0: DataSnapshot) {
                 checkItensACompartilhar()
+                checkItensACompartilharNegados()
             }
 
 
         }
         mDatabaseReference!!.child("itemADividir").addValueEventListener(iadListener)
+    }
+
+    private fun checkItensACompartilharNegados() {
+        val negadosListener = object : ValueEventListener {
+            override fun onCancelled(p0: DatabaseError) {
+                Toast.makeText(applicationContext,"Erro DB",Toast.LENGTH_SHORT).show ()
+            }
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                dataSnapshot.children.forEach{
+                    if ((it.getValue<ItemDividirAlert>(ItemDividirAlert::class.java)?.status.toString() == "Negado")
+                            &&
+                            it.getValue<ItemDividirAlert>(ItemDividirAlert::class.java)?.userOrigem.toString() == user
+                            &&
+                            it.getValue<ItemDividirAlert>(ItemDividirAlert::class.java)?.userDestino.toString() != user){
+                        val id = it.getValue<ItemDividirAlert>(ItemDividirAlert::class.java)?.id.toString()
+                        val dialogBuilder = AlertDialog.Builder(this@ContaActivity)
+                        val solicitanteCompart = it.getValue<ItemDividirAlert>(ItemDividirAlert::class.java)?.userDestino.toString()
+                        val itemACompartilhar = it.getValue<ItemDividirAlert>(ItemDividirAlert::class.java)?.itemAdividir.toString()
+                        val valorIACompartilhar = it.getValue<ItemDividirAlert>(ItemDividirAlert::class.java)?.itemValor.toString()
+
+                        dialogBuilder.setMessage("${solicitanteCompart} recusou compartilhar  ${itemACompartilhar} no valor de ${valorIACompartilhar}. Se vira aí!")
+                                .setCancelable(false)
+                                .setPositiveButton("Ok") { _, _ ->
+                                    //remover item dos itens a compartilhar
+                                    mDatabaseReference?.child("itemADividir")?.child(id)?.removeValue()
+
+                                }
+
+                        val alert = dialogBuilder.create()
+                        alert.setTitle("Compartilhamento Negado!")
+                        alert.show()
+                    }
+                }
+
+            }
+
+        }
+        mDatabaseReference!!.child("itemADividir").addListenerForSingleValueEvent(negadosListener)
     }
 
     //chamada a partir de itemADividirListener() , verifica no banco se há requisição ("Pergunta") para dividir item
@@ -245,14 +284,14 @@ class ContaActivity : AppCompatActivity() {
                             dialogBuilder.setMessage("${solicitanteCompart} gostaria de compartilhar o valor de ${valorIACompartilhar} referente ao item ${itemACompartilhar}. Aceita compartilhar esse item?")
                                     .setCancelable(false)
                                     .setPositiveButton("Sim") { _, _ ->
-                                    //aceitou compartilhar
+                                    //aceitou compartilhar, vai varrer as contas para pegar os itens
                                         val itemListener = object : ValueEventListener {
                                             override fun onDataChange(dataSnapshot: DataSnapshot) {
                                                 var contaADVSol: Conta? = null
                                                 var contaADVAceitou: Conta? = null
                                                 var TS1: String? = null
                                                 var TS2: String? = null
-                                                val toReturn: ArrayList<Conta> = ArrayList();
+                                                //val toReturn: ArrayList<Conta> = ArrayList();
                                                 for (data in dataSnapshot.children) {
                                                     val contaData = data.getValue<Conta>(Conta::class.java)
                                                     val ts = data.getValue<Conta>(Conta::class.java)?.timestamp
@@ -287,16 +326,22 @@ class ContaActivity : AppCompatActivity() {
                                                 //remover o item dos itens a dividir
                                                 mDatabaseReference!!.child("itemADividir").child(id).removeValue()
                                             }
-                                        override fun onCancelled(databaseError: DatabaseError) {
-                                            //log error
+                                            override fun onCancelled(databaseError: DatabaseError) {
+                                            Toast.makeText(applicationContext,"Erro de conexão com o DB", Toast.LENGTH_SHORT).show()
                                         }
-                                    }
-                            mDatabaseReference?.child("Conta")?.child(pathStr)?.addListenerForSingleValueEvent(itemListener)
+                                        }
+                                        mDatabaseReference?.child("Conta")?.child(pathStr)?.addListenerForSingleValueEvent(itemListener)
 
                                     }
                                     .setNegativeButton("Não") { _, _ ->
                                         mDatabaseReference?.child("itemADividir")?.child(id)?.child("status")?.setValue("Negado")
                                         it.getValue<ItemDividirAlert>(ItemDividirAlert::class.java)?.status = "Negado"
+                                        it.getValue<ItemDividirAlert>(ItemDividirAlert::class.java)?.itemAdividir = itemACompartilhar
+                                        it.getValue<ItemDividirAlert>(ItemDividirAlert::class.java)?.id = id
+                                        it.getValue<ItemDividirAlert>(ItemDividirAlert::class.java)?.userOrigem = solicitanteCompart
+                                        it.getValue<ItemDividirAlert>(ItemDividirAlert::class.java)?.userDestino = destinoCompart
+                                        it.getValue<ItemDividirAlert>(ItemDividirAlert::class.java)?.mesaIAD = txtMesaConta.text.toString()
+                                        it.getValue<ItemDividirAlert>(ItemDividirAlert::class.java)?.itemValor = valorIACompartilhar
                                         //checar se há mais itens
                                         checkItensACompartilhar()
                                         Toast.makeText(this@ContaActivity, "Ok, não será dividido!", Toast.LENGTH_SHORT).show()
@@ -308,31 +353,7 @@ class ContaActivity : AppCompatActivity() {
                             alert.setTitle("Compartilhar Item?")
                             alert.show()
                         }
-                        //se a resposta for negativa, apresentar para quem pediu o resultado negativo
-                        if ((it.getValue<ItemDividirAlert>(ItemDividirAlert::class.java)?.status.toString() == "Negado")
-                                &&
-                                it.getValue<ItemDividirAlert>(ItemDividirAlert::class.java)?.userOrigem.toString() == user
-                                &&
-                                it.getValue<ItemDividirAlert>(ItemDividirAlert::class.java)?.userDestino.toString() != user){
-                            val id = it.getValue<ItemDividirAlert>(ItemDividirAlert::class.java)?.id.toString()
-                            val dialogBuilder = AlertDialog.Builder(this@ContaActivity)
-                            val solicitanteCompart = it.getValue<ItemDividirAlert>(ItemDividirAlert::class.java)?.userDestino.toString()
-                            val itemACompartilhar = it.getValue<ItemDividirAlert>(ItemDividirAlert::class.java)?.itemAdividir.toString()
-                            val valorIACompartilhar = it.getValue<ItemDividirAlert>(ItemDividirAlert::class.java)?.itemValor.toString()
 
-                            dialogBuilder.setMessage("${solicitanteCompart} recusou compartilhar  ${itemACompartilhar} no valor de ${valorIACompartilhar}. Se vira aí!")
-                                    .setCancelable(false)
-                                    .setPositiveButton("Ok") { _, _ ->
-                                        //remover item dos itens a compartilhar
-                                        mDatabaseReference?.child("itemADividir")?.child(id)?.removeValue()
-
-                                    }
-
-                            val alert = dialogBuilder.create()
-                            alert.setTitle("Compartilhamento Negado!")
-                            alert.show()
-
-                    }
                     }
                 }
             }
@@ -342,7 +363,6 @@ class ContaActivity : AppCompatActivity() {
         }
         mDatabaseReference!!.child("itemADividir").addListenerForSingleValueEvent(alertListener)
     }
-
 
     //não precisa falar. Ok pega o usuário que está logado
     private fun pegarUser(){
