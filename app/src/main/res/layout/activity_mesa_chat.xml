@@ -58,6 +58,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="4dp"
+        android:layout_marginRight="2dp"
         app:layout_constraintBottom_toTopOf="@+id/mainActivityTextContainer"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -70,13 +71,11 @@
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/mainActivityRecyclerView"
-                android:layout_width="match_parent"
+                android:layout_width="373dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:layout_marginLeft="16dp"
                 android:layout_marginTop="16dp"
-                android:layout_marginEnd="27dp"
-                android:layout_marginRight="27dp" />
+                android:layout_marginEnd="27dp" />
 
             <TextView
                 android:layout_width="match_parent"

@@ -39,7 +39,18 @@ class MesaActivity : AppCompatActivity() {
         mDatabaseReference = mDatabase!!.reference
         criarMesa()
         btnCriarMesa.setOnClickListener { cadastrarMesa() }
+        ACTVMesas.setOnClickListener { setACTVMesas() }
+    }
 
+
+    @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
+    override fun onResume() {
+        super.onResume()
+        setACTVMesas()
+    }
+
+    @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
+    private fun setACTVMesas(){
         //autocomplete
         note_list_progress.visibility = View.VISIBLE
         val toReturn: ArrayList<Mesa> = arrayListOf()
@@ -93,6 +104,7 @@ class MesaActivity : AppCompatActivity() {
             }
         }
     }
+
 
     private fun cadastrarMesa(){
             if (etNomeMesa.text.toString().isNotEmpty()){

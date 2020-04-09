@@ -19,7 +19,7 @@
             style="@android:style/Widget.DeviceDefault.Light.ProgressBar.Horizontal"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="-7dp"
+            android:layout_marginTop="-5dp"
             android:backgroundTint="@color/colorPrimary"
             android:indeterminate="true"
             android:indeterminateTint="#1a09d6"

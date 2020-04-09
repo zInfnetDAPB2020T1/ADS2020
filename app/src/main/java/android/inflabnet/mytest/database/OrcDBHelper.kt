@@ -27,18 +27,18 @@ class OrcDBHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, n
     @Throws(SQLiteConstraintException::class)
     fun insertOrcamento(orcamento: String): Boolean {
         // Gets the data repository in write mode
-        //val db = writableDatabase
+        val db = writableDatabase
         // Create a new map of values, where column names are the keys
         val values = ContentValues()
         values.put(DBContract.OsOrcamentos.COLUMN_VALOR, orcamento)
         // Insert the new row, returning the primary key value of the new row
-        //val newRowId = db.insert(DBContract.OsOrcamentos.TABLE_NAME, null, values)
+        val newRowId = db.insert(DBContract.OsOrcamentos.TABLE_NAME, null, values)
 
         return true
     }
 
-    fun readOrcamentos(): ArrayList<String> {
-        val orcamentos = ArrayList<String>()
+    fun readOrcamentos(): String {
+        var orc = String()
         val db = writableDatabase
         var cursor: Cursor?
         try {
@@ -46,19 +46,31 @@ class OrcDBHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, n
         } catch (e: SQLiteException) {
             // if table not yet present, create it
             db.execSQL(SQL_CREATE_ENTRIES)
-            return ArrayList()
+            return orc
         }
 
-        var orc: String
 
         if (cursor!!.moveToFirst()) {
-            while (cursor.isAfterLast == false) {
+            while (!cursor.isAfterLast) {
                 orc = cursor.getString(cursor.getColumnIndex(DBContract.OsOrcamentos.COLUMN_VALOR))
-                orcamentos.add(orc)
                 cursor.moveToNext()
             }
         }
-        return orcamentos
+        return orc
+    }
+    @Throws(SQLiteConstraintException::class)
+    fun deleteOrcamento(): Boolean {
+        // Gets the data repository in write mode
+        val db = writableDatabase
+        // Define 'where' part of query.
+        //val selection = DBContract.OsOrcamentos.COLUMN_VALOR + " LIKE ?"
+        val selection = DBContract.OsOrcamentos.COLUMN_VALOR
+        // Specify arguments in placeholder order.
+        //val selectionArgs = arrayOf(orc)
+        // Issue SQL statement.
+        db.delete(DBContract.OsOrcamentos.TABLE_NAME, null, null)
+
+        return true
     }
     companion object {
         // If you change the database schema, you must increment the database version.

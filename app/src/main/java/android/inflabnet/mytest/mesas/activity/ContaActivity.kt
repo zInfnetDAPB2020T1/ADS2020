@@ -617,7 +617,7 @@ class ContaActivity : AppCompatActivity() {
     private fun setupTxtView(data: ArrayList<Conta>){
         var orcStr: String?
         orcStr = try{
-            orcaDBHelper.readOrcamentos().last()
+            orcaDBHelper.readOrcamentos().toString()
         }catch (e: Exception){
             "500000.0"
         }
@@ -642,8 +642,8 @@ class ContaActivity : AppCompatActivity() {
             txtTotEu.text = totEu.toString()
         }
         val percentage = (totEu/ orcamento) *100.0
-        //Toast.makeText(this,"totEu: ${totEu.toString()}",Toast.LENGTH_SHORT).show()
-        // Toast.makeText(this,"orcamento: ${orcamento.toString()}",Toast.LENGTH_SHORT).show()
+            //Toast.makeText(this,"Percentagem: ${percentage}",Toast.LENGTH_SHORT).show()
+            //Toast.makeText(this,"orcamento: ${orcamento}",Toast.LENGTH_SHORT).show()
         if (percentage < 75.0){
             txtTotEu.setTextColor(ContextCompat.getColor(applicationContext, R.color.green))
             txtTotEuText.setTextColor(ContextCompat.getColor(applicationContext, R.color.green))
