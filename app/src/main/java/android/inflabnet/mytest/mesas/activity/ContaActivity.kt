@@ -341,9 +341,9 @@ class ContaActivity : AppCompatActivity() {
                                         it.getValue<ItemDividirAlert>(ItemDividirAlert::class.java)?.userDestino = destinoCompart
                                         it.getValue<ItemDividirAlert>(ItemDividirAlert::class.java)?.mesaIAD = txtMesaConta.text.toString()
                                         it.getValue<ItemDividirAlert>(ItemDividirAlert::class.java)?.itemValor = valorIACompartilhar
-                                        //checar se há mais itens
-                                        checkItensACompartilhar()
                                         Toast.makeText(this@ContaActivity, "Ok, não será dividido!", Toast.LENGTH_SHORT).show()
+                                        //verificar se é melhor colocar fora do alerdialog - depois do ondatachange checar se há mais itens
+                                        checkItensACompartilhar()
                                     }
                                     .setNeutralButton("Cancelar") { _, _ ->
                                         Toast.makeText(this@ContaActivity, "Operação cancelada", Toast.LENGTH_SHORT).show()

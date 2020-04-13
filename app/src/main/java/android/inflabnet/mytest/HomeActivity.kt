@@ -35,7 +35,10 @@ class HomeActivity : AppCompatActivity() {
     }
 
     fun upToken(){
-        val userToken = pegarUser()
+        var userToken = pegarUser()
+        if (userToken != null) {
+            userToken = userToken.replace(".","")
+        }
         //val token = pegaToken()
         //atiualizar firebase com o nome do user e token
         //referencia do caminho
@@ -45,7 +48,7 @@ class HomeActivity : AppCompatActivity() {
         //montar o objeto
         val userTk = userToken?.let { token?.let { it1 -> UserTokens(it, it1,tkTimestamp) } }
         if (userToken != null) {
-            dbRefe.child("UserTokens").child(tkTimestamp).setValue(userTk)
+            dbRefe.child("UserTokens").child(userToken).setValue(userTk)
         }
     }
 
