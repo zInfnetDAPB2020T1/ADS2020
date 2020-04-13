@@ -45,7 +45,7 @@ class HomeActivity : AppCompatActivity() {
         //montar o objeto
         val userTk = userToken?.let { token?.let { it1 -> UserTokens(it, it1,tkTimestamp) } }
         if (userToken != null) {
-            dbRefe.child("UserTokens").child(userToken).setValue(userTk)
+            dbRefe.child("UserTokens").child(tkTimestamp).setValue(userTk)
         }
     }
 
