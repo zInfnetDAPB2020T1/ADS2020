@@ -12,7 +12,9 @@ import android.view.View
 import android.view.WindowManager
 import android.widget.ProgressBar
 import android.widget.Toast
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.iid.FirebaseInstanceId
 import kotlinx.android.synthetic.main.activity_login.*
 
 class LoginActivity : AppCompatActivity() {
@@ -23,11 +25,13 @@ class LoginActivity : AppCompatActivity() {
     private var password: String? = null
     //Firebase references
     private var mAuth: FirebaseAuth? = null
+    private var token: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
         initialise()
+        getToken()
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
 
     }
@@ -66,22 +70,41 @@ class LoginActivity : AppCompatActivity() {
                 .addOnCompleteListener(this) { task ->
                     progressbar.visibility = View.GONE
                     if (task.isSuccessful) {
-                        // Sign in success, update UI with signed-in user's information
-                        Log.d(TAG, "signInWithEmail:success")
+                        // Sucesso na autenticação
+
+                        Log.d(TAG, "Sucesso na autenticação")
                         updateUI()
                     } else {
-                        // If sign in fails, display a message to the user.
-                        Log.e(TAG, "signInWithEmail:failure", task.exception)
+                        //Se a autenticação falhou, envia mensagem para usuário
+                        Log.e(TAG, "Acesso com email falhou", task.exception)
                         Toast.makeText(this@LoginActivity, "Falha de autenticação!",
                             Toast.LENGTH_SHORT).show()
                     }
                 }
         } else {
-            Toast.makeText(this, "Enter all details", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Entre todos os detalhes", Toast.LENGTH_SHORT).show()
         }
     }
+
+    private fun getToken() {
+        FirebaseInstanceId.getInstance().instanceId
+                .addOnCompleteListener(OnCompleteListener { task ->
+                    if (!task.isSuccessful) {
+                        Log.w(TAG, "getInstanceId failed", task.exception)
+                        return@OnCompleteListener
+                    }
+
+                    // Get new Instance ID token
+                    token = task.result?.token
+
+                    //Toast.makeText(this, "Token ${token}", Toast.LENGTH_SHORT).show()
+                })
+    }
+
     private fun updateUI() {
         val intent = Intent(this@LoginActivity, HomeActivity::class.java)
+        //Toast.makeText(baseContext, "Token ${token}", Toast.LENGTH_SHORT).show()
+        intent.putExtra("token",token)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         startActivity(intent)
     }

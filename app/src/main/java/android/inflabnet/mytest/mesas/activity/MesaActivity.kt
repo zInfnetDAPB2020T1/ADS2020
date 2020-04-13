@@ -42,7 +42,6 @@ class MesaActivity : AppCompatActivity() {
         ACTVMesas.setOnClickListener { setACTVMesas() }
     }
 
-
     @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     override fun onResume() {
         super.onResume()
@@ -62,7 +61,7 @@ class MesaActivity : AppCompatActivity() {
                     val mesaData = data.getValue<Mesa>(Mesa::class.java)
                     //unwrap
                     val mesa = mesaData?.let { it } ?: continue
-                    mesa?.let { toReturn.add(it) }
+                    mesa.let { toReturn.add(it) }
                 }
                 note_list_progress.visibility = View.GONE
             }
@@ -104,7 +103,6 @@ class MesaActivity : AppCompatActivity() {
             }
         }
     }
-
 
     private fun cadastrarMesa(){
             if (etNomeMesa.text.toString().isNotEmpty()){
@@ -176,18 +174,15 @@ class MesaActivity : AppCompatActivity() {
         mesaRecyclerView.layoutManager = linearLayoutManager
         mesaRecyclerView.adapter = MesaAdapter(data, this::act)
         //scroll to bottom
-
         mesaRecyclerView.scrollToPosition(data.size - 1)
-
     }
     private fun act (data : Mesa) : Unit {
         //Toast.makeText(this, "${data.nameMesa} clicked", Toast.LENGTH_SHORT).show()
         //ao clicar ira para a tela da comanda da mesa
         val intt = Intent(this, ContaActivity::class.java)
-        val mesaData = MesaData(data.nameMesa.toString(),data.proprietarioMesa.toString())
+        val mesaData = MesaData(data.nameMesa,data.proprietarioMesa.toString())
         intt.putExtra("mesa",mesaData)
         startActivity(intt)
     }
-
 
 }

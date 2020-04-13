@@ -7,14 +7,20 @@ import android.inflabnet.mytest.mesas.adapter.MessageAdapter
 import android.inflabnet.mytest.mesas.model.MesaData
 import android.inflabnet.mytest.mesas.model.Message
 import android.inflabnet.mytest.login.LoginActivity
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import kotlinx.android.synthetic.main.activity_mesa_chat.*
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.util.*
+import kotlin.collections.ArrayList
 
 class MesaChatActivity : AppCompatActivity() {
 
@@ -24,6 +30,7 @@ class MesaChatActivity : AppCompatActivity() {
     private var mAuth: FirebaseAuth? = null
     private var user: String? = null
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_mesa_chat)
@@ -55,6 +62,7 @@ class MesaChatActivity : AppCompatActivity() {
         return user
     }
     //ao clicar para enviar mensagem
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun setupSendButton(pathStr: String) {
         if (mainChatEditText2.text.toString().isNotEmpty()){
             sendData(pathStr)
@@ -64,15 +72,19 @@ class MesaChatActivity : AppCompatActivity() {
     }
 
     //enviar dados para firebase
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun sendData(pathStr: String){
         //pegar o usuário
         if (user != null) {
             //gravar no Fbase
             val tStamp = java.lang.String.valueOf(System.currentTimeMillis())
+            val current = LocalDateTime.now()
+            val formatter = DateTimeFormatter.ofPattern("HH:mm")
+            val hora = current.format(formatter)
             mDatabaseReference?.
                 child(pathStr)?.
                 child(tStamp)?.
-                setValue(Message(user!!,  "${mainChatEditText2.text}", tStamp, false))
+                setValue(Message(user!!,  "${mainChatEditText2.text}", tStamp, false,hora))
 
         }else {
             //MANDA LOGAR NOVAMENTE SE O SISTEMA NÃO CONSEGUE IDENTIFICAR O USUÁRIO
@@ -98,7 +110,7 @@ class MesaChatActivity : AppCompatActivity() {
                     val message = messageData?.let { it } ?: continue
                     if (message.userChat == user){
                         val selfCheck: Boolean = true
-                        newMessage = user?.let { message.text?.let { it1 -> message.timestamp?.let { it2 -> Message(it, it1, it2,selfCheck) } } }
+                        newMessage = message.userChat?.let { message.text?.let { it1 -> message.timestamp?.let { it2 -> message.hora?.let { it3 -> Message(it, it1, it2,selfCheck, it3) } } } }
                     } else newMessage = message
                     if (newMessage != null) {
                         toReturn.add(newMessage)

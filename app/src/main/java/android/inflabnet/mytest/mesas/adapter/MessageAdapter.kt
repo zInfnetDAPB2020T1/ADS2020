@@ -29,6 +29,7 @@ class MessageAdapter (val messages: ArrayList<Message>, val itemClick: (Message)
                 if(message.self == false) {
                     itemView.msgOutrosQuem.text = message.userChat
                     itemView.msgOutros.text = message.text
+                    itemView.txtHoraOutros.text = message.hora
                     //itemView.setOnClickListener { itemClick(this) }
                     itemView.msgOutrosQuem.visibility = View.VISIBLE
                     itemView.msgOutros.visibility = View.VISIBLE
@@ -36,9 +37,12 @@ class MessageAdapter (val messages: ArrayList<Message>, val itemClick: (Message)
                     itemView.txtMsgMeu.visibility = View.GONE
                     itemView.textView28.visibility = View.VISIBLE
                     itemView.textView27.visibility = View.GONE
+                    itemView.txtHoraEu.visibility = View.GONE
+                    itemView.txtHoraOutros.visibility = View.VISIBLE
                 }else{
                     itemView.msgMeu.text = message.userChat
                     itemView.txtMsgMeu.text = message.text
+                    itemView.txtHoraEu.text = message.hora
                     //itemView.setOnClickListener { itemClick(this) }
                     itemView.msgOutrosQuem.visibility = View.GONE
                     itemView.msgOutros.visibility = View.GONE
@@ -46,6 +50,8 @@ class MessageAdapter (val messages: ArrayList<Message>, val itemClick: (Message)
                     itemView.txtMsgMeu.visibility = View.VISIBLE
                     itemView.textView28.visibility = View.GONE
                     itemView.textView27.visibility = View.VISIBLE
+                    itemView.txtHoraEu.visibility = View.VISIBLE
+                    itemView.txtHoraOutros.visibility = View.GONE
             }
             }
         }

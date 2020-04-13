@@ -1,5 +1,7 @@
 package android.inflabnet.mytest.mesas.model
 
+import android.inflabnet.mytest.throwables.ContaValorException
+import android.inflabnet.mytest.throwables.ItemNomeException
 import com.google.firebase.database.IgnoreExtraProperties
 
 @IgnoreExtraProperties
@@ -9,6 +11,7 @@ class Conta {
     var quanto: Int? = null
     var timestamp: String? = null
     var mesa: String? = null
+
     constructor() {
         // Default constructor required for calls to DataSnapshot.getValue(User.class)
     }
@@ -20,4 +23,9 @@ class Conta {
         this.timestamp = timestamp
         this.mesa = mesa
     }
+
+//    init {
+//        if (quanto!! < 0) throw ContaValorException()
+//        if (oque?.length!! < 3) throw  ItemNomeException()
+//    }
 }

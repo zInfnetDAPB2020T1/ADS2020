@@ -53,11 +53,13 @@ class HomeMenuFragment : Fragment() {
         }
 
         btnOrcamento.setOnClickListener {
+
             val contFrag = activity!!.applicationContext
             if(edtOrc.text.isNullOrBlank()){
                 Toast.makeText(this.context!!.applicationContext,"Valor inválido!", Toast.LENGTH_SHORT).show()
             }else{
-                val result2:String? = orcaDBHelper.readOrcamentos()
+                val result2 :String? = orcaDBHelper.readOrcamentos()
+                Toast.makeText(this.context!!.applicationContext,result2.toString(), Toast.LENGTH_SHORT).show()
                 if(!result2.isNullOrBlank()) {
                     val txtTitulo = "Trocar Orçamento"
                     val dialogBuilder = AlertDialog.Builder(activity!!)
@@ -92,7 +94,20 @@ class HomeMenuFragment : Fragment() {
                     alert.show()
                 }
                 //Toast.makeText(this.context!!.applicationContext,"Orçamento : ${result2} inserido com sucesso", Toast.LENGTH_SHORT).show()
-
+                else{
+                    val novoOrcamento = edtOrc.text.toString()
+                    orcaDBHelper.insertOrcamento(novoOrcamento)
+                    Toast.makeText(contFrag, "${orcaDBHelper.readOrcamentos()} inserido com sucesso", Toast.LENGTH_SHORT).show()
+                    edtOrc.setText("")
+                    edtOrc.isFocusable = false;
+                    edtOrc.isFocusableInTouchMode = false;
+                    edtOrc.isClickable = false;
+                    edtOrc.visibility = View.INVISIBLE
+                    btnOrcamento.visibility = View.INVISIBLE
+                    // Hide the keyboard.
+                    val inputMethodManager = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                    inputMethodManager.hideSoftInputFromWindow(btnOrcamento.windowToken, 0)
+                }
             }
         }
     }
