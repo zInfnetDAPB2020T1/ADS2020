@@ -75,10 +75,39 @@ class ContaActivity : AppCompatActivity() {
         btnFinalizar.setOnClickListener { finalizar() }
         jaFinalizados()
         btnCompartilhar.setOnClickListener { enviaPerguntaAlert() }
-        //checkItensACompartilhar()
         itemADividirListener()
+        //verificar se há solicitações de compartilhamento não atendidas. Caso positivo, desabilita o botão para não compartilhar mais nada
+        verificaSolicitComart()
 
     }
+
+    private fun verificaSolicitComart() {
+        val blocListener = object : ValueEventListener{
+            override fun onCancelled(p0: DatabaseError) {
+                Toast.makeText(applicationContext, "Errroooo na conexão com o banco",Toast.LENGTH_SHORT ).show()
+            }
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                dataSnapshot.children.forEach{
+                    if ((it.getValue<ItemDividirAlert>(ItemDividirAlert::class.java)?.status.toString() == "Pergunta")
+                            &&
+                            it.getValue<ItemDividirAlert>(ItemDividirAlert::class.java)?.userOrigem.toString() == user
+                            &&
+                            it.getValue<ItemDividirAlert>(ItemDividirAlert::class.java)?.userDestino.toString() != user){
+
+                            val dest = it.getValue<ItemDividirAlert>(ItemDividirAlert::class.java)?.userDestino.toString()
+                            val item = it.getValue<ItemDividirAlert>(ItemDividirAlert::class.java)?.itemAdividir.toString()
+                            val valor = it.getValue<ItemDividirAlert>(ItemDividirAlert::class.java)?.itemValor.toString()
+                            btnCompartilhar.visibility = View.GONE
+                            val textParaPendencia = "${item} - aguardando autorização de ${dest} - valor: ${valor}"
+                            txtPendencia.text = textParaPendencia
+                    }
+                }
+            }
+        }
+        mDatabaseReference!!.child("itemADividir").addValueEventListener(blocListener)
+    }
+
+
     private fun enviaPerguntaAlert () {
         //apresentar o layout de pergunta
         val mDialogView = LayoutInflater.from(this).inflate(R.layout.alert_compartilha_item, null)
@@ -110,7 +139,6 @@ class ContaActivity : AppCompatActivity() {
             }
         }
         mDatabaseReference?.child("Conta")?.child(pathStr)?.addListenerForSingleValueEvent(itensDaContaListener)
-
         //verifica QUEM está na comanda para montar o Radiogroup
         val membrosDaContaListener = object : ValueEventListener {
             @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
@@ -138,7 +166,6 @@ class ContaActivity : AppCompatActivity() {
             }
         }
         mDatabaseReference?.child("Membros")?.addListenerForSingleValueEvent(membrosDaContaListener)
-
         //builder do alertdialog com itens da comanda e membros para dividir (Pergunta)
         val mBuilder = AlertDialog.Builder(this)
                 .setView(mDialogView)
@@ -153,17 +180,14 @@ class ContaActivity : AppCompatActivity() {
             val userOrigem: String? = user
             val userDestino  = membroSelected.text.toString()
             val itemAdividir = itemSelected.text.toString()
-
             val mesaIAD = txtMesaConta.text.toString()
             //status: Pergunta, Aceito, NaoAceito
             val statusItem:String = "Pergunta"
             //gerar a key
             val IADTimestamp = System.currentTimeMillis().toString()
-
             val itemADV = itemAdividir.split(",".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[0]
             val valorADV = itemAdividir.split("no valor de ".toRegex()).dropWhile { it.isEmpty() }.toTypedArray()[1]
             //Toast.makeText(this,"${itemADV} e ${valorADV}" ,Toast.LENGTH_SHORT).show()
-
             val itemADObj = userOrigem?.let { ItemDividirAlert(it,userDestino,itemADV,valorADV,mesaIAD,statusItem,IADTimestamp) }
             //colocar no FBase o item a dividir
             //referencia do caminho
@@ -175,7 +199,7 @@ class ContaActivity : AppCompatActivity() {
         mDialogView.btnCancelar.setOnClickListener {
             //dismiss dialog
             mAlertDialog.dismiss()
-            }
+        }
     }
     //monta o RadioGroup dos itens da conta
     @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
@@ -214,17 +238,13 @@ class ContaActivity : AppCompatActivity() {
             override fun onCancelled(p0: DatabaseError) {
                 Toast.makeText(applicationContext, "Errroooo na conexão com o banco",Toast.LENGTH_SHORT ).show()
             }
-
             override fun onDataChange(p0: DataSnapshot) {
                 checkItensACompartilhar()
                 checkItensACompartilharNegados()
             }
-
-
         }
         mDatabaseReference!!.child("itemADividir").addValueEventListener(iadListener)
     }
-
     private fun checkItensACompartilharNegados() {
         val negadosListener = object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
@@ -242,27 +262,21 @@ class ContaActivity : AppCompatActivity() {
                         val solicitanteCompart = it.getValue<ItemDividirAlert>(ItemDividirAlert::class.java)?.userDestino.toString()
                         val itemACompartilhar = it.getValue<ItemDividirAlert>(ItemDividirAlert::class.java)?.itemAdividir.toString()
                         val valorIACompartilhar = it.getValue<ItemDividirAlert>(ItemDividirAlert::class.java)?.itemValor.toString()
-
                         dialogBuilder.setMessage("${solicitanteCompart} recusou compartilhar  ${itemACompartilhar} no valor de ${valorIACompartilhar}. Se vira aí!")
                                 .setCancelable(false)
                                 .setPositiveButton("Ok") { _, _ ->
                                     //remover item dos itens a compartilhar
                                     mDatabaseReference?.child("itemADividir")?.child(id)?.removeValue()
-
                                 }
-
                         val alert = dialogBuilder.create()
                         alert.setTitle("Compartilhamento Negado!")
                         alert.show()
                     }
                 }
-
             }
-
         }
         mDatabaseReference!!.child("itemADividir").addListenerForSingleValueEvent(negadosListener)
     }
-
     //chamada a partir de itemADividirListener() , verifica no banco se há requisição ("Pergunta") para dividir item
     private fun checkItensACompartilhar(){
         val alertListener = object : ValueEventListener {
@@ -280,11 +294,10 @@ class ContaActivity : AppCompatActivity() {
                             val destinoCompart = it.getValue<ItemDividirAlert>(ItemDividirAlert::class.java)?.userDestino.toString()
                             val itemACompartilhar = it.getValue<ItemDividirAlert>(ItemDividirAlert::class.java)?.itemAdividir.toString()
                             val valorIACompartilhar = it.getValue<ItemDividirAlert>(ItemDividirAlert::class.java)?.itemValor.toString()
-
                             dialogBuilder.setMessage("${solicitanteCompart} gostaria de compartilhar o valor de ${valorIACompartilhar} referente ao item ${itemACompartilhar}. Aceita compartilhar esse item?")
                                     .setCancelable(false)
                                     .setPositiveButton("Sim") { _, _ ->
-                                    //aceitou compartilhar, vai varrer as contas para pegar os itens
+                                        //aceitou compartilhar, vai varrer as contas para pegar os itens
                                         val itemListener = object : ValueEventListener {
                                             override fun onDataChange(dataSnapshot: DataSnapshot) {
                                                 var contaADVSol: Conta? = null
@@ -295,7 +308,7 @@ class ContaActivity : AppCompatActivity() {
                                                 for (data in dataSnapshot.children) {
                                                     val contaData = data.getValue<Conta>(Conta::class.java)
                                                     val ts = data.getValue<Conta>(Conta::class.java)?.timestamp
-                                                     //abrindo a bagaça
+                                                    //abrindo a bagaça
                                                     val conta = contaData?.let { it } ?: continue
                                                     //encontrando o item
                                                     if ((conta.quem == solicitanteCompart)
@@ -326,11 +339,10 @@ class ContaActivity : AppCompatActivity() {
                                                 mDatabaseReference!!.child("itemADividir").child(id).removeValue()
                                             }
                                             override fun onCancelled(databaseError: DatabaseError) {
-                                            Toast.makeText(applicationContext,"Erro de conexão com o DB", Toast.LENGTH_SHORT).show()
-                                        }
+                                                Toast.makeText(applicationContext,"Erro de conexão com o DB", Toast.LENGTH_SHORT).show()
+                                            }
                                         }
                                         mDatabaseReference?.child("Conta")?.child(pathStr)?.addListenerForSingleValueEvent(itemListener)
-
                                     }
                                     .setNegativeButton("Não") { _, _ ->
                                         mDatabaseReference?.child("itemADividir")?.child(id)?.child("status")?.setValue("Negado")
@@ -352,7 +364,6 @@ class ContaActivity : AppCompatActivity() {
                             alert.setTitle("Compartilhar Item?")
                             alert.show()
                         }
-
                     }
                 }
             }
@@ -362,7 +373,6 @@ class ContaActivity : AppCompatActivity() {
         }
         mDatabaseReference!!.child("itemADividir").addListenerForSingleValueEvent(alertListener)
     }
-
     //não precisa falar. Ok pega o usuário que está logado
     private fun pegarUser(){
         //pegar o usuário
@@ -642,8 +652,8 @@ class ContaActivity : AppCompatActivity() {
             txtTotEu.text = totEu.toString()
         }
         val percentage = (totEu/ orcamento) *100.0
-            //Toast.makeText(this,"Percentagem: ${percentage}",Toast.LENGTH_SHORT).show()
-            //Toast.makeText(this,"orcamento: ${orcamento}",Toast.LENGTH_SHORT).show()
+        //Toast.makeText(this,"Percentagem: ${percentage}",Toast.LENGTH_SHORT).show()
+        //Toast.makeText(this,"orcamento: ${orcamento}",Toast.LENGTH_SHORT).show()
         if (percentage < 75.0){
             txtTotEu.setTextColor(ContextCompat.getColor(applicationContext, R.color.green))
             txtTotEuText.setTextColor(ContextCompat.getColor(applicationContext, R.color.green))
