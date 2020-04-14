@@ -284,7 +284,9 @@ class ContaActivity : AppCompatActivity() {
                                 }
                         val alert = dialogBuilder.create()
                         alert.setTitle("Compartilhamento Negado!")
-                        alert.show()
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1 && !isDestroyed()) {
+                            alert.show()
+                        }
                     }
                 }
             }
@@ -367,13 +369,6 @@ class ContaActivity : AppCompatActivity() {
                                         mDatabaseReference?.child("ItemDividirAlertNegado")?.child(id)?.child("userDestino")?.setValue(destinoCompart)
                                         mDatabaseReference?.child("ItemDividirAlertNegado")?.child(id)?.child("mesaIAD")?.setValue(txtMesaConta.text.toString())
                                         mDatabaseReference?.child("ItemDividirAlertNegado")?.child(id)?.child("itemValor")?.setValue(valorIACompartilhar)
-                                        //it.getValue<ItemDividirAlert>(ItemDividirAlert::class.java)?.status = "Negado"
-                                        //it.getValue<ItemDividirAlert>(ItemDividirAlert::class.java)?.itemAdividir = itemACompartilhar
-                                        //it.getValue<ItemDividirAlert>(ItemDividirAlert::class.java)?.id = id
-                                        //it.getValue<ItemDividirAlert>(ItemDividirAlert::class.java)?.userOrigem = solicitanteCompart
-                                        //it.getValue<ItemDividirAlert>(ItemDividirAlert::class.java)?.userDestino = destinoCompart
-                                        //it.getValue<ItemDividirAlert>(ItemDividirAlert::class.java)?.mesaIAD = txtMesaConta.text.toString()
-                                        //it.getValue<ItemDividirAlert>(ItemDividirAlert::class.java)?.itemValor = valorIACompartilhar
                                         Toast.makeText(this@ContaActivity, "Ok, não será dividido!", Toast.LENGTH_SHORT).show()
                                         //verificar se é melhor colocar fora do alerdialog - depois do ondatachange checar se há mais itens
                                         checkItensACompartilhar()
@@ -383,7 +378,10 @@ class ContaActivity : AppCompatActivity() {
                                     }
                             val alert = dialogBuilder.create()
                             alert.setTitle("Compartilhar Item?")
-                            alert.show()
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1 && !isDestroyed()){
+                                alert.show()
+                            }
+
                         }
                     }
                 }
