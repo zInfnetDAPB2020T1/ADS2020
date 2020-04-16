@@ -1,6 +1,6 @@
 package android.inflabnet.mytest.mesas.model
 
-class ItemDividirAlertNegado {var userOrigem: String? = null
+class ItemDividirNegado {var userOrigem: String? = null
                         var userDestino: String?= null
                         var itemAdividir: String?= null
                         var itemValor: String?= null

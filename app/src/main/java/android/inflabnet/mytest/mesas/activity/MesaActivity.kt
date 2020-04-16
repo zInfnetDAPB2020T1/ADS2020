@@ -1,5 +1,6 @@
 package android.inflabnet.mytest.mesas.activity
 
+import android.content.Context
 import android.content.Intent
 import android.inflabnet.mytest.R
 import android.inflabnet.mytest.mesas.adapter.MesaAdapter
@@ -11,6 +12,7 @@ import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
@@ -42,10 +44,13 @@ class MesaActivity : AppCompatActivity() {
         ACTVMesas.setOnClickListener { setACTVMesas() }
     }
 
+
+
     @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     override fun onResume() {
         super.onResume()
         setACTVMesas()
+        //ACTVMesas.setText("")
     }
 
     @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
@@ -107,6 +112,8 @@ class MesaActivity : AppCompatActivity() {
     private fun cadastrarMesa(){
             if (etNomeMesa.text.toString().isNotEmpty()){
                 gravarMesa()
+                val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                inputMethodManager.hideSoftInputFromWindow(btnCriarMesa.windowToken, 0)
             }else{
                 Toast.makeText(this, "Por favor, escreva uma mensagem!", Toast.LENGTH_SHORT).show()
             }

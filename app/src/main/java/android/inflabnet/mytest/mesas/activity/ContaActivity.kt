@@ -255,7 +255,7 @@ class ContaActivity : AppCompatActivity() {
         mDatabaseReference!!.child("itemADividir").addValueEventListener(iadListener)
     }
 
-    //checa em ItemDividirAlertNegado os itens negados
+    //checa em ItemDividirNegado os itens negados
     private fun checkItensACompartilharNegados() {
         val dialogBuilder = AlertDialog.Builder(this@ContaActivity)
         val negadosListener = object : ValueEventListener {
@@ -264,34 +264,34 @@ class ContaActivity : AppCompatActivity() {
             }
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 dataSnapshot.children.forEach{
-                    if ((it.getValue<ItemDividirAlertNegado>(ItemDividirAlertNegado::class.java)?.status.toString() == "Negado")
+                    if ((it.getValue<ItemDividirNegado>(ItemDividirNegado::class.java)?.status.toString() == "Negado")
                             &&
-                            it.getValue<ItemDividirAlertNegado>(ItemDividirAlertNegado::class.java)?.userOrigem.toString() == user
+                            it.getValue<ItemDividirNegado>(ItemDividirNegado::class.java)?.userOrigem.toString() == user
                             &&
-                            it.getValue<ItemDividirAlertNegado>(ItemDividirAlertNegado::class.java)?.userDestino.toString() != user){
+                            it.getValue<ItemDividirNegado>(ItemDividirNegado::class.java)?.userDestino.toString() != user){
 
-                        val id = it.getValue<ItemDividirAlertNegado>(ItemDividirAlertNegado::class.java)?.id.toString()
-                        val solicitanteCompart = it.getValue<ItemDividirAlertNegado>(ItemDividirAlertNegado::class.java)?.userDestino.toString()
-                        val itemACompartilhar = it.getValue<ItemDividirAlertNegado>(ItemDividirAlertNegado::class.java)?.itemAdividir.toString()
-                        val valorIACompartilhar = it.getValue<ItemDividirAlertNegado>(ItemDividirAlertNegado::class.java)?.itemValor.toString()
+                        val id = it.getValue<ItemDividirNegado>(ItemDividirNegado::class.java)?.id.toString()
+                        val solicitanteCompart = it.getValue<ItemDividirNegado>(ItemDividirNegado::class.java)?.userDestino.toString()
+                        val itemACompartilhar = it.getValue<ItemDividirNegado>(ItemDividirNegado::class.java)?.itemAdividir.toString()
+                        val valorIACompartilhar = it.getValue<ItemDividirNegado>(ItemDividirNegado::class.java)?.itemValor.toString()
                         dialogBuilder.setMessage("${solicitanteCompart} recusou compartilhar  ${itemACompartilhar} no valor de ${valorIACompartilhar}. Se vira aí!")
                                 .setCancelable(false)
                                 .setPositiveButton("Ok") { _, _ ->
                                     //remover item dos itens a compartilhar
                                     mDatabaseReference?.child("itemADividir")?.child(id)?.removeValue()
-                                    mDatabaseReference?.child("ItemDividirAlertNegado")?.child(id)?.removeValue()
+                                    mDatabaseReference?.child("ItemDividirNegado")?.child(id)?.removeValue()
                                     verificaSolicitComart()
                                 }
                         val alert = dialogBuilder.create()
                         alert.setTitle("Compartilhamento Negado!")
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1 && !isDestroyed()) {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1 && !isDestroyed) {
                             alert.show()
                         }
                     }
                 }
             }
         }
-        mDatabaseReference!!.child("ItemDividirAlertNegado").addListenerForSingleValueEvent(negadosListener)
+        mDatabaseReference!!.child("ItemDividirNegado").addListenerForSingleValueEvent(negadosListener)
     }
     //chamada a partir de itemADividirListener() , verifica no banco se há requisição ("Pergunta") para dividir item
     private fun checkItensACompartilhar(){
@@ -361,14 +361,9 @@ class ContaActivity : AppCompatActivity() {
                                         mDatabaseReference?.child("Conta")?.child(pathStr)?.addListenerForSingleValueEvent(itemListener)
                                     }
                                     .setNegativeButton("Não") { _, _ ->
+                                        val itemNegado = ItemDividirNegado(solicitanteCompart,destinoCompart,itemACompartilhar,valorIACompartilhar,txtMesaConta.text.toString(),"Negado",id)
                                         mDatabaseReference?.child("itemADividir")?.child(id)?.child("status")?.setValue("Negado")
-                                        mDatabaseReference?.child("ItemDividirAlertNegado")?.child(id)?.child("status")?.setValue("Negado")
-                                        mDatabaseReference?.child("ItemDividirAlertNegado")?.child(id)?.child("itemAdividir")?.setValue(itemACompartilhar)
-                                        mDatabaseReference?.child("ItemDividirAlertNegado")?.child(id)?.child("id")?.setValue(id)
-                                        mDatabaseReference?.child("ItemDividirAlertNegado")?.child(id)?.child("userOrigem")?.setValue(solicitanteCompart)
-                                        mDatabaseReference?.child("ItemDividirAlertNegado")?.child(id)?.child("userDestino")?.setValue(destinoCompart)
-                                        mDatabaseReference?.child("ItemDividirAlertNegado")?.child(id)?.child("mesaIAD")?.setValue(txtMesaConta.text.toString())
-                                        mDatabaseReference?.child("ItemDividirAlertNegado")?.child(id)?.child("itemValor")?.setValue(valorIACompartilhar)
+                                        mDatabaseReference?.child("ItemDividirNegado")?.child(id)?.setValue(itemNegado)
                                         Toast.makeText(this@ContaActivity, "Ok, não será dividido!", Toast.LENGTH_SHORT).show()
                                         //verificar se é melhor colocar fora do alerdialog - depois do ondatachange checar se há mais itens
                                         checkItensACompartilhar()

@@ -23,8 +23,8 @@ class MyFCMClass: FirebaseMessagingService() {
             val handler = Handler(Looper.getMainLooper())
             handler.post(Runnable { Toast.makeText(applicationContext, remoteMessage.notification?.body!!,Toast.LENGTH_SHORT).show() })
 
-            Log.e(TAG, "Title: " + remoteMessage.notification?.title!!)
-            Log.e(TAG, "Body: " + remoteMessage.notification?.body!!)
+            Log.i(TAG, "Title: " + remoteMessage.notification?.title!!)
+            Log.i(TAG, "Body: " + remoteMessage.notification?.body!!)
         }
 
         if (remoteMessage.data.isNotEmpty()) {
