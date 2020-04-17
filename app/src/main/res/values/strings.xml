@@ -15,5 +15,8 @@
     <string name="google_maps_key"></string>
     <string name="cadastrar_nova_mesa">Cadastrar Nova Mesa:</string>
     <string name="msg_token_fmt">Sucesso</string>
+    <string name="notifications_admin_channel_name">InfSocial</string>
+    <string name="notifications_admin_channel_description">InfSocial - notificação de interação na mesa</string>
+    <string name="default_notification_channel_id">InfSocial</string>
 
 </resources>

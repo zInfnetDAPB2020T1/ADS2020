@@ -16,7 +16,17 @@ class Conta {
         // Default constructor required for calls to DataSnapshot.getValue(User.class)
     }
 
-    constructor(username: String?, item: String?, valor: Int?, timestamp: String, mesa: String) {
+    constructor(username: String?,
+                item: String?,
+                valor: Int?,
+                timestamp: String, mesa: String) {
+        if (valor != null) {
+            if(valor < 0) throw  ContaValorException()
+        }
+
+        if (item != null) {
+            if (item.length < 3) throw ItemNomeException()
+        }
         this.quem = username
         this.oque = item
         this.quanto = valor
