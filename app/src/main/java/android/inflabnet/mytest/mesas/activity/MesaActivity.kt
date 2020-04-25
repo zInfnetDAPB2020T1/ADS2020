@@ -115,7 +115,7 @@ class MesaActivity : AppCompatActivity() {
                 val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                 inputMethodManager.hideSoftInputFromWindow(btnCriarMesa.windowToken, 0)
             }else{
-                Toast.makeText(this, "Por favor, escreva uma mensagem!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Por favor, escolha um nome para mesa!", Toast.LENGTH_SHORT).show()
             }
     }
 

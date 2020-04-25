@@ -68,18 +68,14 @@
         android:id="@+id/edtValor"
         android:layout_width="125dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginLeft="32dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
         android:ems="10"
         android:fontFamily="sans-serif-condensed-light"
         android:hint="Valor"
         android:inputType="number"
         android:textStyle="normal"
         app:layout_constraintBaseline_toBaselineOf="@+id/edtItem"
-        app:layout_constraintEnd_toStartOf="@+id/btnOk"
-        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toEndOf="@+id/edtItem" />
 
     <EditText
@@ -138,13 +134,16 @@
         android:id="@+id/btnOk"
         android:layout_width="70dp"
         android:layout_height="44dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
         android:layout_marginEnd="12dp"
         android:layout_marginRight="12dp"
         android:background="@drawable/shape_small_buttons"
         android:text="@android:string/ok"
         android:textColor="#FFFFFF"
         app:layout_constraintBaseline_toBaselineOf="@+id/edtValor"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/edtValor" />
 
     <TextView
         android:id="@+id/textView13"
