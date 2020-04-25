@@ -14,8 +14,10 @@
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
         android:layout_marginTop="16dp"
+        android:fontFamily="sans-serif-condensed-light"
         android:text="Chat da Mesa:"
-        android:textSize="18sp"
+        android:textSize="16sp"
+        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -25,8 +27,10 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
         android:layout_marginLeft="4dp"
+        android:fontFamily="sans-serif-condensed-light"
         android:text="Mesa"
-        android:textSize="18sp"
+        android:textSize="16sp"
+        android:textStyle="bold"
         app:layout_constraintBaseline_toBaselineOf="@+id/textView8"
         app:layout_constraintStart_toEndOf="@+id/textView8" />
 
@@ -37,8 +41,10 @@
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
         android:layout_marginTop="8dp"
+        android:fontFamily="sans-serif-condensed-light"
         android:text="Proprietário:"
-        android:textSize="14sp"
+        android:textSize="16sp"
+        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView8" />
 
@@ -50,6 +56,7 @@
         android:layout_marginLeft="4dp"
         android:text="Proprietário"
         android:textSize="14sp"
+        android:fontFamily="sans-serif-condensed-light"
         app:layout_constraintBaseline_toBaselineOf="@+id/textView9"
         app:layout_constraintStart_toEndOf="@+id/textView9" />
 
@@ -107,7 +114,8 @@
             android:layout_height="wrap_content"
             android:autofillHints=""
             android:fitsSystemWindows="true"
-            android:hint="Enter text to send..."
+            android:hint="Digite aqui..."
+            android:backgroundTint="@color/colorPrimaryDark"
             android:inputType="text" />
 
         <requestFocus />

@@ -13,22 +13,25 @@
         android:layout_marginStart="4dp"
         android:layout_marginLeft="4dp"
         android:layout_marginTop="18dp"
+        android:fontFamily="sans-serif-condensed-light"
         android:gravity="end"
         android:text="Quem"
-        android:textSize="14sp"
+        android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/txtOq"
-        android:layout_width="191dp"
-        android:layout_height="wrap_content"
+        android:layout_width="137dp"
+        android:layout_height="21dp"
         android:layout_marginTop="18dp"
+        android:fontFamily="sans-serif-condensed-light"
         android:gravity="end"
         android:text="O que foi consumido"
-        android:textSize="14sp"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:layout_editor_absoluteX="73dp" />
+        android:textSize="16sp"
+        app:layout_constraintEnd_toStartOf="@+id/txtTimestamp"
+        app:layout_constraintStart_toEndOf="@+id/txtQuem"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/txtQuanto"
@@ -37,9 +40,10 @@
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
         android:layout_marginTop="18dp"
+        android:fontFamily="sans-serif-condensed-light"
         android:gravity="end"
         android:text="Quanto"
-        android:textSize="14sp"
+        android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/txtOq"
         app:layout_constraintTop_toTopOf="parent" />

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:map="http://schemas.android.com/apk/res-auto"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:map="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -17,45 +17,59 @@
             android:layout_height="match_parent">
 
         </fragment>
+
         <Button
+            android:id="@+id/btn_get_current_place"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/btn_get_current_place"
-            android:text="Get Current Place"/>
+            android:background="@drawable/shape_buttons"
+            android:fontFamily="sans-serif-condensed-light"
+            android:text="Get Current Place"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
             <EditText
+                android:id="@+id/edt_address"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/edt_address"
-                android:hint="My Home"/>
+                android:hint="My Home" />
         </com.google.android.material.textfield.TextInputLayout>
+
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
             <EditText
+                android:id="@+id/edt_place_likelihoods"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/edt_place_likelihoods"
-                android:textColor="@android:color/darker_gray"
-                android:hint="Place Likelihoods"/>
+                android:hint="Place Likelihoods"
+                android:textColor="@android:color/darker_gray" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <Button
             android:id="@+id/btn_get_photo"
-            android:text="GET PHOTO"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="300dp"
-            android:id="@+id/image_view"/>
-        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/txt_detail"/>
+            android:background="@drawable/shape_buttons"
+            android:fontFamily="sans-serif-condensed-light"
+            android:text="GET PHOTO"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/image_view"
+            android:layout_width="wrap_content"
+            android:layout_height="300dp" />
+
+        <TextView
+            android:id="@+id/txt_detail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
         <fragment
             android:id="@+id/map"
