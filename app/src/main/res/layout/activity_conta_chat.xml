@@ -262,6 +262,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtMembros" />
 
+
     <Button
         android:id="@+id/btnCompartilhar"
         android:layout_width="140dp"
