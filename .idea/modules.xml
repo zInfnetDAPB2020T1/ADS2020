@@ -2,7 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/ADS2020Old2.iml" filepath="$PROJECT_DIR$/.idea/ADS2020Old2.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/ADS2020v5.iml" filepath="$PROJECT_DIR$/.idea/ADS2020v5.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" group="myTest/app" />
+      <module fileurl="file://$PROJECT_DIR$/myTest.iml" filepath="$PROJECT_DIR$/myTest.iml" group="myTest" />
     </modules>
   </component>
 </project>

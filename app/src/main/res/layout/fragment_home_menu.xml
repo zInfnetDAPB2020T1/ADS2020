@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragments.HomeMenuFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#FFFFFF">
+
+        <TextView
+            android:id="@+id/txtVwOrcamento"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="60dp"
+            android:fontFamily="sans-serif-condensed-light"
+            android:text="@string/insira_quanto_voc_pretende_gastar_hoje"
+            android:textSize="18sp"
+            android:textStyle="normal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.21"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btnMesas" />
+
+        <TextView
+            android:id="@+id/txtVwShareLocation"
+            android:layout_width="301dp"
+            android:layout_height="26dp"
+            android:layout_marginTop="68dp"
+            android:fontFamily="sans-serif-condensed-light"
+            android:text="@string/compartilhe_sua_localiza_o_com_amigos"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.327"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/txtVwAcompanheMesas"
+            android:layout_width="221dp"
+            android:layout_height="28dp"
+            android:layout_marginTop="44dp"
+            android:fontFamily="sans-serif-condensed-light"
+            android:text="@string/acompanhe_as_mesas_criadas"
+            android:textSize="18sp"
+            android:textStyle="normal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.189"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btnMapsMenu" />
+
+        <TextView
+            android:id="@+id/txtVwMenuTxt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="36dp"
+            android:layout_marginLeft="36dp"
+            android:layout_marginTop="16dp"
+            android:fontFamily="sans-serif-condensed-light"
+            android:text="@string/menu"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/btnMapsMenu"
+            android:layout_width="300dp"
+            android:layout_height="41dp"
+            android:layout_marginStart="36dp"
+            android:layout_marginLeft="36dp"
+            android:layout_marginTop="60dp"
+            android:background="@drawable/shape_buttons"
+            android:fontFamily="sans-serif-condensed-light"
+            android:text="@string/check_in"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txtVwMenuTxt" />
+
+        <Button
+            android:id="@+id/btnMesas"
+            android:layout_width="300dp"
+            android:layout_height="41dp"
+            android:layout_marginStart="36dp"
+            android:layout_marginLeft="36dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/shape_buttons"
+            android:fontFamily="sans-serif-condensed-light"
+            android:text="@string/mesas"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txtVwAcompanheMesas" />
+
+        <Button
+            android:id="@+id/btnOrcamento"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:background="@drawable/shape_small_buttons"
+            android:text="@android:string/ok"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            app:layout_constraintBaseline_toBaselineOf="@+id/edtOrc"
+            app:layout_constraintStart_toEndOf="@+id/edtOrc" />
+
+        <EditText
+            android:id="@+id/edtOrc"
+            android:layout_width="226dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="36dp"
+            android:layout_marginLeft="36dp"
+            android:layout_marginTop="24dp"
+            android:ems="10"
+            android:hint="@string/insira_aqui_seu_or_amento"
+            android:inputType="number"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txtVwOrcamento"
+            android:autofillHints="" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</FrameLayout>
