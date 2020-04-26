@@ -1,11 +1,11 @@
 <component name="libraryTable">
   <library name="Gradle: com.firebaseui:firebase-ui-auth:3.3.1@aar">
     <ANNOTATIONS>
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/8978427ba83232e28b2152e7d1485f24/jetified-firebase-ui-auth-3.3.1/annotations.zip!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/d95462d34b2f0f308587ef4b8b3cd2c0/jetified-firebase-ui-auth-3.3.1/annotations.zip!/" />
     </ANNOTATIONS>
     <CLASSES>
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/8978427ba83232e28b2152e7d1485f24/jetified-firebase-ui-auth-3.3.1/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/8978427ba83232e28b2152e7d1485f24/jetified-firebase-ui-auth-3.3.1/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/d95462d34b2f0f308587ef4b8b3cd2c0/jetified-firebase-ui-auth-3.3.1/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/d95462d34b2f0f308587ef4b8b3cd2c0/jetified-firebase-ui-auth-3.3.1/res" />
     </CLASSES>
     <JAVADOC>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.firebaseui/firebase-ui-auth/3.3.1/d75125e2c84b348dbd0734dc7f6c311065a63a08/firebase-ui-auth-3.3.1-javadoc.jar!/" />
