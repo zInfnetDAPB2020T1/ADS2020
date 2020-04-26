@@ -17,7 +17,7 @@ import kotlinx.android.synthetic.main.activity_conta_chat.*
 
 class HomeActivity : AppCompatActivity() {
 
-    //Firebase references
+    //Firebase references para conexão
     private var mDatabaseReference: DatabaseReference? = null
     private var mDatabase: FirebaseDatabase? = null
     private var mAuth: FirebaseAuth? = null
