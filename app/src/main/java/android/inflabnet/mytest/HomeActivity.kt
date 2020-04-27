@@ -34,6 +34,7 @@ class HomeActivity : AppCompatActivity() {
         upToken()
     }
 
+    //token para envio e recebimento de mensagens
     fun upToken(){
         var userToken = pegarUser()
         if (userToken != null) {

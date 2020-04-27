@@ -3,9 +3,14 @@ package android.inflabnet.mytest.mesas.activity
 import android.content.Intent
 import android.inflabnet.mytest.R
 import android.inflabnet.mytest.database.OrcDBHelper
+import android.inflabnet.mytest.database.database.AppDatabase
+import android.inflabnet.mytest.database.database.AppDatabaseService
+import android.inflabnet.mytest.database.model.MesaOrc
+import android.inflabnet.mytest.database.model.Orcamento
 import android.inflabnet.mytest.login.LoginActivity
 import android.inflabnet.mytest.mesas.adapter.ContaAdapter
 import android.inflabnet.mytest.mesas.model.*
+import android.os.AsyncTask
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -28,10 +33,12 @@ import kotlinx.android.synthetic.main.activity_conta_chat.*
 import kotlinx.android.synthetic.main.alert_compartilha_item.*
 import kotlinx.android.synthetic.main.alert_compartilha_item.view.*
 import kotlinx.android.synthetic.main.item_consumido.view.*
+import java.util.*
+import kotlin.collections.ArrayList
 
 class ContaActivity : AppCompatActivity() {
 
-    lateinit var orcaDBHelper : OrcDBHelper
+    private lateinit var appDatabase : AppDatabase
 
     //Firebase references
     private var mDatabaseReference: DatabaseReference? = null
@@ -44,8 +51,6 @@ class ContaActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_conta_chat)
-        //inicializando o DB local
-        orcaDBHelper = OrcDBHelper(this)
 
         //Recebendo os Valores da activity MesaActivity
         val mesaData = intent.getSerializableExtra("mesa") as MesaData
@@ -58,6 +63,9 @@ class ContaActivity : AppCompatActivity() {
         mAuth = FirebaseAuth.getInstance()
         mDatabase = FirebaseDatabase.getInstance()
         mDatabaseReference = mDatabase!!.reference
+
+        //iniciando o banco local
+        appDatabase = AppDatabaseService.getInstance(this)
 
         //chama o chat
         btnChatinho.setOnClickListener {
@@ -407,11 +415,13 @@ class ContaActivity : AppCompatActivity() {
 
     //finalizar a conta individual
     private fun finalizar() {
+
         val dialogBuilder = AlertDialog.Builder(this)
         dialogBuilder.setMessage("Tem certeza que gostaria de pagar sua parte?")
                 .setCancelable(false)
                 .setPositiveButton("Sim"){_, _ ->
                     //segue a deleção dos itens de quem fechou a conta e a soma do total dos seus itens
+
                     val postListener = object : ValueEventListener {
                         var totalConta: Int = 0
                         override fun onDataChange(dataSnapshot: DataSnapshot) {
@@ -434,6 +444,9 @@ class ContaActivity : AppCompatActivity() {
                                     toReturn.add(conta)
                                 }
                             }
+                            //inserir no banco local o valor que fechou
+                            Log.i("TOTAL","Tot conta ${totalConta.toString()}")
+                            GuardarValorMesa().execute(MesaOrc(null,txtMesaConta.text.toString(),totalConta))
                             //coloca user que saiu no txt dos que já correram
                             //txtFinalizado.append("${user} : ${totalConta}\n").toString()
                             //não deixa colocar mais produtos
@@ -454,6 +467,7 @@ class ContaActivity : AppCompatActivity() {
                             //log error
                         }
                     }
+
                     //mDatabaseReference?.child(pathStr)?.addValueEventListener(postListener)
                     mDatabaseReference?.child("Conta")?.child(pathStr)?.addListenerForSingleValueEvent(postListener)
 
@@ -639,9 +653,11 @@ class ContaActivity : AppCompatActivity() {
     }
     //colocar os Txts de valores da conta
     private fun setupTxtView(data: ArrayList<Conta>){
-        var orcStr: String?
+        val month: Calendar = Calendar.getInstance()
+        val currentMonth = month.get(Calendar.MONTH)
+        val orcStr: String?
         orcStr = try{
-            orcaDBHelper.readOrcamentos().toString()
+            GetOrcamento().execute(currentMonth).get().valor.toString()
         }catch (e: Exception){
             "500000.0"
         }
@@ -743,4 +759,16 @@ class ContaActivity : AppCompatActivity() {
         mDatabaseReference?.child("Conta")?.child(pathStr)?.addValueEventListener(postListener)
     }
 
+    inner class GetOrcamento: AsyncTask<Int, Unit, Orcamento>() {
+        override fun doInBackground(vararg params: Int?): Orcamento? {
+            val valorMesdb = appDatabase.orcamentoDAO().buscarMes(params[0]!!)
+            return valorMesdb
+        }
+    }
+
+    inner class GuardarValorMesa: AsyncTask<MesaOrc, Unit, Unit>() {
+        override fun doInBackground(vararg params: MesaOrc?) {
+            appDatabase.mesaDAO().guardar(params[0]!!)
+        }
+    }
 }
