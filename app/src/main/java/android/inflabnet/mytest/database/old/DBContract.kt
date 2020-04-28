@@ -1,4 +1,4 @@
-package android.inflabnet.mytest.database
+package android.inflabnet.mytest.database.old
 
 import android.provider.BaseColumns
 

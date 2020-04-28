@@ -4,12 +4,11 @@ package android.inflabnet.mytest.fragments
 import android.content.Context
 import android.content.Intent
 import android.inflabnet.mytest.R
-import android.inflabnet.mytest.database.OrcDBHelper
-import android.inflabnet.mytest.database.dao.OrcamentoDAO
 import android.inflabnet.mytest.database.database.AppDatabase
 import android.inflabnet.mytest.database.database.AppDatabaseService
 import android.inflabnet.mytest.database.model.MesaOrc
 import android.inflabnet.mytest.database.model.Orcamento
+import android.inflabnet.mytest.database.model.OrcamentoEMesa
 import android.inflabnet.mytest.maps.MapsActivity
 import android.inflabnet.mytest.mesas.activity.MesaActivity
 import android.os.AsyncTask
@@ -23,6 +22,8 @@ import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
+import kotlinx.android.synthetic.main.alert_orcamento.*
+import kotlinx.android.synthetic.main.alert_orcamento.view.*
 import kotlinx.android.synthetic.main.fragment_home_menu.*
 import java.util.*
 
@@ -42,6 +43,10 @@ class HomeMenuFragment : Fragment() {
         val contFrag = activity!!.applicationContext
         appDatabase = AppDatabaseService.getInstance(contFrag)
 
+        //limpar tabela orçamento
+        //DeleteOrcamento().execute()
+        //limpar tabela MesaOrc
+        //DeleteMesaGastos().execute()
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_home_menu, container, false)
     }
@@ -49,18 +54,47 @@ class HomeMenuFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val month: Calendar = Calendar.getInstance()
-        val currentMonth = month.get(Calendar.MONTH)
-        lstGastos.text = ""
-        listarGastos()
 
-        //verify empty table
-        val totRows = GetRows().execute()
-        if (totRows.get() != 0){
-            txtOrcamentoAtual.text = GetOrcamento().execute(currentMonth).get().valor.toString()
+        //quanto já gastou no presente mês
+        val jaGastou = GetGastosAtuais().execute(currentMonth2()).get()
+        txtGastou.text = jaGastou.toString()
+
+        //listar gastos na list
+        val checkGastos = GetRowsGastos().execute().get()
+        Log.i("TESTEE",checkGastos.toString())
+        if (checkGastos != 0) {
+            listarGastos()
         }
 
-        val mAtual = currentMonth()
+        //colocar o valor do orçamento na tela se não tiver orçamento para o mês corrente
+        val totRows = GetRows().execute(currentMonth2())
+        if (totRows.get() != 0){
+            txtOrcamentoAtual.text = GetOrcamento().execute(currentMonth2()).get().valor.toString()
+        }else{//já pergunta o orçamento caso seja o primeiro acesso
+            //apresentar o layout de pergunta
+            val mDialogView = LayoutInflater.from(activity!!).inflate(R.layout.alert_orcamento, null)
+            //builder do alertdialog com itens da comanda e membros para dividir (Pergunta)
+            val mBuilder = AlertDialog.Builder(activity!!)
+                .setView(mDialogView)
+                .setTitle("Inserir Orçamento para ${currentMonth2()}")
+
+
+            //verificar leak memory
+            val  mAlertDialog = mBuilder.show()
+
+            mDialogView.btnPerguntar.setOnClickListener {
+                val orcamentoNew = mDialogView.edtOrcamento.text
+                InsertOrcamento().execute(Orcamento(null,currentMonth2(),orcamentoNew.toString().toInt()))
+                txtOrcamentoAtual.setText(orcamentoNew.toString())
+                mAlertDialog.dismiss()
+            }
+            mDialogView.btnCancelar.setOnClickListener {
+                mAlertDialog.dismiss()
+            }
+
+        }
+
+        val mAtual = currentMonth2()
 
         btnMapsMenu.setOnClickListener {
             val intt = Intent(this.context!!.applicationContext, MapsActivity::class.java)
@@ -72,20 +106,20 @@ class HomeMenuFragment : Fragment() {
             startActivity(intt)
         }
 
-        //inserir orçamento mensal
+        //inserir novo orçamento mensal
         btnOrcamento.setOnClickListener {
             val contFrag = activity!!.applicationContext
             if(edtOrc.text.isNullOrBlank()){
                 Toast.makeText(this.context!!.applicationContext,"Valor inválido!", Toast.LENGTH_SHORT).show()
             }else{
-
                 //não há orçamentos - primeiro acesso
                 if (totRows.get() == 0){
                     val novoOrcamento = edtOrc.text.toString()
-                    InsertOrcamento().execute(Orcamento(null,currentMonth,novoOrcamento.toInt()))
+                    InsertOrcamento().execute(Orcamento(null,currentMonth2(),novoOrcamento.toInt()))
+                    Toast.makeText(this.context!!.applicationContext,"Novo orçamento ${totRows.get()}",Toast.LENGTH_SHORT).show()
                 }else {
                     txtOrcamentoAtual.text =  GetOrcamento().execute(mAtual).get().valor.toString()
-                    val orcamentoAtual = GetOrcamento().execute(currentMonth).get()
+                    val orcamentoAtual = GetOrcamento().execute(currentMonth2()).get()
                     val txtTitulo = "Trocar Orçamento"
                     val dialogBuilder = AlertDialog.Builder(activity!!)
                     dialogBuilder.setMessage("Tem certeza que gostaria de trocar o orçamento ${orcamentoAtual.valor} por ${edtOrc.text} ?")
@@ -114,25 +148,29 @@ class HomeMenuFragment : Fragment() {
                     alert.show()
                 }
             }
-            val orcAtual = GetOrcamento().execute(currentMonth).get().valor
+            val orcAtual = GetOrcamento().execute(currentMonth2()).get().valor
             //Toast.makeText(this.context!!.applicationContext, "Orçamento é ${orcAtual}", Toast.LENGTH_SHORT).show()
         }
-
-
     }
 
     private fun listarGastos() {
         ListaGastos().execute()
     }
 
-    inner class ListaGastos:AsyncTask<Unit,Unit,Unit>(){
+    inner class ListaGastos:AsyncTask<Unit,Unit,Array<MesaOrc>>(){
 
-        override fun doInBackground(vararg params: Unit) {
-
+        override fun doInBackground(vararg params: Unit):Array<MesaOrc> {
             val gastos = appDatabase.mesaDAO().buscar()
-            gastos.forEach {
-                lstGastos.append(" Mesa: ${it.nome_mesa} , Gasto: ${it.gasto} \n" )
-            }
+            return gastos
+        }
+
+        override fun onPostExecute(result: Array<MesaOrc>) {
+
+            lstGastos.adapter = ArrayAdapter(
+                activity!!.applicationContext,
+                android.R.layout.simple_list_item_1,
+                result
+            )
         }
     }
 
@@ -142,9 +180,16 @@ class HomeMenuFragment : Fragment() {
         }
     }
 
-    inner class GetRows:AsyncTask<Unit,Unit,Int>(){
-        override fun doInBackground(vararg params: Unit?):Int {
-            val totRows = appDatabase.orcamentoDAO().getNumRows()
+    inner class GetRows:AsyncTask<String,Unit,Int>(){
+        override fun doInBackground(vararg params: String?):Int {
+            val totRows = appDatabase.orcamentoDAO().getNumRows(params[0]!!)
+            return totRows
+        }
+    }
+
+    inner class GetRowsGastos:AsyncTask<Int,Unit,Int>(){
+        override fun doInBackground(vararg params: Int?):Int {
+            val totRows = appDatabase.mesaDAO().getNumRows()
             return totRows
         }
     }
@@ -155,6 +200,12 @@ class HomeMenuFragment : Fragment() {
         }
     }
 
+    inner class DeleteMesaGastos:AsyncTask<Unit,Unit,Unit>(){
+        override fun doInBackground(vararg params: Unit?) {
+            appDatabase.mesaDAO().delete()
+        }
+    }
+
     inner class InsertOrcamento:AsyncTask<Orcamento,Unit,Unit>(){
         override fun doInBackground(vararg params: Orcamento?) {
             appDatabase.orcamentoDAO().guardar(params[0]!!)
@@ -162,15 +213,23 @@ class HomeMenuFragment : Fragment() {
 
     }
 
-    inner class GetOrcamento:AsyncTask<Int,Unit,Orcamento>(){
-        override fun doInBackground(vararg params: Int?): Orcamento? {
+    inner class GetOrcamento:AsyncTask<String,Unit,Orcamento>(){
+        override fun doInBackground(vararg params: String?): Orcamento? {
             val valorMesdb = appDatabase.orcamentoDAO().buscarMes(params[0]!!)
             return valorMesdb
         }
 
     }
 
-    private fun currentMonth():Int {
+    inner class GetGastosAtuais:AsyncTask<String,Unit,Int>(){
+        override fun doInBackground(vararg params: String?): Int? {
+            val valorGasto = appDatabase.mesaDAO().gastosAtuais(params[0]!!)
+            return valorGasto
+        }
+
+    }
+
+    private fun currentMonth3():Int {
         val month: Calendar = Calendar.getInstance()
         val mesAtual = month.get(Calendar.MONTH)
         var mes = when (mesAtual) {
@@ -188,9 +247,30 @@ class HomeMenuFragment : Fragment() {
             11 ->  "Dez"
             else -> "Mês"
         }
-        return mesAtual
         txtMes.setText(mes)
+        return mesAtual
+        }
 
+    private fun currentMonth2():String {
+        val month: Calendar = Calendar.getInstance()
+        val mesAtual = month.get(Calendar.MONTH)
+        var mes = when (mesAtual) {
+            0 -> "Janeiro"
+            1 -> "Fevereiro"
+            2 ->  "Março"
+            3 ->  "Abril"
+            4 -> "Maio"
+            5 -> "Junho"
+            6 -> "Julho"
+            7 ->  "Agosto"
+            8 ->  "Setembro"
+            9 ->  "Outubro"
+            10 -> "Novembro"
+            11 ->  "Dezembro"
+            else -> "Mês"
+        }
+        txtMes.setText(mes)
+        return mes
     }
 
     override fun onResume() {

@@ -14,7 +14,7 @@ class AppDatabaseService {
                     context,
                     AppDatabase::class.java,
                     database_name
-                ).fallbackToDestructiveMigration().build()
+                ).build()
                 //).fallbackToDestructiveMigration().build()
             }
             return instance as AppDatabase

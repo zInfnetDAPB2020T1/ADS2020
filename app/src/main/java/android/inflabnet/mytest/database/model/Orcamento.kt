@@ -6,7 +6,12 @@ import androidx.room.PrimaryKey
 @Entity
 class Orcamento (
     @PrimaryKey(autoGenerate = true)
-    var id_orcamento: Int? = null,
-    var mes: Int,
+    var id: Int? = null,
+    var mes: String,
     var valor: Int
-)
+){
+    override fun toString(): String {
+        var mes = "Id ${id}, Mes ${mes}, Valor ${valor}"
+        return mes
+    }
+}

@@ -1,8 +1,8 @@
 {
   "formatVersion": 1,
   "database": {
-    "version": 3,
-    "identityHash": "f87e93f8e761c24bdfabf7a723014ba9",
+    "version": 4,
+    "identityHash": "d8b2032bad647af9f6fb34ff200a8f72",
     "entities": [
       {
         "tableName": "Orcamento",
@@ -38,13 +38,19 @@
       },
       {
         "tableName": "MesaOrc",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id_mesa` INTEGER PRIMARY KEY AUTOINCREMENT, `nome_mesa` TEXT NOT NULL, `gasto` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id_mesa` INTEGER PRIMARY KEY AUTOINCREMENT, `id_orcamento` INTEGER NOT NULL, `nome_mesa` TEXT NOT NULL, `gasto` INTEGER NOT NULL)",
         "fields": [
           {
             "fieldPath": "id_mesa",
             "columnName": "id_mesa",
             "affinity": "INTEGER",
             "notNull": false
+          },
+          {
+            "fieldPath": "id_orcamento",
+            "columnName": "id_orcamento",
+            "affinity": "INTEGER",
+            "notNull": true
           },
           {
             "fieldPath": "nome_mesa",
@@ -72,7 +78,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'f87e93f8e761c24bdfabf7a723014ba9')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'd8b2032bad647af9f6fb34ff200a8f72')"
     ]
   }
 }

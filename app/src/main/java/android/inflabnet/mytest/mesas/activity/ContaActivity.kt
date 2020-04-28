@@ -2,7 +2,6 @@ package android.inflabnet.mytest.mesas.activity
 
 import android.content.Intent
 import android.inflabnet.mytest.R
-import android.inflabnet.mytest.database.OrcDBHelper
 import android.inflabnet.mytest.database.database.AppDatabase
 import android.inflabnet.mytest.database.database.AppDatabaseService
 import android.inflabnet.mytest.database.model.MesaOrc
@@ -17,22 +16,18 @@ import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
-import android.widget.LinearLayout
 import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
-import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import kotlinx.android.synthetic.main.activity_conta_chat.*
-import kotlinx.android.synthetic.main.alert_compartilha_item.*
 import kotlinx.android.synthetic.main.alert_compartilha_item.view.*
-import kotlinx.android.synthetic.main.item_consumido.view.*
+import kotlinx.android.synthetic.main.fragment_home_menu.*
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -446,7 +441,8 @@ class ContaActivity : AppCompatActivity() {
                             }
                             //inserir no banco local o valor que fechou
                             Log.i("TOTAL","Tot conta ${totalConta.toString()}")
-                            GuardarValorMesa().execute(MesaOrc(null,txtMesaConta.text.toString(),totalConta))
+                            val getIdOrcamento = GetIdOrcamento().execute(currentMonth2()).get()
+                            GuardarValorMesa().execute(MesaOrc(null,getIdOrcamento,txtMesaConta.text.toString(),totalConta,currentMonth2()))
                             //coloca user que saiu no txt dos que já correram
                             //txtFinalizado.append("${user} : ${totalConta}\n").toString()
                             //não deixa colocar mais produtos
@@ -653,11 +649,9 @@ class ContaActivity : AppCompatActivity() {
     }
     //colocar os Txts de valores da conta
     private fun setupTxtView(data: ArrayList<Conta>){
-        val month: Calendar = Calendar.getInstance()
-        val currentMonth = month.get(Calendar.MONTH)
         val orcStr: String?
         orcStr = try{
-            GetOrcamento().execute(currentMonth).get().valor.toString()
+            GetOrcamento().execute(currentMonth2()).get().valor.toString()
         }catch (e: Exception){
             "500000.0"
         }
@@ -759,8 +753,8 @@ class ContaActivity : AppCompatActivity() {
         mDatabaseReference?.child("Conta")?.child(pathStr)?.addValueEventListener(postListener)
     }
 
-    inner class GetOrcamento: AsyncTask<Int, Unit, Orcamento>() {
-        override fun doInBackground(vararg params: Int?): Orcamento? {
+    inner class GetOrcamento: AsyncTask<String, Unit, Orcamento>() {
+        override fun doInBackground(vararg params: String?): Orcamento? {
             val valorMesdb = appDatabase.orcamentoDAO().buscarMes(params[0]!!)
             return valorMesdb
         }
@@ -770,5 +764,32 @@ class ContaActivity : AppCompatActivity() {
         override fun doInBackground(vararg params: MesaOrc?) {
             appDatabase.mesaDAO().guardar(params[0]!!)
         }
+    }
+
+    inner class GetIdOrcamento: AsyncTask<String, Unit, Int>() {
+        override fun doInBackground(vararg params: String?): Int? {
+            val idMesCorrente = appDatabase.orcamentoDAO().buscarIdMes(params[0]!!)
+            return idMesCorrente
+        }
+    }
+    private fun currentMonth2():String {
+        val month: Calendar = Calendar.getInstance()
+        val mesAtual = month.get(Calendar.MONTH)
+        var mes = when (mesAtual) {
+            0 -> "Janeiro"
+            1 -> "Fevereiro"
+            2 ->  "Março"
+            3 ->  "Abril"
+            4 -> "Maio"
+            5 -> "Junho"
+            6 -> "Julho"
+            7 ->  "Agosto"
+            8 ->  "Setembro"
+            9 ->  "Outubro"
+            10 -> "Novembro"
+            11 ->  "Dezembro"
+            else -> "Mês"
+        }
+        return mes
     }
 }

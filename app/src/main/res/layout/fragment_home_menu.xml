@@ -15,7 +15,7 @@
             android:id="@+id/txtVwOrcamento"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="60dp"
+            android:layout_marginTop="32dp"
             android:fontFamily="sans-serif-condensed-light"
             android:text="@string/insira_quanto_voc_pretende_gastar_hoje"
             android:textSize="18sp"
@@ -98,30 +98,32 @@
 
         <Button
             android:id="@+id/btnOrcamento"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="49dp"
+            android:layout_height="30dp"
             android:layout_marginStart="8dp"
             android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
             android:background="@drawable/shape_small_buttons"
             android:text="@android:string/ok"
             android:textColor="#FFFFFF"
             android:textStyle="bold"
-            app:layout_constraintBaseline_toBaselineOf="@+id/edtOrc"
-            app:layout_constraintStart_toEndOf="@+id/edtOrc" />
+            app:layout_constraintStart_toEndOf="@+id/edtOrc"
+            app:layout_constraintTop_toBottomOf="@+id/txtVwOrcamento" />
 
         <EditText
             android:id="@+id/edtOrc"
-            android:layout_width="226dp"
-            android:layout_height="0dp"
+            android:layout_width="135dp"
+            android:layout_height="34dp"
             android:layout_marginStart="36dp"
             android:layout_marginLeft="36dp"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="8dp"
+            android:autofillHints=""
             android:ems="10"
             android:hint="@string/insira_aqui_seu_or_amento"
             android:inputType="number"
+            android:textSize="14sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/txtVwOrcamento"
-            android:autofillHints="" />
+            app:layout_constraintTop_toBottomOf="@+id/txtVwOrcamento" />
 
         <TextView
             android:id="@+id/textView2"
@@ -129,8 +131,10 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="36dp"
             android:layout_marginLeft="36dp"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="16dp"
             android:text="Orçamento"
+            android:textSize="18sp"
+            android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/edtOrc" />
 
@@ -140,8 +144,10 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginLeft="16dp"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="16dp"
             android:text="Valor"
+            android:textSize="18sp"
+            android:textStyle="bold"
             app:layout_constraintStart_toEndOf="@+id/txtMes"
             app:layout_constraintTop_toBottomOf="@+id/edtOrc" />
 
@@ -152,18 +158,49 @@
             android:layout_marginStart="17dp"
             android:layout_marginLeft="17dp"
             android:text="Mês"
+            android:textSize="18sp"
+            android:textStyle="bold"
             app:layout_constraintBaseline_toBaselineOf="@+id/textView2"
             app:layout_constraintStart_toEndOf="@+id/textView2" />
 
         <TextView
+            android:id="@+id/txtGastou"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="11dp"
+            android:layout_marginLeft="11dp"
+            android:text="Gastou"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintBaseline_toBaselineOf="@+id/txtOrcamentoAtual"
+            app:layout_constraintStart_toEndOf="@+id/textView3" />
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:text="/"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintBaseline_toBaselineOf="@+id/txtOrcamentoAtual"
+            app:layout_constraintStart_toEndOf="@+id/txtOrcamentoAtual" />
+
+        <ListView
             android:id="@+id/lstGastos"
-            android:layout_width="330dp"
-            android:layout_height="127dp"
-            android:layout_marginStart="37dp"
-            android:layout_marginLeft="37dp"
-            android:layout_marginTop="34dp"
+            android:layout_width="371dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="32dp"
+            android:layout_marginLeft="32dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="32dp"
+            android:layout_marginRight="32dp"
+            android:layout_marginBottom="32dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView2" />
+            app:layout_constraintTop_toBottomOf="@+id/txtMes" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>

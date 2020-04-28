@@ -1,4 +1,4 @@
-package android.inflabnet.mytest.database
+package android.inflabnet.mytest.database.old
 
 import android.content.ContentValues
 import android.content.Context
@@ -8,7 +8,10 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteException
 import android.database.sqlite.SQLiteOpenHelper
 
-class OrcDBHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
+class OrcDBHelper(context: Context) : SQLiteOpenHelper(context,
+    DATABASE_NAME, null,
+    DATABASE_VERSION
+) {
     override fun onCreate(db: SQLiteDatabase) {
         db.execSQL(SQL_CREATE_ENTRIES)
     }

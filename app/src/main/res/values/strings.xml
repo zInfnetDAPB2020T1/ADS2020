@@ -15,12 +15,12 @@
     <string name="google_maps_key"></string>
     <string name="cadastrar_nova_mesa">Cadastrar Nova Mesa:</string>
     <string name="msg_token_fmt">Sucesso</string>
-    <string name="insira_quanto_voc_pretende_gastar_hoje">Insira quanto você pretende gastar esse mês!</string>
+    <string name="insira_quanto_voc_pretende_gastar_hoje">Gostaria de alterar seu orçamento?</string>
     <string name="compartilhe_sua_localiza_o_com_amigos">Compartilhe sua localização com amigos!</string>
     <string name="acompanhe_as_mesas_criadas">Acompanhe as mesas criadas!</string>
     <string name="menu">Menu</string>
     <string name="check_in">Check-in</string>
-    <string name="insira_aqui_seu_or_amento">Insira aqui seu orçamento</string>
+    <string name="insira_aqui_seu_or_amento">novo orçamento</string>
     <string name="mesas">Mesas</string>
 
 </resources>
