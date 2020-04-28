@@ -21,6 +21,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.alert_orcamento.*
 import kotlinx.android.synthetic.main.alert_orcamento.view.*
@@ -60,8 +61,8 @@ class HomeMenuFragment : Fragment() {
         txtGastou.text = jaGastou.toString()
 
         //listar gastos na list
-        val checkGastos = GetRowsGastos().execute().get()
-        Log.i("TESTEE",checkGastos.toString())
+        val checkGastos: Int = GetRowsGastos().execute().get()
+
         if (checkGastos != 0) {
             listarGastos()
         }
@@ -70,6 +71,15 @@ class HomeMenuFragment : Fragment() {
         val totRows = GetRows().execute(currentMonth2())
         if (totRows.get() != 0){
             txtOrcamentoAtual.text = GetOrcamento().execute(currentMonth2()).get().valor.toString()
+            //colocar cor nos gastos atuais de acordo com orçamento
+            if(!jaGastou.equals(0)) {
+                val orcamento = GetOrcamento().execute(currentMonth2()).get().valor
+                val percentage = (jaGastou / orcamento) * 100.0
+                //Toast.makeText(this.context!!.applicationContext,"Percentagem: ${percentage}",Toast.LENGTH_SHORT).show()
+                //Toast.makeText(this.context!!.applicationContext,"orcamento: ${orcamento}",Toast.LENGTH_SHORT).show()
+                corOrcamento(percentage)
+            }
+
         }else{//já pergunta o orçamento caso seja o primeiro acesso
             //apresentar o layout de pergunta
             val mDialogView = LayoutInflater.from(activity!!).inflate(R.layout.alert_orcamento, null)
@@ -77,8 +87,6 @@ class HomeMenuFragment : Fragment() {
             val mBuilder = AlertDialog.Builder(activity!!)
                 .setView(mDialogView)
                 .setTitle("Inserir Orçamento para ${currentMonth2()}")
-
-
             //verificar leak memory
             val  mAlertDialog = mBuilder.show()
 
@@ -151,7 +159,35 @@ class HomeMenuFragment : Fragment() {
             val orcAtual = GetOrcamento().execute(currentMonth2()).get().valor
             //Toast.makeText(this.context!!.applicationContext, "Orçamento é ${orcAtual}", Toast.LENGTH_SHORT).show()
         }
+
+        textView2.setOnClickListener {
+            ListaGastos().execute()
+            //quanto já gastou no presente mês
+            val jaGastou = GetGastosAtuais().execute(currentMonth2()).get()
+            txtGastou.text = jaGastou.toString()
+            val orcamento = GetOrcamento().execute(currentMonth2()).get().valor
+            val percentage = (jaGastou / orcamento) * 100.0
+//            Toast.makeText(this.context!!.applicationContext,"Percentagem: ${percentage}",Toast.LENGTH_SHORT).show()
+//            Toast.makeText(this.context!!.applicationContext,"orcamento: ${orcamento}",Toast.LENGTH_SHORT).show()
+//            Toast.makeText(this.context!!.applicationContext,"Ja Gastou: ${jaGastou}",Toast.LENGTH_SHORT).show()
+            corOrcamento(percentage)
+            //Log.i("TESTEEE",jaGastou.toString())
+        }
     }
+
+    private fun corOrcamento(percentage: Double) {
+        if (percentage < 75.0) {
+            txtOrcamentoAtual.setTextColor(ContextCompat.getColor(activity!!, R.color.green))
+            txtGastou.setTextColor(ContextCompat.getColor(activity!!, R.color.green))
+        } else if (percentage < 90.0) {
+            txtOrcamentoAtual.setTextColor(ContextCompat.getColor(activity!!, R.color.yellow))
+            txtGastou.setTextColor(ContextCompat.getColor(activity!!, R.color.yellow))
+        } else {
+            txtOrcamentoAtual.setTextColor(ContextCompat.getColor(activity!!, R.color.red))
+            txtGastou.setTextColor(ContextCompat.getColor(activity!!, R.color.red))
+        }
+    }
+
 
     private fun listarGastos() {
         ListaGastos().execute()
@@ -229,28 +265,6 @@ class HomeMenuFragment : Fragment() {
 
     }
 
-    private fun currentMonth3():Int {
-        val month: Calendar = Calendar.getInstance()
-        val mesAtual = month.get(Calendar.MONTH)
-        var mes = when (mesAtual) {
-            0 -> "Jan"
-            1 -> "Fev"
-            2 ->  "Mar"
-            3 ->  "Abr"
-            4 -> "Mai"
-            5 -> "Jun"
-            6 -> "Jul"
-            7 ->  "Ago"
-            8 ->  "Set"
-            9 ->  "Out"
-            10 -> "Nov"
-            11 ->  "Dez"
-            else -> "Mês"
-        }
-        txtMes.setText(mes)
-        return mesAtual
-        }
-
     private fun currentMonth2():String {
         val month: Calendar = Calendar.getInstance()
         val mesAtual = month.get(Calendar.MONTH)
@@ -271,10 +285,5 @@ class HomeMenuFragment : Fragment() {
         }
         txtMes.setText(mes)
         return mes
-    }
-
-    override fun onResume() {
-        super.onResume()
-
     }
 }

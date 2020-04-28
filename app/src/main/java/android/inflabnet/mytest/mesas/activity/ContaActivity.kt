@@ -442,7 +442,7 @@ class ContaActivity : AppCompatActivity() {
                             //inserir no banco local o valor que fechou
                             Log.i("TOTAL","Tot conta ${totalConta.toString()}")
                             val getIdOrcamento = GetIdOrcamento().execute(currentMonth2()).get()
-                            GuardarValorMesa().execute(MesaOrc(null,getIdOrcamento,txtMesaConta.text.toString(),totalConta,currentMonth2()))
+                            GuardarValorMesa().execute(MesaOrc(getIdOrcamento,txtMesaConta.text.toString(),totalConta,currentMonth2()))
                             //coloca user que saiu no txt dos que já correram
                             //txtFinalizado.append("${user} : ${totalConta}\n").toString()
                             //não deixa colocar mais produtos

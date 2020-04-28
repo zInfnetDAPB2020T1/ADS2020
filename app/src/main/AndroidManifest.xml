@@ -17,11 +17,6 @@
         </activity>
         <activity android:name=".mesas.activity.MainActivityChat" />
         <activity android:name=".HomeActivity" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity android:name=".login.DataActivity" />
         <activity android:name=".login.CreateAccountActivity" />
@@ -34,7 +29,11 @@
 
         <activity android:name=".maps.MapsActivity" />
         <activity android:name=".login.SplashActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity android:name=".login.MainActivity" />
         <!-- Firebase Service -->

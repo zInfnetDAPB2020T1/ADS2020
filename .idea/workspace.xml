@@ -11,29 +11,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="81d720e3-0536-4740-a9b9-a1933877bc40" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/app/schemas/android.inflabnet.mytest.database.database.AppDatabase/4.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/schemas/android.inflabnet.mytest.database.database.AppDatabase/5.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/schemas/android.inflabnet.mytest.database.database.AppDatabase/6.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/schemas/android.inflabnet.mytest.database.database.AppDatabase/7.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/android/inflabnet/mytest/database/model/OrcamentoEMesa.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/res/layout/alert_orcamento.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/schemas/android.inflabnet.mytest.database.database.AppDatabase/3.json" beforeDir="false" afterPath="$PROJECT_DIR$/app/schemas/android.inflabnet.mytest.database.database.AppDatabase/3.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/android/inflabnet/mytest/database/DBContract.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/android/inflabnet/mytest/database/old/DBContract.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/android/inflabnet/mytest/database/OrcDBHelper.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/android/inflabnet/mytest/database/old/OrcDBHelper.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/android/inflabnet/mytest/database/dao/MesaDAO.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/android/inflabnet/mytest/database/dao/MesaDAO.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/android/inflabnet/mytest/database/dao/OrcamentoDAO.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/android/inflabnet/mytest/database/dao/OrcamentoDAO.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/android/inflabnet/mytest/database/dao/SaldoDAO.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/android/inflabnet/mytest/database/database/AppDatabase.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/android/inflabnet/mytest/database/database/AppDatabase.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/android/inflabnet/mytest/database/database/AppDatabaseService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/android/inflabnet/mytest/database/database/AppDatabaseService.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/android/inflabnet/mytest/database/model/MesaOrc.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/android/inflabnet/mytest/database/model/MesaOrc.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/android/inflabnet/mytest/database/model/Orcamento.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/android/inflabnet/mytest/database/model/Orcamento.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/android/inflabnet/mytest/database/model/Saldo.kt" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/android/inflabnet/mytest/fragments/HomeMenuFragment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/android/inflabnet/mytest/fragments/HomeMenuFragment.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/android/inflabnet/mytest/mesas/activity/ContaActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/android/inflabnet/mytest/mesas/activity/ContaActivity.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_conta_chat.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_conta_chat.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/fragment_home_menu.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/fragment_home_menu.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -41,7 +24,7 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="RQ8M50VVV9D" />
+  <component name="ExecutionTargetManager" SELECTED_TARGET="Pixel_2_API_24" />
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$">
       <ProjectState />
@@ -50,7 +33,12 @@
   <component name="ExternalProjectsManager">
     <system id="GRADLE">
       <state>
-        <projects_view />
+        <projects_view>
+          <tree_state>
+            <expand />
+            <select />
+          </tree_state>
+        </projects_view>
       </state>
     </system>
   </component>
@@ -452,7 +440,14 @@
       <option name="project" value="LOCAL" />
       <updated>1588028073124</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="criação de relatório de gastos na tela de menu">
+      <created>1588100300504</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1588100300504</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -473,6 +468,7 @@
     <MESSAGE value="removing" />
     <MESSAGE value="new restart" />
     <MESSAGE value="usando room database para controle dos gastos&#10;removido antigo método de acesso ao SQLite" />
-    <option name="LAST_COMMIT_MESSAGE" value="usando room database para controle dos gastos&#10;removido antigo método de acesso ao SQLite" />
+    <MESSAGE value="criação de relatório de gastos na tela de menu" />
+    <option name="LAST_COMMIT_MESSAGE" value="criação de relatório de gastos na tela de menu" />
   </component>
 </project>
