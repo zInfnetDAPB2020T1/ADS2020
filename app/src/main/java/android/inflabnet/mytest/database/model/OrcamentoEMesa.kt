@@ -9,9 +9,5 @@ class OrcamentoEMesa (
             @Relation(
                 parentColumn = "id", //id na tabela orçamento
                 entityColumn = "id_orcamento" //id de orçamento na tabela MesaOrc
-            ) val mesaorc: MesaOrc
-){
-    override fun toString(): String {
-        return "Mês ${orcamento.mes} : Mesa ${mesaorc.nome_mesa} : Valor ${mesaorc.gasto}"
-    }
-}
+            ) val mesaorc: List<MesaOrc>
+)

@@ -32,7 +32,7 @@ interface OrcamentoDAO {
 
     @Transaction
     @Query ("Select * from Orcamento")
-    fun buscaGeral(): Array<OrcamentoEMesa>
+    fun buscaGeral(): List<OrcamentoEMesa>
 
     //busca id para inserir na tabela MesaOrc
     @Query ("Select id from Orcamento where mes = :Mes")

@@ -3,6 +3,7 @@ package android.inflabnet.mytest.fragments
 
 import android.content.Context
 import android.content.Intent
+import android.inflabnet.mytest.GastosAdapter
 import android.inflabnet.mytest.R
 import android.inflabnet.mytest.database.database.AppDatabase
 import android.inflabnet.mytest.database.database.AppDatabaseService
@@ -23,6 +24,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.alert_orcamento.*
 import kotlinx.android.synthetic.main.alert_orcamento.view.*
 import kotlinx.android.synthetic.main.fragment_home_menu.*
@@ -193,20 +195,35 @@ class HomeMenuFragment : Fragment() {
         ListaGastos().execute()
     }
 
-    inner class ListaGastos:AsyncTask<Unit,Unit,Array<MesaOrc>>(){
+    inner class ListaGastos:AsyncTask<Unit,Unit,List<OrcamentoEMesa>>(){
 
-        override fun doInBackground(vararg params: Unit):Array<MesaOrc> {
-            val gastos = appDatabase.mesaDAO().buscar()
+        override fun doInBackground(vararg params: Unit):List<OrcamentoEMesa> {
+            val gastos = appDatabase.orcamentoDAO().buscaGeral()
             return gastos
         }
 
-        override fun onPostExecute(result: Array<MesaOrc>) {
+        override fun onPostExecute(result: List<OrcamentoEMesa>) {
+            val toReturn : MutableList<MesaOrc> = mutableListOf()
+            result.forEach {
+                it.mesaorc.forEach {
+                    toReturn.add(it)
+                }
+            }
 
-            lstGastos.adapter = ArrayAdapter(
-                activity!!.applicationContext,
-                android.R.layout.simple_list_item_1,
-                result
-            )
+            val linearLayoutManager = LinearLayoutManager(activity!!.applicationContext)
+            rvGastos.layoutManager = linearLayoutManager
+            rvGastos.scrollToPosition(result!!.size)
+            rvGastos.adapter = GastosAdapter(toReturn) {
+
+            }
+
+            result.forEach {
+                Log.i("RESULT ORC", it.orcamento.toString())
+                it.mesaorc.forEach {
+                    Log.i("RESULT MES", " ${it.nome_mesa} ${it.gasto} ")
+                }
+            }
+
         }
     }
 
