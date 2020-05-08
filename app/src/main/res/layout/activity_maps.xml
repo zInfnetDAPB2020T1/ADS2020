@@ -18,6 +18,11 @@
 
         </fragment>
 
+        <TextView
+            android:id="@+id/textView19"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
         <Button
             android:id="@+id/btn_get_current_place"
             android:layout_width="match_parent"
@@ -71,11 +76,5 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
-        <fragment
-            android:id="@+id/map"
-            android:name="com.google.android.gms.maps.SupportMapFragment"
-            android:layout_width="match_parent"
-            android:layout_height="711dp"
-            tools:context=".maps.MapsActivity" />
     </LinearLayout>
 </ScrollView>

@@ -4,6 +4,7 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_maps">Map</string>
     <string name="places_api_key"></string>
+    <string name="google_maps_key"></string>
     <string name="apresenta_o_da_logo">Apresentação da Logo</string>
 
     <string name="email">Email</string>
@@ -12,7 +13,6 @@
     <string name="last_name">Sobrenome</string>
     <string name="login_title">Acessar</string>
     <string name="create_act">Criar Conta</string>
-    <string name="google_maps_key"></string>
     <string name="cadastrar_nova_mesa">Cadastrar Nova Mesa:</string>
     <string name="msg_token_fmt">Sucesso</string>
     <string name="insira_quanto_voc_pretende_gastar_hoje">Gostaria de alterar seu orçamento?</string>
@@ -22,5 +22,6 @@
     <string name="check_in">Check-in</string>
     <string name="insira_aqui_seu_or_amento">novo orçamento</string>
     <string name="mesas">Mesas</string>
+    <string name="title_activity_mapa_de_locais">Map</string>
 
 </resources>

@@ -1,5 +1,6 @@
-package android.inflabnet.mytest
+package android.inflabnet.mytest.database.adapter
 
+import android.inflabnet.mytest.R
 import android.inflabnet.mytest.database.model.MesaOrc
 import android.view.LayoutInflater
 import android.view.View
@@ -9,16 +10,19 @@ import kotlinx.android.synthetic.main.orcamento_item.view.*
 
 class GastosAdapter(val gastos: List<MesaOrc>, private val itemClick: (MesaOrc) -> Unit)
     :RecyclerView.Adapter<GastosAdapter.ViewHolder> (){
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GastosAdapter.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.orcamento_item,parent,false)
-        return ViewHolder(view, itemClick)
+        return ViewHolder(
+            view,
+            itemClick
+        )
     }
 
     override fun getItemCount(): Int {
         return gastos.size
     }
 
-    override fun onBindViewHolder(holder: GastosAdapter.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bindForecast(gastos[position])
     }
 

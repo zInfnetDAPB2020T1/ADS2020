@@ -37,11 +37,7 @@ import com.karumi.dexter.listener.multi.MultiplePermissionsListener
 import kotlinx.android.synthetic.main.activity_maps.*
 import java.util.*
 
-class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
-
-    //mapa
-    lateinit var context: Context
-    lateinit var mMap: GoogleMap
+class MapsActivity : AppCompatActivity() {
 
     //places
     var placeFields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.ADDRESS)
@@ -52,9 +48,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_maps)
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        context = this@MapsActivity
-        val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
-        mapFragment.getMapAsync(this)
 
         //places
         requestPermission()
@@ -65,17 +58,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
 
-    /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
-     */
-    //places abaixo
 
+
+    //places abaixo
     private fun requestPermission() {
         Dexter.withActivity(this)
             .withPermissions(Arrays.asList(
@@ -90,7 +75,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                     permissions: MutableList<com.karumi.dexter.listener.PermissionRequest>?,
                     token: PermissionToken?
                 ) {
-                    Toast.makeText(this@MapsActivity,"You should accept Permission", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this@MapsActivity,"A permissão é necessária", Toast.LENGTH_LONG).show()
                 }
             }).check()
 
@@ -159,7 +144,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 }
                 else
                 {
-                    Toast.makeText(this, "Place not found!", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this, "Local não encontrado", Toast.LENGTH_LONG).show()
                 }
             }
         }
@@ -207,48 +192,4 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
-
-    //mapa abaixo
-    override fun onMapReady(p0: GoogleMap) {
-        mMap = p0
-        HitApi(this@MapsActivity,-22.82 ,-43.16,10000,"Hospitality").execute()
-    }
-    private inner class HitApi: AsyncTask<Void, Void, String> {
-        var context : Context? = null
-        var lat : Double? = null
-        var lng : Double? = null
-        var radius : Int? = null
-        var type : String? = null
-
-        constructor(context: Context,lat: Double,lng: Double,radius: Int,type: String) {
-            this.context = context
-            this.lat = lat
-            this.lng = lng
-            this.radius = radius
-            this.type = type
-        }
-        override fun doInBackground(vararg params: Void?): String {
-            return GooglePlacesApi().getPlacesJson(context as Context,lat as  Double,lng as Double,radius as Int,type as String)
-
-        }
-
-        override fun onPostExecute(result: String?) {
-            super.onPostExecute(result)
-
-            val gson = GsonBuilder().create()
-
-            val root = gson.fromJson(result, PlacesRootClass::class.java)
-            addMarkers(root)
-        }
-    }
-
-
-    public fun addMarkers(root: PlacesRootClass){
-        for (result  in root.results){
-            val p  = LatLng(result.geometry.location.lat, result.geometry.location.lng)
-            mMap.addMarker(MarkerOptions().position(p).title(result.name))
-        }
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(LatLng(-22.905821 ,-43.1790907)))
-        mMap.animateCamera(CameraUpdateFactory.zoomTo(14f))
-    }
 }

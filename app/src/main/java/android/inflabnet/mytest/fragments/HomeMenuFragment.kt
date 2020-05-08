@@ -3,13 +3,14 @@ package android.inflabnet.mytest.fragments
 
 import android.content.Context
 import android.content.Intent
-import android.inflabnet.mytest.GastosAdapter
+import android.inflabnet.mytest.database.adapter.GastosAdapter
 import android.inflabnet.mytest.R
 import android.inflabnet.mytest.database.database.AppDatabase
 import android.inflabnet.mytest.database.database.AppDatabaseService
 import android.inflabnet.mytest.database.model.MesaOrc
 import android.inflabnet.mytest.database.model.Orcamento
 import android.inflabnet.mytest.database.model.OrcamentoEMesa
+import android.inflabnet.mytest.maps.HomeMapsActivity
 import android.inflabnet.mytest.maps.MapsActivity
 import android.inflabnet.mytest.mesas.activity.MesaActivity
 import android.os.AsyncTask
@@ -19,13 +20,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import kotlinx.android.synthetic.main.alert_orcamento.*
 import kotlinx.android.synthetic.main.alert_orcamento.view.*
 import kotlinx.android.synthetic.main.fragment_home_menu.*
 import java.util.*
@@ -107,7 +106,7 @@ class HomeMenuFragment : Fragment() {
         val mAtual = currentMonth2()
 
         btnMapsMenu.setOnClickListener {
-            val intt = Intent(this.context!!.applicationContext, MapsActivity::class.java)
+            val intt = Intent(this.context!!.applicationContext, HomeMapsActivity::class.java)
             startActivity(intt)
         }
 
@@ -213,9 +212,10 @@ class HomeMenuFragment : Fragment() {
             val linearLayoutManager = LinearLayoutManager(activity!!.applicationContext)
             rvGastos.layoutManager = linearLayoutManager
             rvGastos.scrollToPosition(result!!.size)
-            rvGastos.adapter = GastosAdapter(toReturn) {
+            rvGastos.adapter =
+                GastosAdapter(toReturn) {
 
-            }
+                }
 
             result.forEach {
                 Log.i("RESULT ORC", it.orcamento.toString())

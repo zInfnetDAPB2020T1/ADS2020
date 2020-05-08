@@ -12,9 +12,10 @@ class GooglePlacesApi {
     public fun getPlacesJson (context : Context, lat : Double, lng : Double, radius : Int, type : String) : String{
         var result = ""
         try {
-            var key: String = context.resources.getString(R.string.places_api_key)
-            var urlStr: String = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=$lat,$lng&radius=$radius&type=$type&key=$key"
-            var url : URL = URL(urlStr)
+            val key: String = context.resources.getString(R.string.places_api_key)
+            val urlStr: String = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=$lat,$lng&radius=$radius&type=$type&key=$key"
+            Log.i("Placess", urlStr)
+            val url : URL = URL(urlStr)
             val connection: HttpURLConnection = url.openConnection() as HttpURLConnection
 
             connection.setRequestProperty("Content-Type", "application/json")

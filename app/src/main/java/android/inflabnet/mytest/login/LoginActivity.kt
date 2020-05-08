@@ -33,11 +33,9 @@ class LoginActivity : AppCompatActivity() {
         initialise()
         getToken()
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
-
     }
 
     private fun initialise() {
-
         mAuth = FirebaseAuth.getInstance()
         tv_forgot_password!!
             .setOnClickListener {
@@ -71,7 +69,6 @@ class LoginActivity : AppCompatActivity() {
                     progressbar.visibility = View.GONE
                     if (task.isSuccessful) {
                         // Sucesso na autenticação
-
                         Log.d(TAG, "Sucesso na autenticação")
                         updateUI()
                     } else {
