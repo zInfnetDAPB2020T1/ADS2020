@@ -12,26 +12,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="81d720e3-0536-4740-a9b9-a1933877bc40" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/app/src/debug/res/values/google_maps_api.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/android/inflabnet/mytest/maps/HomeMapsActivity.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/android/inflabnet/mytest/maps/MapaDeLocais.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/android/inflabnet/mytest/maps/PlacesAdapter.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/android/inflabnet/mytest/maps/UserLocation.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_home_maps.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_mapa_de_locais.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/res/layout/escolhe_tipo.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/res/layout/place_tipo.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/release/res/values/google_maps_api.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/android/inflabnet/mytest/mesas/activity/MembrosAdapter.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/android/inflabnet/mytest/mesas/activity/SairamAdapter.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/res/layout/membro_mesa.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/res/layout/sairam_mesa.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/app/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/android/inflabnet/mytest/GastosAdapter.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/android/inflabnet/mytest/database/adapter/GastosAdapter.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/android/inflabnet/mytest/fragments/HomeMenuFragment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/android/inflabnet/mytest/fragments/HomeMenuFragment.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/android/inflabnet/mytest/login/LoginActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/android/inflabnet/mytest/login/LoginActivity.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/android/inflabnet/mytest/maps/GooglePlacesApi.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/android/inflabnet/mytest/maps/GooglePlacesApi.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/android/inflabnet/mytest/maps/MapsActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/android/inflabnet/mytest/maps/MapsActivity.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_maps.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_maps.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/android/inflabnet/mytest/mesas/activity/ContaActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/android/inflabnet/mytest/mesas/activity/ContaActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout-v21/activity_login.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout-v21/activity_login.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout-v21/activity_mesa.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout-v21/activity_mesa.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_conta_chat.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_conta_chat.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_login.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_login.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_mesa.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_mesa.xml" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -61,8 +52,8 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Kotlin Interface" />
-        <option value="layoutResourceFile" />
         <option value="Kotlin Class" />
+        <option value="layoutResourceFile" />
       </list>
     </option>
   </component>
@@ -76,7 +67,7 @@
   <component name="PropertiesComponent">
     <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
     <property name="DeviceAndSnapshotComboBoxAction.selectedDevice" value="RQ8M50VVV9D" />
-    <property name="DeviceAndSnapshotComboBoxAction.selectionTime" value="2020-05-08T19:46:25.656Z" />
+    <property name="DeviceAndSnapshotComboBoxAction.selectionTime" value="2020-05-08T22:31:10.904Z" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/../DKAEP4" />
     <property name="project.structure.last.edited" value="Project" />
@@ -88,8 +79,8 @@
     <option name="LAST_EDITED_BUILD_TYPE" value="release" />
   </component>
   <component name="RecentsManager">
-    <key name="CreateKotlinClassDialog.RecentsKey">
-      <recent name="android.inflabnet.mytest.maps" />
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Marcelo\AndroidStudioProjects\ADS2020\app\src\main\res\layout" />
     </key>
     <key name="MoveKotlinTopLevelDeclarationsDialog.RECENTS_KEY">
       <recent name="android.inflabnet.mytest.database.adapter" />
@@ -104,8 +95,9 @@
     <key name="CopyKotlinDeclarationDialog.RECENTS_KEY">
       <recent name="android.inflabnet.mytest" />
     </key>
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="C:\Users\Marcelo\AndroidStudioProjects\ADS2020\app\src\main\res\layout" />
+    <key name="CreateKotlinClassDialog.RecentsKey">
+      <recent name="android.inflabnet.mytest.mesas.activity" />
+      <recent name="android.inflabnet.mytest.maps" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -484,7 +476,14 @@
       <option name="project" value="LOCAL" />
       <updated>1588543047159</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="Guardar a localização ok">
+      <created>1588969252296</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1588969252297</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -508,6 +507,7 @@
     <MESSAGE value="criação de relatório de gastos na tela de menu" />
     <MESSAGE value="Orçamento ok" />
     <MESSAGE value="Recycleviewr e transaction ok na tela inicial" />
-    <option name="LAST_COMMIT_MESSAGE" value="Recycleviewr e transaction ok na tela inicial" />
+    <MESSAGE value="Guardar a localização ok" />
+    <option name="LAST_COMMIT_MESSAGE" value="Guardar a localização ok" />
   </component>
 </project>

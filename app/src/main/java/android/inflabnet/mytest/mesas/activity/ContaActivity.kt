@@ -7,8 +7,10 @@ import android.inflabnet.mytest.database.database.AppDatabaseService
 import android.inflabnet.mytest.database.model.MesaOrc
 import android.inflabnet.mytest.database.model.Orcamento
 import android.inflabnet.mytest.login.LoginActivity
+import android.inflabnet.mytest.maps.UserLocation
 import android.inflabnet.mytest.mesas.adapter.ContaAdapter
 import android.inflabnet.mytest.mesas.model.*
+import android.net.Uri
 import android.os.AsyncTask
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
@@ -517,15 +519,18 @@ class ContaActivity : AppCompatActivity() {
 
     //popular o txt com quem já saiu do grupo
     private fun jaFinalizados() {
+        val toSairam: MutableList<String> = mutableListOf()
         val japagouListener = object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
-                txtFinalizado.setText("")
+                //txtFinalizado.setText("")
                 //varre a lista membros do FBase procurando o nome da mesa
                 //se encontrar no grupo dos aPagar adicionar ao TXT
                 dataSnapshot.children.forEach{
                     if(it.getValue<fechouConta>(fechouConta::class.java)?.mesa.toString() == txtMesaConta.text.toString()) {
-                        txtFinalizado.append(" ${it.getValue<fechouConta>(fechouConta::class.java)?.user.toString()} : ${it.getValue<fechouConta>(fechouConta::class.java)?.totConta.toString()}\n").toString()
+                        //txtFinalizado.append(" ${it.getValue<fechouConta>(fechouConta::class.java)?.user.toString()} : ${it.getValue<fechouConta>(fechouConta::class.java)?.totConta.toString()}\n").toString()
+                        toSairam.add("${it.getValue<fechouConta>(fechouConta::class.java)?.user.toString()} : ${it.getValue<fechouConta>(fechouConta::class.java)?.totConta.toString()}")
                     }
+                    setupSairam(toSairam)
                 }
             }
             override fun onCancelled(p0: DatabaseError) {
@@ -535,23 +540,93 @@ class ContaActivity : AppCompatActivity() {
         mDatabaseReference!!.child("aPagar").addValueEventListener(japagouListener)
     }
 
+    private fun setupSairam(toSairam: MutableList<String>) {
+        val linearLayoutManager = LinearLayoutManager(applicationContext)
+        rvSairam.layoutManager = linearLayoutManager
+        rvSairam.scrollToPosition(toSairam.size)
+        rvSairam.adapter = SairamAdapter(toSairam){
+
+        }
+
+    }
+
     //atualiza os membros da mesa em txtMembros
     private fun membrosLista(mesa: String) {
+        val toMembros: MutableList<String> = mutableListOf()
         val membroListener = object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
-                txtMembros.setText("")
+                //txtMembros.setText("")
                 //varre a lista membros do FBase procurando o nome da mesa
                 //se encontrar adiciona o membro no txtMembros
                 dataSnapshot.children.forEach{
-                    if(it.getValue<MembrosMesa>(MembrosMesa::class.java)?.nomeMesa.toString() == mesa )
-                        txtMembros.append("${it.getValue<MembrosMesa>(MembrosMesa::class.java)?.membro.toString()}\n")
+                    if(it.getValue(MembrosMesa::class.java)?.nomeMesa.toString() == mesa )
+                        //txtMembros.append("${it.getValue(MembrosMesa::class.java)?.membro.toString()}\n")
+                        //montando lista para recycleview membros
+                        toMembros.add(it.getValue(MembrosMesa::class.java)?.membro.toString())
                 }
+                setupMembros(toMembros)
             }
             override fun onCancelled(p0: DatabaseError) {
                 Toast.makeText(applicationContext, "Errroooo",Toast.LENGTH_SHORT ).show()
             }
         }
         mDatabaseReference!!.child("Membros").addValueEventListener(membroListener)
+    }
+
+    private fun setupMembros(toMembros: MutableList<String>) {
+        val linearLayoutManager = LinearLayoutManager(applicationContext)
+        rvMembros.layoutManager = linearLayoutManager
+        rvMembros.scrollToPosition(toMembros.size)
+        rvMembros.adapter = MembrosAdapter(toMembros){
+            val dialogBuilder = AlertDialog.Builder(this)
+            dialogBuilder.setMessage("Gostaria de localizar ${it}?")
+                .setCancelable(false)
+                .setPositiveButton("Sim"){_, _ ->
+                    val pessoa : String = it.replace(".","")
+                    var locationStr : String? = null
+                    val membroListener = object : ValueEventListener {
+                        override fun onDataChange(dataSnapshot: DataSnapshot) {
+                            //varre a lista membros do FBase procurando o nome da mesa
+                            //se encontrar adiciona o membro no txtMembros
+                            dataSnapshot.children.forEach{
+                                if(it.getValue(UserLocation::class.java)?.user == pessoa )
+                                    locationStr = it.getValue(UserLocation::class.java)?.location.toString()
+                            }
+                            if(locationStr != null){
+                                val addressUri = Uri.parse("geo:0,0?q=$locationStr")
+                                val intent = Intent(Intent.ACTION_VIEW, addressUri)
+                                // Find an activity to handle the intent, and start that activity.
+                                if (intent.resolveActivity(packageManager) != null) {
+                                    startActivity(intent)
+                                } else {
+                                    Log.d("ImplicitIntents", "Não é possível abrir mapa!")
+                                }
+                            }else{
+                                Toast.makeText(applicationContext,"${pessoa} sem localização disponível", Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                        override fun onCancelled(p0: DatabaseError) {
+                            Toast.makeText(applicationContext, "Errroooo",Toast.LENGTH_SHORT ).show()
+                        }
+                    }
+                    mDatabaseReference!!.child("UserLocations").addValueEventListener(membroListener)
+
+                }
+                .setNegativeButton("Não") { _, _ ->
+
+                }
+                .setNeutralButton("Cancelar") {_, _ ->
+
+                }
+            val alert = dialogBuilder.create()
+            alert.setTitle("Localizar Membro")
+            alert.show()
+
+
+
+
+        }
+
     }
 
     //ao clicar para enviar um item para comanda e entrar no grupo da mesa, caso já não esteja
@@ -564,25 +639,17 @@ class ContaActivity : AppCompatActivity() {
             Toast.makeText(this, "Por favor, colocar o valor do item", Toast.LENGTH_SHORT).show()
         }
         else{
-            //entrar no grupo da mesa
-            //aparece a conta
-            if (user.toString() in txtMembros.text){
-                //Toast.makeText(this,"Cliente já está na mesa", Toast.LENGTH_SHORT).show()
-            }else {
-                //atiualizar firebase com nome da mesa e novo membro
-                val mesa = user?.let { it1 -> MembrosMesa(txtMesaConta.text.toString(), it1) }
-                val key = mDatabaseReference!!.child("Membros").push().key
-                if (mesa != null) {
-                    if (key != null) {
-                        mesa.id = key
-                    }
-                }
+            //atiualizar firebase com nome da mesa e novo membro
+            val mesa = user?.let { it1 -> MembrosMesa(txtMesaConta.text.toString(), it1) }
+            val key = mDatabaseReference!!.child("Membros").push().key
+            if (mesa != null) {
                 if (key != null) {
-                    mDatabaseReference!!.child("Membros").child(key).setValue(mesa)
-                    //coloca o user no grupo membros da mesa
-                    //txtMembros.append(user)
-
+                    mesa.id = key
                 }
+            }
+            if (key != null) {
+                mDatabaseReference!!.child("Membros").child(key).setValue(mesa)
+
             }
             //enviar dados do item consumido para banco
             sendData(pathStr, edtItem.text.toString(),edtValor.text.toString())
