@@ -8,7 +8,14 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp">
+
+        <TextView
+            android:id="@+id/textView24"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
         <fragment
             android:id="@+id/fragment_place"
@@ -29,52 +36,70 @@
             android:layout_height="wrap_content"
             android:background="@drawable/shape_buttons"
             android:fontFamily="sans-serif-condensed-light"
-            android:text="Get Current Place"
+            android:text="O que há próximo"
             android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/textView23"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-condensed-light"
+            android:gravity="center"
+            android:text="Locais Interessantes"
+            android:textColor="@color/places_autocomplete_prediction_primary_text"
+            android:textSize="22sp"
             android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/textView21"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <EditText
+            <TextView
                 android:id="@+id/edt_address"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="My Home" />
+                android:fontFamily="sans-serif-condensed-light"
+                android:hint="Meu local:"
+                android:textColor="@color/places_autocomplete_prediction_primary_text"
+                android:textSize="18sp"
+                android:textStyle="bold" />
         </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:id="@+id/txtMeuLocal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <EditText
+            <TextView
                 android:id="@+id/edt_place_likelihoods"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Place Likelihoods"
-                android:textColor="@android:color/darker_gray" />
+                android:fontFamily="sans-serif-condensed-light"
+                android:hint="Locais próximos:"
+                android:textColor="@android:color/background_dark"
+                android:textSize="18sp"
+                android:textStyle="bold" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <Button
-            android:id="@+id/btn_get_photo"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvLocais"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/shape_buttons"
-            android:fontFamily="sans-serif-condensed-light"
-            android:text="GET PHOTO"
-            android:textColor="#FFFFFF"
-            android:textStyle="bold" />
-
-        <ImageView
-            android:id="@+id/image_view"
-            android:layout_width="wrap_content"
-            android:layout_height="300dp" />
-
-        <TextView
-            android:id="@+id/txt_detail"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="match_parent"
+            android:paddingLeft="6dp"
+            android:paddingRight="6dp" />
 
     </LinearLayout>
 </ScrollView>

@@ -1,13 +1,14 @@
 package android.inflabnet.mytest.maps
 
 import android.inflabnet.mytest.R
+import android.inflabnet.mytest.maps.model.NomesPlacesTraducao
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.place_tipo.view.*
 
-class PlacesAdapter(val listPlace: List<String>,  private val itemClick: (String) -> Unit):
+class PlacesAdapter(val listPlace: List<NomesPlacesTraducao>, private val itemClick: (NomesPlacesTraducao) -> Unit):
     RecyclerView.Adapter<PlacesAdapter.ViewHolder>(){
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -21,11 +22,11 @@ class PlacesAdapter(val listPlace: List<String>,  private val itemClick: (String
 
     override fun getItemCount() = listPlace.size
 
-    class ViewHolder(view: View, val itemClick: (String) -> Unit) : RecyclerView.ViewHolder(view) {
+    class ViewHolder(view: View, val itemClick: (NomesPlacesTraducao) -> Unit) : RecyclerView.ViewHolder(view) {
 
-        fun bindForecast(place: String) {
+        fun bindForecast(place: NomesPlacesTraducao) {
             with(place) {
-                itemView.txtTipo.text = place
+                itemView.txtTipo.text = place.nome
                 itemView.setOnClickListener { itemClick(this) }
             }
         }

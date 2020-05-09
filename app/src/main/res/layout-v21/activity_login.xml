@@ -9,7 +9,7 @@
     <!--background colors test F4D03F/B2BABB/34495E-->
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/imageViewFoto"
         android:layout_width="161dp"
         android:layout_height="165dp"
         android:layout_marginTop="24dp"
@@ -48,7 +48,7 @@
         android:paddingRight="50dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView"><![CDATA[> ]]>
+        app:layout_constraintTop_toBottomOf="@+id/imageViewFoto"><![CDATA[> ]]>
 
         <EditText
             android:id="@+id/et_email"

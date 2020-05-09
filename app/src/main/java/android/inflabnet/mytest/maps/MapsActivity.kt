@@ -1,17 +1,25 @@
 package android.inflabnet.mytest.maps
 
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.inflabnet.infsocial.maps.PlacesRootClass
 import android.inflabnet.mytest.R
+import android.inflabnet.mytest.maps.model.NomesPlacesEnderecos
+import android.inflabnet.mytest.mesas.activity.MembrosAdapter
+import android.net.Uri
 import android.os.AsyncTask
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
+import android.view.LayoutInflater
 import android.webkit.PermissionRequest
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.common.api.Status
 
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -34,8 +42,15 @@ import com.karumi.dexter.Dexter
 import com.karumi.dexter.MultiplePermissionsReport
 import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener
+import kotlinx.android.synthetic.main.activity_conta_chat.*
 import kotlinx.android.synthetic.main.activity_maps.*
+import kotlinx.android.synthetic.main.alert_foto_item.*
+import kotlinx.android.synthetic.main.alert_foto_item.view.*
+import kotlinx.android.synthetic.main.alert_foto_item.view.imageViewFoto
+import java.lang.reflect.Array.getInt
 import java.util.*
+import kotlin.math.round
+import kotlin.math.roundToInt
 
 class MapsActivity : AppCompatActivity() {
 
@@ -54,11 +69,7 @@ class MapsActivity : AppCompatActivity() {
         initPlaces()
         setupPlacesAutocomplete()
         setupCurrentPlace()
-        setupGetPhotoandDetail()
     }
-
-
-
 
     //places abaixo
     private fun requestPermission() {
@@ -82,7 +93,7 @@ class MapsActivity : AppCompatActivity() {
     }
 
     private fun initPlaces() {
-        Places.initialize(this, getString(R.string.google_maps_key))
+        Places.initialize(this, getString(R.string.places_api_key))
         placesClient = Places.createClient(this)
     }
 
@@ -93,8 +104,15 @@ class MapsActivity : AppCompatActivity() {
         autocompleteFragment.setOnPlaceSelectedListener(object : PlaceSelectionListener {
             override fun onPlaceSelected(p0: Place) {
                 Toast.makeText(this@MapsActivity, "" + p0.address, Toast.LENGTH_LONG).show()
+                val addressUri = Uri.parse("geo:0,0?q=$p0.address")
+                val intent = Intent(Intent.ACTION_VIEW, addressUri)
+                // Achar uma activity para o intent e abrir
+                if (intent.resolveActivity(packageManager) != null) {
+                    startActivity(intent)
+                } else {
+                    Log.d("ImplicitIntents", "Can't handle this intent!")
+                }
             }
-
             override fun onError(p0: Status) {
                 Toast.makeText(this@MapsActivity, "" + p0.statusMessage, Toast.LENGTH_LONG).show()
             }
@@ -104,13 +122,12 @@ class MapsActivity : AppCompatActivity() {
     private fun setupCurrentPlace() {
         val request = FindCurrentPlaceRequest.builder(placeFields).build()
 
-        btn_get_current_place.setOnClickListener {
             if (ActivityCompat.checkSelfPermission(
                     this@MapsActivity,
                     android.Manifest.permission.ACCESS_FINE_LOCATION
                 ) != PackageManager.PERMISSION_GRANTED
             ) {
-                return@setOnClickListener;
+                Toast.makeText(this,"Permissão necessária para seguir",Toast.LENGTH_SHORT).show()
             }
 
             val placeResponse = placesClient.findCurrentPlace(request)
@@ -129,44 +146,83 @@ class MapsActivity : AppCompatActivity() {
 //                    Collections.reverse(response.placeLikelihoods)
                     placeId = response!!.placeLikelihoods[0].place.id!!
                     val likehoods = StringBuilder("")
-                    edt_address.setText(StringBuilder(response.placeLikelihoods[0].place.address!!))
+                    val toReturn: ArrayList<NomesPlacesEnderecos> = ArrayList()
+                    txtMeuLocal.text = StringBuilder(response.placeLikelihoods[0].place.address!!)
 
-                    for (placeLikelihood in response.placeLikelihoods)
-                    {
-                        likehoods.append(
-                            String.format(
-                                "Place '%s' has likelihood: %f",
-                                placeLikelihood.place.name,
-                                placeLikelihood.likelihood))
-                            .append("\n")
+                    for (placeLikelihood in response.placeLikelihoods){
+                        val n = placeLikelihood.place.name
+                        val e = placeLikelihood.place.address
+                        var r = placeLikelihood.place.rating
+                        val p = round(placeLikelihood.likelihood*100).roundToInt()
+                        val id = placeLikelihood.place.id
+                        if (r == null){
+                            r = 0.0
+                        }
+                            val localNew = NomesPlacesEnderecos(n,e,r,p,id)
+                            toReturn.add(localNew)
+                            likehoods.append(
+                                String.format(
+                                    "Local '%s' parece estar próximo: %d%%",
+                                    placeLikelihood.place.name,
+                                    round(placeLikelihood.likelihood*100).roundToInt()))
+                                .append("\n")
+                        }
+                    setupRV(toReturn)
+                    //edt_place_likelihoods.setText(likehoods.toString())
                     }
-                    edt_place_likelihoods.setText(likehoods.toString())
-                }
                 else
                 {
                     Toast.makeText(this, "Local não encontrado", Toast.LENGTH_LONG).show()
                 }
             }
-        }
-    }
-    private fun sortByLikelihood(placeLikelihoods: MutableList<PlaceLikelihood>) {
-
-        placeLikelihoods.sortByDescending { it.likelihood }
 
     }
-    private fun setupGetPhotoandDetail() {
-        btn_get_photo.setOnClickListener {
-            if (TextUtils.isEmpty(placeId)) {
-                Toast.makeText(this@MapsActivity, "Place ID não pode ser nulo", Toast.LENGTH_SHORT)
-                    .show()
-                return@setOnClickListener
-            }
-            getPhoto(placeId)
+
+    private fun setupRV(toReturn:ArrayList<NomesPlacesEnderecos>) {
+        val linearLayoutManager = LinearLayoutManager(applicationContext)
+        rvLocais.layoutManager = linearLayoutManager
+        rvLocais.scrollToPosition(toReturn.size)
+        rvLocais.adapter = PlacesNamesAdapter(toReturn){
+            val dialogBuilder = AlertDialog.Builder(this)
+            dialogBuilder.setMessage("O que gostaria de ver?")
+                .setCancelable(false)
+                .setPositiveButton("Localização"){_, _ ->
+                    val addressUri = Uri.parse("geo:0,0?q=${it.endereco}")
+                    val intent = Intent(Intent.ACTION_VIEW, addressUri)
+
+                    // Achar avtivity que abra a intent
+                    if (intent.resolveActivity(packageManager) != null) {
+                        startActivity(intent)
+                    } else {
+                        Log.d("ImplicitIntents", "Can't handle this intent!")
+                    }
+
+                }
+                .setNegativeButton("Foto") { _, _ ->
+                    verFotoDoLocal(it)
+
+                }
+                .setNeutralButton("Cancelar") {_, _ ->
+                    Toast.makeText(this,"Operação cancelada",Toast.LENGTH_SHORT).show()
+                }
+            val alert = dialogBuilder.create()
+            alert.setTitle("Locais Interessantes?")
+            alert.show()
+
         }
     }
-    private fun getPhoto(placeId: String) {
+
+    private fun verFotoDoLocal(placeId: NomesPlacesEnderecos?) {
+        if (TextUtils.isEmpty(placeId!!.placeId)) {
+            Toast.makeText(this@MapsActivity, "Place ID não pode ser nulo", Toast.LENGTH_SHORT)
+                .show()
+        }
+        getFoto(placeId)
+    }
+
+    private fun getFoto(placeId: NomesPlacesEnderecos) {
         val placeRequest = FetchPlaceRequest.builder(
-            placeId,
+            placeId.placeId!!,
             Arrays.asList(Place.Field.PHOTO_METADATAS,
                 Place.Field.LAT_LNG)).build()
 
@@ -174,9 +230,9 @@ class MapsActivity : AppCompatActivity() {
             val place = fetchPlaceResponse.place
 
             //get Lang Lat
-            txt_detail.text = StringBuilder(place.latLng!!.latitude.toString())
-                .append("/")
-                .append(place.latLng!!.longitude.toString())
+            //txt_detail.text = StringBuilder(place.latLng!!.latitude.toString())
+            //    .append("/")
+            //    .append(place.latLng!!.longitude.toString())
             //Get photo
             try {
                 val photoMetaData = place.photoMetadatas!![0]
@@ -184,7 +240,20 @@ class MapsActivity : AppCompatActivity() {
                 val photoRequest = FetchPhotoRequest.builder(photoMetaData).build()
                 placesClient.fetchPhoto(photoRequest).addOnSuccessListener { fetchPhotoResponse ->
                     val bitmap = fetchPhotoResponse.bitmap
-                    image_view.setImageBitmap(bitmap)
+                    val mDialogView = LayoutInflater.from(this).inflate(R.layout.alert_foto_item, null)
+                    val mBuilder = AlertDialog.Builder(this)
+                        .setView(mDialogView)
+                        .setTitle("${placeId.nome}\n${placeId.endereco}")
+
+                    val  mAlertDialog = mBuilder.show()
+                    mAlertDialog.imageViewFoto.setImageBitmap(bitmap)
+                    mDialogView.btnRetornar.setOnClickListener {
+                        mAlertDialog.dismiss()
+                    }
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        mAlertDialog.create()
+                    }else
+                        Toast.makeText(this,"Versão do Androis não suportada", Toast.LENGTH_SHORT).show()
                 }
             } catch (e: Exception){
                 Toast.makeText(this,"Foto não disponível para esse local",Toast.LENGTH_SHORT).show()

@@ -7,7 +7,7 @@ import android.inflabnet.mytest.database.database.AppDatabaseService
 import android.inflabnet.mytest.database.model.MesaOrc
 import android.inflabnet.mytest.database.model.Orcamento
 import android.inflabnet.mytest.login.LoginActivity
-import android.inflabnet.mytest.maps.UserLocation
+import android.inflabnet.mytest.maps.model.UserLocation
 import android.inflabnet.mytest.mesas.adapter.ContaAdapter
 import android.inflabnet.mytest.mesas.model.*
 import android.net.Uri
@@ -29,7 +29,6 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import kotlinx.android.synthetic.main.activity_conta_chat.*
 import kotlinx.android.synthetic.main.alert_compartilha_item.view.*
-import kotlinx.android.synthetic.main.fragment_home_menu.*
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -621,10 +620,6 @@ class ContaActivity : AppCompatActivity() {
             val alert = dialogBuilder.create()
             alert.setTitle("Localizar Membro")
             alert.show()
-
-
-
-
         }
 
     }

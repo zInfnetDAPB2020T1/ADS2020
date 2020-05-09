@@ -6,19 +6,19 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.inflabnet.mytest.R
 import android.inflabnet.mytest.login.LoginActivity
+import android.inflabnet.mytest.maps.model.NomesPlacesTraducao
+import android.inflabnet.mytest.maps.model.UserLocation
 import android.location.Location
 import android.location.LocationManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Looper
 import android.provider.Settings
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
-import androidx.core.location.LocationManagerCompat.isLocationEnabled
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.location.*
 import com.google.firebase.auth.FirebaseAuth
@@ -53,13 +53,14 @@ class HomeMapsActivity : AppCompatActivity() {
 
         btnHabilitarLocalizacao.setOnClickListener {
             val dialogBuilder = AlertDialog.Builder(this)
-            dialogBuilder.setMessage("Tem certeza que gostaria de compartilhar sua localização?")
+            dialogBuilder.setMessage("Gostaria de compartilhar sua localização?")
                 .setCancelable(false)
                 .setPositiveButton("Sim"){_, _ ->
                     setLocationOn()
                     Toast.makeText(this, "Localização compartilhada", Toast.LENGTH_SHORT).show()
                 }
                 .setNegativeButton("Não") { _, _ ->
+                    setLocationOff()
                     Toast.makeText(this,"Localização não será mais compartilhada",Toast.LENGTH_SHORT).show()
                 }
                 .setNeutralButton("Cancelar") {_, _ ->
@@ -71,8 +72,36 @@ class HomeMapsActivity : AppCompatActivity() {
         }
 
         btnSugestaoLocais.setOnClickListener {
-            var listPlace: List<String> = listOf("bar", "bakery", "night_club", "cafe", "restaurant")
-
+            val listPlace: List<NomesPlacesTraducao> = listOf(
+                NomesPlacesTraducao(
+                    "bar",
+                    "Bares"
+                ),
+                NomesPlacesTraducao(
+                    "bakery",
+                    "Padarias"
+                ),
+                NomesPlacesTraducao(
+                    "night_club",
+                    "Casas Noturnas"
+                ),
+                NomesPlacesTraducao(
+                    "cafe",
+                    "Cafés"
+                ),
+                NomesPlacesTraducao(
+                    "restaurant",
+                    "Restaurantes"
+                ),
+                NomesPlacesTraducao(
+                    "convenience_store",
+                    "Lojas de Conveniência"
+                ),
+                NomesPlacesTraducao(
+                    "shopping_mall",
+                    "Shoppings"
+                )
+                )
             val mDialogView = LayoutInflater.from(this).inflate(R.layout.escolhe_tipo, null)
             val mBuilder = AlertDialog.Builder(this)
                 .setView(mDialogView)
@@ -82,8 +111,8 @@ class HomeMapsActivity : AppCompatActivity() {
                 mDialogView.rcRecycleV.layoutManager = linearLayoutManager
                 mDialogView.rcRecycleV.scrollToPosition(listPlace.size)
                 mDialogView.rcRecycleV.adapter = PlacesAdapter(listPlace){
-                    Toast.makeText(this,it,Toast.LENGTH_SHORT).show()
-                    val selectedItem= it
+                    Toast.makeText(this,it.nome,Toast.LENGTH_SHORT).show()
+                    val selectedItem= it.name
                     val intt = Intent(this, MapaDeLocais::class.java)
                         intt.putExtra("nomeTipo",selectedItem)
                         startActivity(intt)
@@ -98,6 +127,18 @@ class HomeMapsActivity : AppCompatActivity() {
             val intt = Intent(this, MapsActivity::class.java)
             startActivity(intt)
         }
+    }
+
+    private fun setLocationOff() {
+        val dbRefe = mDatabaseReference!!
+        val userFBase = pegarUser()
+        dbRefe.child("UserLocations").child(userFBase!!).removeValue()
+            .addOnSuccessListener {
+                Toast.makeText(this,"Localização não está sendo compartilhada",Toast.LENGTH_SHORT).show()
+            }
+            .addOnFailureListener {
+                Toast.makeText(this,it.message,Toast.LENGTH_SHORT).show()
+            }
     }
 
     private fun setLocationOn() {
@@ -122,7 +163,6 @@ class HomeMapsActivity : AppCompatActivity() {
                         textView20.visibility = View.VISIBLE
                         //update firebase
                         var userFBase = pegarUser()
-                        Log.i("TESTE", userFBase)
                           if (userFBase != null) {
                               userFBase = userFBase.replace(".","")
                         }
@@ -132,10 +172,14 @@ class HomeMapsActivity : AppCompatActivity() {
                         //gerar a key
                         val locTimestamp = System.currentTimeMillis().toString()
                         //montar o objeto
-                        val userLocation = UserLocation(userFBase!!,"${txtLatitude.text}, ${txtLongitude.text}",locTimestamp)
-                        if (userFBase != null) {
-                            dbRefe.child("UserLocations").child(userFBase).setValue(userLocation)
-                        }
+                        val userLocation =
+                            UserLocation(
+                                userFBase!!,
+                                "${txtLatitude.text}, ${txtLongitude.text}",
+                                locTimestamp
+                            )
+                        dbRefe.child("UserLocations").child(userFBase).setValue(userLocation)
+
                     }
                 }
             } else {

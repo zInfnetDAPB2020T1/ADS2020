@@ -33,8 +33,6 @@
             android:name=".maps.MapaDeLocais"
             android:label="@string/title_activity_mapa_de_locais" />
         <activity android:name=".maps.HomeMapsActivity">
-
-
         </activity>
         <activity android:name=".mesas.activity.ContaActivity" />
         <activity
