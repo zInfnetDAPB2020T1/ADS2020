@@ -3,7 +3,7 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_maps">Map</string>
     <string name="places_api_key"></string>
-    <string name="google_maps_key"></string>
+<!--    <string name="google_maps_key"></string>-->
     <string name="apresenta_o_da_logo">Apresentação da Logo</string>
     <string name="email">Email</string>
     <string name="password">Senha</string>

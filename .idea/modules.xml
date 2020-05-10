@@ -3,9 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/app/ADS2020-app.iml" filepath="$PROJECT_DIR$/app/ADS2020-app.iml" group="myTest/app" />
-      <module fileurl="file://$PROJECT_DIR$/ADS2020-myTest.iml" filepath="$PROJECT_DIR$/ADS2020-myTest.iml" group="myTest" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/ADS2020v5.iml" filepath="$PROJECT_DIR$/.idea/ADS2020v5.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" group="myTest/app" />
       <module fileurl="file://$PROJECT_DIR$/myTest.iml" filepath="$PROJECT_DIR$/myTest.iml" group="myTest" />
     </modules>
   </component>

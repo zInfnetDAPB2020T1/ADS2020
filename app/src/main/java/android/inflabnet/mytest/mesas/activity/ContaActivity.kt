@@ -518,12 +518,12 @@ class ContaActivity : AppCompatActivity() {
 
     //popular o txt com quem já saiu do grupo
     private fun jaFinalizados() {
-        val toSairam: MutableList<String> = mutableListOf()
+
         val japagouListener = object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
-                //txtFinalizado.setText("")
+                val toSairam: MutableList<String> = mutableListOf()
                 //varre a lista membros do FBase procurando o nome da mesa
-                //se encontrar no grupo dos aPagar adicionar ao TXT
+                //se encontrar no grupo dos aPagar adicionar recycleview rvSairam
                 dataSnapshot.children.forEach{
                     if(it.getValue<fechouConta>(fechouConta::class.java)?.mesa.toString() == txtMesaConta.text.toString()) {
                         //txtFinalizado.append(" ${it.getValue<fechouConta>(fechouConta::class.java)?.user.toString()} : ${it.getValue<fechouConta>(fechouConta::class.java)?.totConta.toString()}\n").toString()
@@ -549,12 +549,12 @@ class ContaActivity : AppCompatActivity() {
 
     }
 
-    //atualiza os membros da mesa em txtMembros
+    //atualiza os membros da mesa em recycleview rvMembros
     private fun membrosLista(mesa: String) {
-        val toMembros: MutableList<String> = mutableListOf()
+
         val membroListener = object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
-                //txtMembros.setText("")
+                val toMembros: MutableList<String> = mutableListOf()
                 //varre a lista membros do FBase procurando o nome da mesa
                 //se encontrar adiciona o membro no txtMembros
                 dataSnapshot.children.forEach{
