@@ -14,9 +14,9 @@
         android:layout_marginLeft="36dp"
         android:layout_marginTop="16dp"
         android:fontFamily="sans-serif-condensed-light"
+        android:text="Home -> Locais"
         android:textSize="24sp"
         android:textStyle="bold"
-        android:text="Locais"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -24,14 +24,14 @@
         android:id="@+id/btnHabilitarLocalizacao"
         android:layout_width="300dp"
         android:layout_height="41dp"
-        android:layout_marginStart="36dp"
-        android:layout_marginLeft="36dp"
-        android:layout_marginTop="38dp"
+        android:layout_marginTop="60dp"
         android:background="@drawable/shape_buttons"
         android:fontFamily="sans-serif-condensed-light"
         android:text="compartilhar minha localização"
         android:textColor="#FFFFFF"
+        android:textSize="16sp"
         android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView18" />
 
@@ -39,14 +39,14 @@
         android:id="@+id/btnSugestaoLocais"
         android:layout_width="300dp"
         android:layout_height="41dp"
-        android:layout_marginStart="36dp"
-        android:layout_marginLeft="36dp"
         android:layout_marginTop="60dp"
         android:background="@drawable/shape_buttons"
         android:fontFamily="sans-serif-condensed-light"
         android:text="Sugestão de Locais"
         android:textColor="#FFFFFF"
+        android:textSize="16sp"
         android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnHabilitarLocalizacao" />
 
@@ -54,14 +54,14 @@
         android:id="@+id/btnProcurarLocal"
         android:layout_width="300dp"
         android:layout_height="41dp"
-        android:layout_marginStart="36dp"
-        android:layout_marginLeft="36dp"
         android:layout_marginTop="60dp"
         android:background="@drawable/shape_buttons"
         android:fontFamily="sans-serif-condensed-light"
         android:text="Procurar Locais"
         android:textColor="#FFFFFF"
+        android:textSize="16sp"
         android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnSugestaoLocais" />
 
@@ -69,10 +69,12 @@
         android:id="@+id/textView20"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="42dp"
-        android:layout_marginLeft="42dp"
         android:layout_marginTop="8dp"
+        android:fontFamily="sans-serif-smallcaps"
         android:text="Lat.:"
+        app:layout_constraintEnd_toStartOf="@+id/txtLatitude"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnHabilitarLocalizacao" />
 
@@ -83,7 +85,10 @@
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
+        android:fontFamily="sans-serif-smallcaps"
         android:text="latitude"
+        app:layout_constraintEnd_toStartOf="@+id/textView22"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/textView20"
         app:layout_constraintTop_toBottomOf="@+id/btnHabilitarLocalizacao" />
 
@@ -91,10 +96,13 @@
         android:id="@+id/textView22"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="36dp"
-        android:layout_marginLeft="36dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
         android:layout_marginTop="8dp"
+        android:fontFamily="sans-serif-smallcaps"
         android:text="Lon.:"
+        app:layout_constraintEnd_toStartOf="@+id/txtLongitude"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/txtLatitude"
         app:layout_constraintTop_toBottomOf="@+id/btnHabilitarLocalizacao" />
 
@@ -105,8 +113,25 @@
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
+        android:fontFamily="sans-serif-smallcaps"
         android:text="longitude"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/textView22"
         app:layout_constraintTop_toBottomOf="@+id/btnHabilitarLocalizacao" />
+
+    <Button
+        android:id="@+id/btnVoltarMenu"
+        android:layout_width="128dp"
+        android:layout_height="34dp"
+        android:layout_marginTop="70dp"
+        android:background="@drawable/shape_buttons"
+        android:fontFamily="sans-serif-condensed-light"
+        android:text="Voltar"
+        android:textColor="#FFFFFF"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/btnProcurarLocal"
+        app:layout_constraintTop_toBottomOf="@+id/btnProcurarLocal" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

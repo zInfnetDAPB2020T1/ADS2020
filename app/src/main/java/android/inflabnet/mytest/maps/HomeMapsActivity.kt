@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.inflabnet.mytest.HomeActivity
 import android.inflabnet.mytest.R
 import android.inflabnet.mytest.login.LoginActivity
 import android.inflabnet.mytest.maps.model.NomesPlacesTraducao
@@ -14,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Looper
 import android.provider.Settings
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.Toast
@@ -127,11 +129,16 @@ class HomeMapsActivity : AppCompatActivity() {
             val intt = Intent(this, MapsActivity::class.java)
             startActivity(intt)
         }
+
+        btnVoltarMenu.setOnClickListener {
+            val intt = Intent(this, HomeActivity::class.java)
+            startActivity(intt)
+        }
     }
 
     private fun setLocationOff() {
         val dbRefe = mDatabaseReference!!
-        val userFBase = pegarUser()
+        val userFBase = pegarUser()?.replace(".","")
         dbRefe.child("UserLocations").child(userFBase!!).removeValue()
             .addOnSuccessListener {
                 Toast.makeText(this,"Localização não está sendo compartilhada",Toast.LENGTH_SHORT).show()
@@ -205,6 +212,7 @@ class HomeMapsActivity : AppCompatActivity() {
             arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION),
             PERMISSION_ID
         )
+
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
@@ -213,6 +221,11 @@ class HomeMapsActivity : AppCompatActivity() {
                 getLastLocation()
             }
         }
+        //de qq forma tem que voltar uma casinha caso peça permissão
+        txtLatitude.text = "Para compartilhar a localização, aperte o botão acima"
+        txtLatitude.visibility = View.VISIBLE
+        val intt = Intent(this, HomeActivity::class.java)
+        startActivity(intt)
     }
 
     private fun isLocationEnabled(): Boolean {

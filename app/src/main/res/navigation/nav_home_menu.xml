@@ -16,6 +16,9 @@
         <action
             android:id="@+id/action_homeMenuFragment_to_dividirContaFragment"
             app:destination="@id/dividirContaFragment" />
+        <action
+            android:id="@+id/action_homeMenuFragment_to_orcamentoFragment"
+            app:destination="@id/orcamentoFragment" />
     </fragment>
     <fragment
         android:id="@+id/criarSalaFragment"
@@ -33,6 +36,15 @@
         tools:layout="@layout/fragment_dividir_conta" >
         <action
             android:id="@+id/action_dividirContaFragment_to_homeMenuFragment"
+            app:destination="@id/homeMenuFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/orcamentoFragment"
+        android:name="android.inflabnet.mytest.OrcamentoFragment"
+        android:label="fragment_orcamento"
+        tools:layout="@layout/fragment_orcamento" >
+        <action
+            android:id="@+id/action_orcamentoFragment_to_homeMenuFragment"
             app:destination="@id/homeMenuFragment" />
     </fragment>
 </navigation>

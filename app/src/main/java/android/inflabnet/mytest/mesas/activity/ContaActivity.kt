@@ -31,6 +31,7 @@ import kotlinx.android.synthetic.main.activity_conta_chat.*
 import kotlinx.android.synthetic.main.alert_compartilha_item.view.*
 import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.system.exitProcess
 
 class ContaActivity : AppCompatActivity() {
 
@@ -136,7 +137,6 @@ class ContaActivity : AppCompatActivity() {
                 contaItens.sortBy { conta ->
                     conta.timestamp
                 }
-                Log.i("ALERTA", contaItens.toString())
 
                 //llGroup.addView(rg)
                 montaRG(contaItens,mDialogView)
@@ -165,7 +165,6 @@ class ContaActivity : AppCompatActivity() {
                 membrosMesas.sortBy { membro ->
                     membro.id
                 }
-                Log.i("ALERTA", membrosMesas.toString())
                 //llGroup.addView(rg)
                 montaMembrosRG(membrosMesas,mDialogView)
                 //setupAdapter(toReturn)
@@ -441,7 +440,6 @@ class ContaActivity : AppCompatActivity() {
                                 }
                             }
                             //inserir no banco local o valor que fechou
-                            Log.i("TOTAL","Tot conta ${totalConta.toString()}")
                             val getIdOrcamento = GetIdOrcamento().execute(currentMonth2()).get()
                             GuardarValorMesa().execute(MesaOrc(getIdOrcamento,txtMesaConta.text.toString(),totalConta,currentMonth2()))
                             //coloca user que saiu no txt dos que já correram
@@ -516,7 +514,7 @@ class ContaActivity : AppCompatActivity() {
         dbRefe.child(apTimestamp).setValue(aPagarObj)
     }
 
-    //popular o txt com quem já saiu do grupo
+    //popular o RV com quem já saiu do grupo
     private fun jaFinalizados() {
 
         val japagouListener = object : ValueEventListener {
@@ -626,30 +624,49 @@ class ContaActivity : AppCompatActivity() {
 
     //ao clicar para enviar um item para comanda e entrar no grupo da mesa, caso já não esteja
     private fun setupSendButton(pathStr: String) {
-        if (edtItem.text.toString().isEmpty() && edtValor.text.toString().isEmpty()){
-            Toast.makeText(this, "Por favor, inserir um item e seu valor.", Toast.LENGTH_SHORT).show()
-        }else if (edtItem.text.toString().isEmpty()){
-            Toast.makeText(this, "Por favor, inserir um item.", Toast.LENGTH_SHORT).show()
-        } else if (edtValor.text.toString().isEmpty()){
-            Toast.makeText(this, "Por favor, colocar o valor do item", Toast.LENGTH_SHORT).show()
-        }
-        else{
-            //atiualizar firebase com nome da mesa e novo membro
-            val mesa = user?.let { it1 -> MembrosMesa(txtMesaConta.text.toString(), it1) }
-            val key = mDatabaseReference!!.child("Membros").push().key
-            if (mesa != null) {
-                if (key != null) {
-                    mesa.id = key
+        var membroExiste: String? = null
+        if(checkFields()) {
+            //validar se usuário já está na mesa
+            val toMembrosMesa: MutableList<MembrosMesa> = mutableListOf()
+            val membroListener = object : ValueEventListener {
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+
+                    dataSnapshot.children.forEach{
+                        if(it.getValue(MembrosMesa::class.java)?.nomeMesa.toString() == txtMesaConta.text.toString() && it.getValue(MembrosMesa::class.java)?.membro == user )
+                            toMembrosMesa.add(it.getValue(MembrosMesa::class.java)!!)
+                    }
+                }
+                override fun onCancelled(p0: DatabaseError) {
+                    Toast.makeText(applicationContext, "Errroooo",Toast.LENGTH_SHORT ).show()
                 }
             }
-            if (key != null) {
-                mDatabaseReference!!.child("Membros").child(key).setValue(mesa)
+            mDatabaseReference!!.child("Membros").addValueEventListener(membroListener)
 
-            }
+            //atiualizar firebase com nome da mesa e novo membro
+            val key = "${user?.replace(".","")}${txtMesaConta.text}"
+            val mesa = MembrosMesa(txtMesaConta.text.toString(),user!!,key)
+            mDatabaseReference!!.child("Membros").child(key).setValue(mesa)
+
             //enviar dados do item consumido para banco
-            sendData(pathStr, edtItem.text.toString(),edtValor.text.toString())
+            sendData(pathStr, edtItem.text.toString(), edtValor.text.toString())
         }
     }
+
+    //checar os campos ao entrar um item consumido
+    private fun checkFields(): Boolean{
+        if (edtItem.text.toString().isEmpty() && edtValor.text.toString().isEmpty()){
+            Toast.makeText(this, "Por favor, inserir um item e seu valor.", Toast.LENGTH_SHORT).show()
+            return false
+        }else if (edtItem.text.toString().isEmpty()){
+            Toast.makeText(this, "Por favor, inserir um item.", Toast.LENGTH_SHORT).show()
+            return false
+        } else if (edtValor.text.toString().isEmpty()){
+            Toast.makeText(this, "Por favor, colocar o valor do item", Toast.LENGTH_SHORT).show()
+            return false
+        }
+        return true
+    }
+
 
     //envia dados para firebase
     private fun sendData(pathStr: String, item:String, valor: String){
@@ -665,6 +682,7 @@ class ContaActivity : AppCompatActivity() {
     //listener para itens da comanda
     private fun createFirebaseListener(pathStr : String){
         val postListener = object : ValueEventListener {
+
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 val toReturn: ArrayList<Conta> = ArrayList();
                 for(data in dataSnapshot.children){

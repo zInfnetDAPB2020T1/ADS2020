@@ -32,22 +32,28 @@
                 android:id="@+id/btnCancelar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
                 android:background="@drawable/shape_buttons"
                 android:fontFamily="sans-serif-condensed-light"
-                android:text="Cancelar"
                 android:textColor="#FFFFFF"
+                android:layout_weight="1"
+                android:text="Cancelar"
+                android:textSize="16sp"
                 android:textStyle="bold" />
 
             <Button
                 android:id="@+id/btnPerguntar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
                 android:background="@drawable/shape_buttons"
                 android:fontFamily="sans-serif-condensed-light"
-                android:text="@android:string/ok"
+                android:text="OK"
+                android:textSize="16sp"
                 android:textColor="#FFFFFF"
+                android:layout_weight="1"
                 android:textStyle="bold" />
         </LinearLayout>
 
