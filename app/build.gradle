@@ -11,7 +11,7 @@ android {
 
     defaultConfig {
         applicationId "android.inflabnet.mytest"
-        minSdkVersion 16
+        minSdkVersion 19
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
@@ -84,4 +84,6 @@ dependencies {
     implementation "androidx.room:room-runtime:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
 
+    //formatar dinheiro
+    implementation  'com.cottacush:CurrencyEditText:0.0.3'
 }

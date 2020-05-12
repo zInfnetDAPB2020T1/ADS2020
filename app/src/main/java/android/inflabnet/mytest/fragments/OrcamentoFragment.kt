@@ -1,7 +1,8 @@
-package android.inflabnet.mytest
+package android.inflabnet.mytest.fragments
 
 import android.app.AlertDialog
 import android.content.Context
+import android.inflabnet.mytest.R
 import android.inflabnet.mytest.database.adapter.GastosAdapter
 import android.inflabnet.mytest.database.database.AppDatabase
 import android.inflabnet.mytest.database.database.AppDatabaseService
@@ -10,6 +11,8 @@ import android.inflabnet.mytest.database.model.Orcamento
 import android.inflabnet.mytest.database.model.OrcamentoEMesa
 import android.os.AsyncTask
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -22,6 +25,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.alert_orcamento.view.*
 import kotlinx.android.synthetic.main.fragment_orcamento.*
+import java.text.NumberFormat
 import java.util.*
 
 /**
@@ -39,6 +43,8 @@ class OrcamentoFragment : Fragment() {
         val contFrag = activity!!.applicationContext
         appDatabase = AppDatabaseService.getInstance(contFrag)
 
+
+
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_orcamento, container, false)
 
@@ -46,12 +52,15 @@ class OrcamentoFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
+        val locale: Locale = Locale.getDefault()
+        edtOrc.setLocale(locale)
+
         btnVoltaMenu.setOnClickListener {
             findNavController().navigate(R.id.action_orcamentoFragment_to_homeMenuFragment)
         }
 
         //quanto já gastou no presente mês
-        val jaGastou = GetGastosAtuais().execute(currentMonth2()).get()
+        val jaGastou = GetGastosAtuais().execute(currentMonth2()).get().toDouble()
         txtGastou.text = jaGastou.toString()
 
         //listar gastos na list
@@ -67,7 +76,7 @@ class OrcamentoFragment : Fragment() {
             txtOrcamentoAtual.text = GetOrcamento().execute(currentMonth2()).get().valor.toString()
             //colocar cor nos gastos atuais de acordo com orçamento
             if(!jaGastou.equals(0)) {
-                val orcamento = GetOrcamento().execute(currentMonth2()).get().valor
+                val orcamento = GetOrcamento().execute(currentMonth2()).get().valor.toDouble()
                 val percentage = (jaGastou / orcamento) * 100.0
                 //Toast.makeText(this.context!!.applicationContext,"Percentagem: ${percentage}",Toast.LENGTH_SHORT).show()
                 //Toast.makeText(this.context!!.applicationContext,"orcamento: ${orcamento}",Toast.LENGTH_SHORT).show()
@@ -120,7 +129,8 @@ class OrcamentoFragment : Fragment() {
                         .setCancelable(false)
                         .setPositiveButton("Sim") { _, _ ->
                             //segue a troca de orçamentos
-                            val novoOrcamento = edtOrc.text.toString()
+                            val novoOrcamento = edtOrc.text.toString().replace("R$ ","").replace(".","")
+
                             orcamentoAtual.valor = novoOrcamento.toInt()
                             UpdateOrcamento().execute(orcamentoAtual)
                             edtOrc.setText("")
@@ -133,6 +143,11 @@ class OrcamentoFragment : Fragment() {
                             // Hide the keyboard.
                             val inputMethodManager = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                             inputMethodManager.hideSoftInputFromWindow(btnOrcamento.windowToken, 0)
+                            val jaGastouTxt = txtGastou.text.toString().toDouble()
+                            val orcamento = GetOrcamento().execute(currentMonth2()).get().valor.toDouble()
+                            Log.i("Percentagem", "JAGastou ${jaGastouTxt}/ Orcamento ${orcamento}")
+                            val percentage = (jaGastouTxt / orcamento) * 100.0
+                            corOrcamento(percentage)
                         }
                         .setNeutralButton("Cancelar") { _, _ ->
                             Toast.makeText(contFrag, "Operação cancelada", Toast.LENGTH_SHORT).show()
@@ -149,9 +164,9 @@ class OrcamentoFragment : Fragment() {
         textView2.setOnClickListener {
             ListaGastos().execute()
             //quanto já gastou no presente mês
-            val jaGastou = GetGastosAtuais().execute(currentMonth2()).get()
+            val jaGastou = GetGastosAtuais().execute(currentMonth2()).get().toDouble()
             txtGastou.text = jaGastou.toString()
-            val orcamento = GetOrcamento().execute(currentMonth2()).get().valor
+            val orcamento = GetOrcamento().execute(currentMonth2()).get().valor.toDouble()
             val percentage = (jaGastou / orcamento) * 100.0
 //            Toast.makeText(this.context!!.applicationContext,"Percentagem: ${percentage}",Toast.LENGTH_SHORT).show()
 //            Toast.makeText(this.context!!.applicationContext,"orcamento: ${orcamento}",Toast.LENGTH_SHORT).show()
@@ -162,15 +177,28 @@ class OrcamentoFragment : Fragment() {
     }
 
     private fun corOrcamento(percentage: Double) {
-        if (percentage < 75.0) {
-            txtOrcamentoAtual.setTextColor(ContextCompat.getColor(activity!!, R.color.green))
-            txtGastou.setTextColor(ContextCompat.getColor(activity!!, R.color.green))
+        Log.i("Percentagem",percentage.toString())
+        if (percentage < 70.0) {
+            txtOrcamentoAtual.setTextColor(ContextCompat.getColor(activity!!,
+                R.color.green
+            ))
+            txtGastou.setTextColor(ContextCompat.getColor(activity!!,
+                R.color.green
+            ))
         } else if (percentage < 90.0) {
-            txtOrcamentoAtual.setTextColor(ContextCompat.getColor(activity!!, R.color.yellow))
-            txtGastou.setTextColor(ContextCompat.getColor(activity!!, R.color.yellow))
+            txtOrcamentoAtual.setTextColor(ContextCompat.getColor(activity!!,
+                R.color.yellow
+            ))
+            txtGastou.setTextColor(ContextCompat.getColor(activity!!,
+                R.color.yellow
+            ))
         } else {
-            txtOrcamentoAtual.setTextColor(ContextCompat.getColor(activity!!, R.color.red))
-            txtGastou.setTextColor(ContextCompat.getColor(activity!!, R.color.red))
+            txtOrcamentoAtual.setTextColor(ContextCompat.getColor(activity!!,
+                R.color.red
+            ))
+            txtGastou.setTextColor(ContextCompat.getColor(activity!!,
+                R.color.red
+            ))
         }
     }
 

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:drawable/screen_background_light_transparent"
-    tools:context=".OrcamentoFragment">
+    tools:context=".fragments.OrcamentoFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -34,7 +34,7 @@
             android:layout_marginTop="32dp"
             android:fontFamily="sans-serif-condensed-light"
             android:text="Orçamento"
-            android:textSize="18sp"
+            android:textSize="20sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView26" />
@@ -47,7 +47,7 @@
             android:layout_marginLeft="16dp"
             android:fontFamily="sans-serif-condensed-light"
             android:text="Valor"
-            android:textSize="18sp"
+            android:textSize="20sp"
             android:textStyle="bold"
             app:layout_constraintBaseline_toBaselineOf="@+id/txtMes"
             app:layout_constraintStart_toEndOf="@+id/txtMes" />
@@ -56,24 +56,24 @@
             android:id="@+id/txtMes"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
+            android:layout_marginStart="4dp"
+            android:layout_marginLeft="4dp"
             android:fontFamily="sans-serif-condensed-light"
             android:text="Mês"
-            android:textSize="18sp"
+            android:textSize="20sp"
             android:textStyle="bold"
             app:layout_constraintBaseline_toBaselineOf="@+id/textView2"
             app:layout_constraintStart_toEndOf="@+id/textView2" />
 
         <TextView
             android:id="@+id/txtGastou"
-            android:layout_width="51dp"
-            android:layout_height="wrap_content"
+            android:layout_width="68dp"
+            android:layout_height="32dp"
             android:layout_marginStart="8dp"
             android:layout_marginLeft="8dp"
             android:fontFamily="sans-serif-condensed-light"
             android:text="Gastou"
-            android:textSize="18sp"
+            android:textSize="20sp"
             android:textStyle="bold"
             app:layout_constraintBaseline_toBaselineOf="@+id/txtOrcamentoAtual"
             app:layout_constraintStart_toEndOf="@+id/textView3" />
@@ -99,12 +99,12 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="32dp"
             android:layout_marginRight="32dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
             android:background="@color/colorAccent"
             android:elevation="4dp"
             android:fadeScrollbars="true"
             android:outlineProvider="bounds"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView6" />
 
@@ -143,28 +143,45 @@
             app:layout_constraintBaseline_toBaselineOf="@+id/textView6"
             app:layout_constraintStart_toEndOf="@+id/textView6" />
 
-        <EditText
-            android:id="@+id/edtOrc"
-            android:layout_width="135dp"
-            android:layout_height="34dp"
+        <TextView
+            android:id="@+id/textView31"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginStart="36dp"
             android:layout_marginLeft="36dp"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="33dp"
+            android:fontFamily="sans-serif-condensed-light"
+            android:text="Alterar orçamento mensal?"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/rvGastos" />
+
+        <com.cottacush.android.currencyedittext.CurrencyEditText
+            android:id="@+id/edtOrc"
+            android:layout_width="138dp"
+            android:layout_height="46dp"
+            android:layout_marginStart="40dp"
+            android:layout_marginTop="8dp"
             android:autofillHints=""
             android:ems="10"
             android:hint="@string/insira_aqui_seu_or_amento"
             android:inputType="number"
             android:textSize="14sp"
+            app:currencySymbol="R$"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/rvGastos" />
+            app:layout_constraintTop_toBottomOf="@+id/textView31"
+            app:layout_constraintVertical_bias="0.022"
+            app:useCurrencySymbolAsHint="true" />
 
         <Button
             android:id="@+id/btnOrcamento"
             android:layout_width="49dp"
             android:layout_height="30dp"
-            android:layout_marginStart="30dp"
-            android:layout_marginLeft="30dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginLeft="20dp"
             android:background="@drawable/shape_small_buttons"
+            android:fontFamily="sans-serif-condensed-light"
             android:text="@android:string/ok"
             android:textColor="#FFFFFF"
             android:textStyle="bold"
@@ -175,13 +192,14 @@
             android:id="@+id/btnVoltaMenu"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="111dp"
+            android:layout_marginTop="180dp"
             android:layout_marginEnd="32dp"
             android:layout_marginRight="32dp"
             android:background="@drawable/shape_buttons"
             android:fontFamily="sans-serif-condensed-light"
             android:text="Voltar"
             android:textColor="#FFFFFF"
+            android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/rvGastos" />
     </androidx.constraintlayout.widget.ConstraintLayout>

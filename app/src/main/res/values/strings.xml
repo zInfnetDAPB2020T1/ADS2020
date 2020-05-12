@@ -15,10 +15,11 @@
     <string name="msg_token_fmt">Sucesso</string>
     <string name="insira_quanto_voc_pretende_gastar_hoje">Gostaria de controlar seus gastos?</string>
     <string name="compartilhe_sua_localiza_o_com_amigos">Compartilhe sua localização com amigos!</string>
-    <string name="acompanhe_as_mesas_criadas">Acompanhe as mesas criadas!</string>
+    <string name="acompanhe_as_mesas_criadas">Crie ou entre nas mesas já criadas!</string>
     <string name="menu">Menu</string>
     <string name="check_in">Check-in</string>
     <string name="insira_aqui_seu_or_amento">novo orçamento</string>
     <string name="mesas">Mesas</string>
     <string name="title_activity_mapa_de_locais">Map</string>
+    <string name="or_amento">Orçamento</string>
 </resources>

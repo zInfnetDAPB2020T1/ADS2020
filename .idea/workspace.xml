@@ -11,25 +11,20 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="81d720e3-0536-4740-a9b9-a1933877bc40" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/android/inflabnet/mytest/OrcamentoFragment.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/res/layout/fragment_orcamento.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/app/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/debug/res/values/google_maps_api.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/debug/res/values/google_maps_api.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/android/inflabnet/mytest/OrcamentoFragment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/android/inflabnet/mytest/fragments/OrcamentoFragment.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/android/inflabnet/mytest/fragments/HomeMenuFragment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/android/inflabnet/mytest/fragments/HomeMenuFragment.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/android/inflabnet/mytest/maps/HomeMapsActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/android/inflabnet/mytest/maps/HomeMapsActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/android/inflabnet/mytest/maps/MapsActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/android/inflabnet/mytest/maps/MapsActivity.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/android/inflabnet/mytest/mesas/activity/ContaActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/android/inflabnet/mytest/mesas/activity/ContaActivity.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout-v21/activity_login.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout-v21/activity_login.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout-v21/activity_mesa.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout-v21/activity_mesa.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_conta_chat.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_conta_chat.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_home_maps.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_home_maps.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_maps.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_maps.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_mesa.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_mesa.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/alert_orcamento.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/alert_orcamento.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/fragment_home_menu.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/fragment_home_menu.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/fragment_orcamento.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/fragment_orcamento.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/item_consumido.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/item_consumido.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/place_tipo.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/place_tipo.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/res/navigation/nav_home_menu.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/navigation/nav_home_menu.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -73,8 +68,8 @@
   </component>
   <component name="PropertiesComponent">
     <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
-    <property name="DeviceAndSnapshotComboBoxAction.selectedDevice" value="RQ8M50VVV9D" />
-    <property name="DeviceAndSnapshotComboBoxAction.selectionTime" value="2020-05-10T21:05:45.934Z" />
+    <property name="DeviceAndSnapshotComboBoxAction.selectedDevice" value="Pixel_2_API_29" />
+    <property name="DeviceAndSnapshotComboBoxAction.selectionTime" value="2020-05-12T13:32:42.206Z" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/../fragment" />
     <property name="project.structure.last.edited" value="Project" />
@@ -86,16 +81,15 @@
     <option name="LAST_EDITED_BUILD_TYPE" value="release" />
   </component>
   <component name="RecentsManager">
-    <key name="CreateKotlinClassDialog.RecentsKey">
-      <recent name="android.inflabnet.mytest.maps" />
-      <recent name="android.inflabnet.mytest.mesas.activity" />
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Marcelo\AndroidStudioProjects\ADS2020\app\src\main\res\layout" />
     </key>
     <key name="MoveKotlinTopLevelDeclarationsDialog.RECENTS_KEY">
+      <recent name="android.inflabnet.mytest.fragments" />
       <recent name="android.inflabnet.mytest.maps.model" />
       <recent name="android.inflabnet.mytest.database.adapter" />
       <recent name="android.inflabnet.mytest.database" />
       <recent name="android.inflabnet.mytest.database.old" />
-      <recent name="android.inflabnet.mytest.database.database" />
     </key>
     <key name="android.template.packageName">
       <recent name="android.inflabnet.mytest.maps" />
@@ -103,8 +97,9 @@
     <key name="CopyKotlinDeclarationDialog.RECENTS_KEY">
       <recent name="android.inflabnet.mytest" />
     </key>
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="C:\Users\Marcelo\AndroidStudioProjects\ADS2020\app\src\main\res\layout" />
+    <key name="CreateKotlinClassDialog.RecentsKey">
+      <recent name="android.inflabnet.mytest.maps" />
+      <recent name="android.inflabnet.mytest.mesas.activity" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -511,7 +506,14 @@
       <option name="project" value="LOCAL" />
       <updated>1589119659636</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="Acerto no recycleview da conta">
+      <created>1589229580791</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1589229580792</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">

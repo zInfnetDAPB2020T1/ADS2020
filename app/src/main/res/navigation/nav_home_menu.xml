@@ -40,7 +40,7 @@
     </fragment>
     <fragment
         android:id="@+id/orcamentoFragment"
-        android:name="android.inflabnet.mytest.OrcamentoFragment"
+        android:name="android.inflabnet.mytest.fragments.OrcamentoFragment"
         android:label="fragment_orcamento"
         tools:layout="@layout/fragment_orcamento" >
         <action

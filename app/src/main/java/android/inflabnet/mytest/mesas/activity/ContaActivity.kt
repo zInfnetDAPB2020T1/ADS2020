@@ -49,6 +49,10 @@ class ContaActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_conta_chat)
 
+        //campo dinheiro
+        val locale: Locale = Locale.getDefault()
+        edtValor.setLocale(locale)
+
         //Recebendo os Valores da activity MesaActivity
         val mesaData = intent.getSerializableExtra("mesa") as MesaData
         txtMesaConta.text = mesaData.nameMesa
@@ -667,11 +671,11 @@ class ContaActivity : AppCompatActivity() {
         return true
     }
 
-
     //envia dados para firebase
     private fun sendData(pathStr: String, item:String, valor: String){
         val itemTimestamp = System.currentTimeMillis().toString()
-        val conta = Conta(user, item,valor.toInt(), itemTimestamp,txtMesaConta.text.toString())
+        val valorItem = valor.replace("R$ ","").replace(".","")
+        val conta = Conta(user, item,valorItem.toInt(), itemTimestamp,txtMesaConta.text.toString())
         mDatabaseReference?.child("Conta")?.child(pathStr)?.
                 child(itemTimestamp)?.
                 setValue(conta)
@@ -758,10 +762,10 @@ class ContaActivity : AppCompatActivity() {
         val percentage = (totEu/ orcamento) *100.0
         //Toast.makeText(this,"Percentagem: ${percentage}",Toast.LENGTH_SHORT).show()
         //Toast.makeText(this,"orcamento: ${orcamento}",Toast.LENGTH_SHORT).show()
-        if (percentage < 75.0){
+        if (percentage < 20.0){
             txtTotEu.setTextColor(ContextCompat.getColor(applicationContext, R.color.green))
             txtTotEuText.setTextColor(ContextCompat.getColor(applicationContext, R.color.green))
-        }else if (percentage < 90.0){
+        }else if (percentage < 30.0){
             txtTotEu.setTextColor(ContextCompat.getColor(applicationContext, R.color.yellow))
             txtTotEuText.setTextColor(ContextCompat.getColor(applicationContext, R.color.yellow))
         }else{

@@ -1,9 +1,7 @@
 package android.inflabnet.mytest.fragments
 
 
-import android.app.Activity
 import android.content.Intent
-import android.inflabnet.mytest.OrcamentoFragment
 import android.inflabnet.mytest.R
 import android.inflabnet.mytest.maps.HomeMapsActivity
 import android.inflabnet.mytest.mesas.activity.MesaActivity
@@ -12,11 +10,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
 import androidx.navigation.fragment.findNavController
 import kotlinx.android.synthetic.main.fragment_home_menu.*
-import java.lang.reflect.Array.newInstance
-import javax.xml.parsers.DocumentBuilderFactory.newInstance
 
 
 /**

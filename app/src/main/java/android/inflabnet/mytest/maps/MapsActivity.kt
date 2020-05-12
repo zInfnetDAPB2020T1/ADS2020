@@ -100,6 +100,10 @@ class MapsActivity : AppCompatActivity() {
     private fun setupPlacesAutocomplete() {
         val autocompleteFragment = supportFragmentManager.findFragmentById(R.id.fragment_place) as AutocompleteSupportFragment
         autocompleteFragment.setPlaceFields(placeFields)
+        autocompleteFragment.view?.setBackgroundColor(resources.getColor(R.color.colorAccent))
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            autocompleteFragment.view?.outlineAmbientShadowColor
+        }
 
         autocompleteFragment.setOnPlaceSelectedListener(object : PlaceSelectionListener {
             override fun onPlaceSelected(p0: Place) {
