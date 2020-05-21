@@ -5,11 +5,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.membro_mesa.view.*
+import kotlinx.android.synthetic.main.membros_mesa_local.view.*
 
-class MembrosAdapter(val toMembros: MutableList<String>, private val itemClick: (String) -> Unit) : RecyclerView.Adapter<MembrosAdapter.ViewHolder>() {
+class MembrosAdapter(val toMembros: MutableList<MembroLocal>, private val itemClick: (MembroLocal) -> Unit) : RecyclerView.Adapter<MembrosAdapter.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.membro_mesa,parent,false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.membros_mesa_local,parent,false)
         return ViewHolder(view,itemClick)
     }
 
@@ -21,11 +21,15 @@ class MembrosAdapter(val toMembros: MutableList<String>, private val itemClick: 
         holder.bindForecast(toMembros[position])
     }
 
-    class ViewHolder(view: View, val itemClick: (String) -> Unit) : RecyclerView.ViewHolder(view) {
-        fun bindForecast(membro: String) {
+    class ViewHolder(view: View, val itemClick: (MembroLocal) -> Unit) : RecyclerView.ViewHolder(view) {
+        fun bindForecast(membro: MembroLocal) {
             with(membro) {
-                itemView.txtMembro.text = membro
-                itemView.setOnClickListener { itemClick(this) }
+                itemView.txtPessoa.text = membro.user
+                if (membro.location.equals("Sem Local")){
+                    itemView.btnLocali.visibility = View.VISIBLE
+                    itemView.btnLocali.setOnClickListener { itemClick(this) }
+                }
+
             }
         }
     }

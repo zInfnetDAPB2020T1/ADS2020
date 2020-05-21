@@ -101,7 +101,7 @@
         android:id="@+id/progressbar"
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="161dp"
-        android:layout_height="12dp"
+        android:layout_height="22dp"
         android:backgroundTint="@color/colorAccent"
         android:indeterminate="true"
         android:indeterminateTint="@color/colorPrimaryDark"

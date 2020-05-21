@@ -29,9 +29,9 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import kotlinx.android.synthetic.main.activity_conta_chat.*
 import kotlinx.android.synthetic.main.alert_compartilha_item.view.*
+import kotlinx.android.synthetic.main.escolhe_membro_mesa.view.*
 import java.util.*
 import kotlin.collections.ArrayList
-import kotlin.system.exitProcess
 
 class ContaActivity : AppCompatActivity() {
 
@@ -43,6 +43,8 @@ class ContaActivity : AppCompatActivity() {
     private var mAuth: FirebaseAuth? = null
     private var user: String? = null
     lateinit var pathStr: String
+
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -71,7 +73,7 @@ class ContaActivity : AppCompatActivity() {
         //chama o chat
         btnChatinho.setOnClickListener {
             val intt = Intent(this, MesaChatActivity::class.java)
-            val mesaData = MesaData(mesaData.nameMesa.toString(),mesaData.proprietarioMesa.toString())
+            val mesaData = MesaData(mesaData.nameMesa,mesaData.proprietarioMesa)
             intt.putExtra("mesa",mesaData)
             startActivity(intt)
         }
@@ -80,15 +82,158 @@ class ContaActivity : AppCompatActivity() {
         createFirebaseListener(pathStr)
         contaListener(pathStr)
         btnOk.setOnClickListener { setupSendButton(pathStr) }
-        membrosLista(mesaData.nameMesa)
         btnFinalizar.setOnClickListener { finalizar() }
         jaFinalizados()
         btnCompartilhar.setOnClickListener { enviaPerguntaAlert() }
         itemADividirListener()
         //verificar se há solicitações de compartilhamento não atendidas. Caso positivo, desabilita o botão para não compartilhar mais nada
         verificaSolicitComart()
+        btnParticipantes.setOnClickListener {
+			setUpMembrosAlert(mesaData.nameMesa)
+        }
+    }
+
+
+
+    //Criar lista com os membros da mesa
+    private fun setUpMembrosAlert(mesa: String) {
+        val toMembros: MutableList<MembroLocal> = mutableListOf()
+        val membroListener = object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                //varre a lista membros do FBase procurando o nome da mesa
+                //se encontrar adiciona o membro no RV
+                dataSnapshot.children.forEach{
+                    if(it.getValue(MembrosMesa::class.java)?.nomeMesa.toString() == mesa ){
+                        toMembros.add(MembroLocal(it.getValue(MembrosMesa::class.java)?.membro.toString(),"Sem Local"))
+                    }
+                }
+                setUpRVMemrosLocal(toMembros)
+            }
+            override fun onCancelled(p0: DatabaseError) {
+                Toast.makeText(applicationContext, "Errroooo",Toast.LENGTH_SHORT ).show()
+            }
+        }
+        mDatabaseReference!!.child("Membros").addValueEventListener(membroListener)
+    }
+
+
+    //criar o Alert Dialog com RV
+    private fun setUpRVMemrosLocal(toMembrosLoc: MutableList<MembroLocal>) {
+
+
+        val mDialogView = LayoutInflater.from(this).inflate(R.layout.escolhe_membro_mesa, null)
+        val mBuilder = AlertDialog.Builder(this)
+            .setView(mDialogView)
+            .setTitle("Participantes da Mesa:")
+        val  mAlertDialog = mBuilder.show()
+        val linearLayoutManager = LinearLayoutManager(applicationContext)
+        mDialogView.rvMembros.layoutManager = linearLayoutManager
+        mDialogView.rvMembros.scrollToPosition(toMembrosLoc.size)
+        mDialogView.rvMembros.adapter = MembrosAdapter(toMembrosLoc)
+        {
+
+            val dialogBuilder = AlertDialog.Builder(mDialogView.context)
+            dialogBuilder.setMessage("Gostaria de localizar ${it.user}?")
+                .setCancelable(false)
+                .setPositiveButton("Sim"){_, _ ->
+                    val pessoaLoc : String = it.user!!.replace(".","")
+                    var locationStr : String? = null
+                    val localListener = object : ValueEventListener {
+                        override fun onDataChange(dataSnapshot: DataSnapshot) {
+                            //varre a lista membros do FBase procurando o nome e localização
+                            //se encontrar adiciona o membro no txtMembros
+                            dataSnapshot.children.forEach{
+                                if(it.getValue(UserLocation::class.java)?.user == pessoaLoc )
+                                    locationStr = it.getValue(UserLocation::class.java)?.location.toString()
+                            }
+                            if(locationStr != null){
+                                val addressUri = Uri.parse("geo:0,0?q=$locationStr")
+                                val intent = Intent(Intent.ACTION_VIEW, addressUri)
+                                // Find an activity to handle the intent, and start that activity.
+                                if (intent.resolveActivity(packageManager) != null) {
+                                    startActivity(intent)
+                                } else {
+                                    Log.d("ImplicitIntents", "Não é possível abrir mapa!")
+                                }
+                            }else{
+                                Toast.makeText(applicationContext,"${pessoaLoc} sem localização disponível", Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                        override fun onCancelled(p0: DatabaseError) {
+                            Toast.makeText(applicationContext, "Errroooo",Toast.LENGTH_SHORT ).show()
+                        }
+                    }
+                    mDatabaseReference!!.child("UserLocations").addValueEventListener(localListener)
+
+                }
+                .setNegativeButton("Não") { _, _ ->
+
+                }
+                .setNeutralButton("Cancelar") {_, _ ->
+
+                }
+            val alert = dialogBuilder.create()
+            alert.setTitle("Localizar Membro")
+            alert.show()
+        }
+        mDialogView.btnVoltar.setOnClickListener {
+            mAlertDialog.dismiss()
+        }
 
     }
+
+
+//    private fun setupMembros(toMembros: MutableList<MembroLocal>) {
+//        val linearLayoutManager = LinearLayoutManager(applicationContext)
+//        rvMembros.layoutManager = linearLayoutManager
+//        rvMembros.scrollToPosition(toMembros.size)
+//        rvMembros.adapter = MembrosAdapter(toMembros){
+//            val dialogBuilder = AlertDialog.Builder(this)
+//            dialogBuilder.setMessage("Gostaria de localizar ${it}?")
+//                .setCancelable(false)
+//                .setPositiveButton("Sim"){_, _ ->
+//                    val pessoa : String = it.pessoa!!.replace(".","")
+//                    var locationStr : String? = null
+//                    val membroListener = object : ValueEventListener {
+//                        override fun onDataChange(dataSnapshot: DataSnapshot) {
+//                            //varre a lista membros do FBase procurando o nome da mesa
+//                            //se encontrar adiciona o membro no txtMembros
+//                            dataSnapshot.children.forEach{
+//                                if(it.getValue(UserLocation::class.java)?.user == pessoa )
+//                                    locationStr = it.getValue(UserLocation::class.java)?.location.toString()
+//                            }
+//                            if(locationStr != null){
+//                                val addressUri = Uri.parse("geo:0,0?q=$locationStr")
+//                                val intent = Intent(Intent.ACTION_VIEW, addressUri)
+//                                // Find an activity to handle the intent, and start that activity.
+//                                if (intent.resolveActivity(packageManager) != null) {
+//                                    startActivity(intent)
+//                                } else {
+//                                    Log.d("ImplicitIntents", "Não é possível abrir mapa!")
+//                                }
+//                            }else{
+//                                Toast.makeText(applicationContext,"${pessoa} sem localização disponível", Toast.LENGTH_SHORT).show()
+//                            }
+//                        }
+//                        override fun onCancelled(p0: DatabaseError) {
+//                            Toast.makeText(applicationContext, "Errroooo",Toast.LENGTH_SHORT ).show()
+//                        }
+//                    }
+//                    mDatabaseReference!!.child("UserLocations").addValueEventListener(membroListener)
+//
+//                }
+//                .setNegativeButton("Não") { _, _ ->
+//
+//                }
+//                .setNeutralButton("Cancelar") {_, _ ->
+//
+//                }
+//            val alert = dialogBuilder.create()
+//            alert.setTitle("Localizar Membro")
+//            alert.show()
+//        }
+//
+//    }
 
     //objetivo desabilitar botão de compartilhar caso já exista pedido pendente de autorização
     private fun verificaSolicitComart() {
@@ -529,7 +674,7 @@ class ContaActivity : AppCompatActivity() {
                 dataSnapshot.children.forEach{
                     if(it.getValue<fechouConta>(fechouConta::class.java)?.mesa.toString() == txtMesaConta.text.toString()) {
                         //txtFinalizado.append(" ${it.getValue<fechouConta>(fechouConta::class.java)?.user.toString()} : ${it.getValue<fechouConta>(fechouConta::class.java)?.totConta.toString()}\n").toString()
-                        toSairam.add("${it.getValue<fechouConta>(fechouConta::class.java)?.user.toString()} : ${it.getValue<fechouConta>(fechouConta::class.java)?.totConta.toString()}")
+                        toSairam.add("${it.getValue<fechouConta>(fechouConta::class.java)?.user.toString()} R$ ${it.getValue<fechouConta>(fechouConta::class.java)?.totConta.toString()}")
                     }
                     setupSairam(toSairam)
                 }
@@ -546,83 +691,12 @@ class ContaActivity : AppCompatActivity() {
         rvSairam.layoutManager = linearLayoutManager
         rvSairam.scrollToPosition(toSairam.size)
         rvSairam.adapter = SairamAdapter(toSairam){
-
         }
-
     }
 
     //atualiza os membros da mesa em recycleview rvMembros
     private fun membrosLista(mesa: String) {
 
-        val membroListener = object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                val toMembros: MutableList<String> = mutableListOf()
-                //varre a lista membros do FBase procurando o nome da mesa
-                //se encontrar adiciona o membro no txtMembros
-                dataSnapshot.children.forEach{
-                    if(it.getValue(MembrosMesa::class.java)?.nomeMesa.toString() == mesa )
-                        //txtMembros.append("${it.getValue(MembrosMesa::class.java)?.membro.toString()}\n")
-                        //montando lista para recycleview membros
-                        toMembros.add(it.getValue(MembrosMesa::class.java)?.membro.toString())
-                }
-                setupMembros(toMembros)
-            }
-            override fun onCancelled(p0: DatabaseError) {
-                Toast.makeText(applicationContext, "Errroooo",Toast.LENGTH_SHORT ).show()
-            }
-        }
-        mDatabaseReference!!.child("Membros").addValueEventListener(membroListener)
-    }
-
-    private fun setupMembros(toMembros: MutableList<String>) {
-        val linearLayoutManager = LinearLayoutManager(applicationContext)
-        rvMembros.layoutManager = linearLayoutManager
-        rvMembros.scrollToPosition(toMembros.size)
-        rvMembros.adapter = MembrosAdapter(toMembros){
-            val dialogBuilder = AlertDialog.Builder(this)
-            dialogBuilder.setMessage("Gostaria de localizar ${it}?")
-                .setCancelable(false)
-                .setPositiveButton("Sim"){_, _ ->
-                    val pessoa : String = it.replace(".","")
-                    var locationStr : String? = null
-                    val membroListener = object : ValueEventListener {
-                        override fun onDataChange(dataSnapshot: DataSnapshot) {
-                            //varre a lista membros do FBase procurando o nome da mesa
-                            //se encontrar adiciona o membro no txtMembros
-                            dataSnapshot.children.forEach{
-                                if(it.getValue(UserLocation::class.java)?.user == pessoa )
-                                    locationStr = it.getValue(UserLocation::class.java)?.location.toString()
-                            }
-                            if(locationStr != null){
-                                val addressUri = Uri.parse("geo:0,0?q=$locationStr")
-                                val intent = Intent(Intent.ACTION_VIEW, addressUri)
-                                // Find an activity to handle the intent, and start that activity.
-                                if (intent.resolveActivity(packageManager) != null) {
-                                    startActivity(intent)
-                                } else {
-                                    Log.d("ImplicitIntents", "Não é possível abrir mapa!")
-                                }
-                            }else{
-                                Toast.makeText(applicationContext,"${pessoa} sem localização disponível", Toast.LENGTH_SHORT).show()
-                            }
-                        }
-                        override fun onCancelled(p0: DatabaseError) {
-                            Toast.makeText(applicationContext, "Errroooo",Toast.LENGTH_SHORT ).show()
-                        }
-                    }
-                    mDatabaseReference!!.child("UserLocations").addValueEventListener(membroListener)
-
-                }
-                .setNegativeButton("Não") { _, _ ->
-
-                }
-                .setNeutralButton("Cancelar") {_, _ ->
-
-                }
-            val alert = dialogBuilder.create()
-            alert.setTitle("Localizar Membro")
-            alert.show()
-        }
 
     }
 
@@ -741,7 +815,7 @@ class ContaActivity : AppCompatActivity() {
         }
 
         val orcamento = orcStr.toDouble()
-        var totEu: Double = 0.0
+        var totEu: Int = 0
         val tot = data.sumBy { conta ->
             conta.quanto!!.toInt()
         }
@@ -751,26 +825,33 @@ class ContaActivity : AppCompatActivity() {
             }
         }
         txtTotConta.text = tot.toString()
-        if (totEu == 0.0){
+
+        if (totEu == 0){
             txtTotEu.visibility = View.GONE
             txtTotEuText.visibility = View.GONE
+			textView35.visibility = View.GONE
         }else {
             txtTotEu.visibility = View.VISIBLE
             txtTotEuText.visibility = View.VISIBLE
+			textView35.visibility = View.VISIBLE
             txtTotEu.text = totEu.toString()
         }
-        val percentage = (totEu/ orcamento) *100.0
+		val totEu2 = totEu.toDouble()
+        val percentage = (totEu2/ orcamento) *100.0
         //Toast.makeText(this,"Percentagem: ${percentage}",Toast.LENGTH_SHORT).show()
         //Toast.makeText(this,"orcamento: ${orcamento}",Toast.LENGTH_SHORT).show()
         if (percentage < 20.0){
             txtTotEu.setTextColor(ContextCompat.getColor(applicationContext, R.color.green))
             txtTotEuText.setTextColor(ContextCompat.getColor(applicationContext, R.color.green))
+            textView35.setTextColor(ContextCompat.getColor(applicationContext, R.color.green))
         }else if (percentage < 30.0){
             txtTotEu.setTextColor(ContextCompat.getColor(applicationContext, R.color.yellow))
             txtTotEuText.setTextColor(ContextCompat.getColor(applicationContext, R.color.yellow))
+            textView35.setTextColor(ContextCompat.getColor(applicationContext, R.color.yellow))
         }else{
             txtTotEu.setTextColor(ContextCompat.getColor(applicationContext, R.color.red))
             txtTotEuText.setTextColor(ContextCompat.getColor(applicationContext, R.color.red))
+            textView35.setTextColor(ContextCompat.getColor(applicationContext, R.color.red))
         }
     }
 

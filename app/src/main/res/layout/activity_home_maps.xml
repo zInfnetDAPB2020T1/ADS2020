@@ -14,7 +14,7 @@
         android:layout_marginLeft="36dp"
         android:layout_marginTop="16dp"
         android:fontFamily="sans-serif-condensed-light"
-        android:text="Home -> Locais"
+        android:text="Menu \u27A2 Locais"
         android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"

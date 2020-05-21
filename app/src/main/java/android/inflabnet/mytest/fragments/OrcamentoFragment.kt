@@ -94,8 +94,9 @@ class OrcamentoFragment : Fragment() {
             val  mAlertDialog = mBuilder.show()
 
             mDialogView.btnPerguntar.setOnClickListener {
-                val orcamentoNew = mDialogView.edtOrcamento.text
-                InsertOrcamento().execute(Orcamento(null,currentMonth2(),orcamentoNew.toString().toInt()))
+                val orcamentoNew = mDialogView.edtOrcamento.text.toString().replace("R$ ","").replace(".","").replace(",","")
+
+                InsertOrcamento().execute(Orcamento(null,currentMonth2(),orcamentoNew.toInt()))
                 txtOrcamentoAtual.setText(orcamentoNew.toString())
                 mAlertDialog.dismiss()
             }
@@ -125,11 +126,11 @@ class OrcamentoFragment : Fragment() {
                     val orcamentoAtual = GetOrcamento().execute(currentMonth2()).get()
                     val txtTitulo = "Trocar Orçamento"
                     val dialogBuilder = AlertDialog.Builder(activity!!)
-                    dialogBuilder.setMessage("Tem certeza que gostaria de trocar o orçamento ${orcamentoAtual.valor} por ${edtOrc.text} ?")
+                    dialogBuilder.setMessage("Tem certeza que gostaria de trocar o orçamento R$ ${orcamentoAtual.valor} por ${edtOrc.text} ?")
                         .setCancelable(false)
                         .setPositiveButton("Sim") { _, _ ->
                             //segue a troca de orçamentos
-                            val novoOrcamento = edtOrc.text.toString().replace("R$ ","").replace(".","")
+                            val novoOrcamento = edtOrc.text.toString().replace("R$ ","").replace(",","").replace(".","")
 
                             orcamentoAtual.valor = novoOrcamento.toInt()
                             UpdateOrcamento().execute(orcamentoAtual)
@@ -185,6 +186,8 @@ class OrcamentoFragment : Fragment() {
             txtGastou.setTextColor(ContextCompat.getColor(activity!!,
                 R.color.green
             ))
+            txtRs1.setTextColor(ContextCompat.getColor(activity!!, R.color.green))
+            txtRs2.setTextColor(ContextCompat.getColor(activity!!, R.color.green))
         } else if (percentage < 90.0) {
             txtOrcamentoAtual.setTextColor(ContextCompat.getColor(activity!!,
                 R.color.yellow
@@ -192,6 +195,8 @@ class OrcamentoFragment : Fragment() {
             txtGastou.setTextColor(ContextCompat.getColor(activity!!,
                 R.color.yellow
             ))
+            txtRs1.setTextColor(ContextCompat.getColor(activity!!, R.color.yellow))
+            txtRs2.setTextColor(ContextCompat.getColor(activity!!, R.color.yellow))
         } else {
             txtOrcamentoAtual.setTextColor(ContextCompat.getColor(activity!!,
                 R.color.red
@@ -199,6 +204,8 @@ class OrcamentoFragment : Fragment() {
             txtGastou.setTextColor(ContextCompat.getColor(activity!!,
                 R.color.red
             ))
+            txtRs1.setTextColor(ContextCompat.getColor(activity!!, R.color.red))
+            txtRs2.setTextColor(ContextCompat.getColor(activity!!, R.color.red))
         }
     }
 

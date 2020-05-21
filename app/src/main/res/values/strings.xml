@@ -22,4 +22,5 @@
     <string name="mesas">Mesas</string>
     <string name="title_activity_mapa_de_locais">Map</string>
     <string name="or_amento">Orçamento</string>
+    <string name="rs">R$</string>
 </resources>

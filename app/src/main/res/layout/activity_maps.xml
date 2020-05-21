@@ -22,7 +22,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="sans-serif-condensed-light"
-            android:text="Home -> Locais -> Locais Interessantes"
+            android:text="Menu \u27A2 Locais \u27A2 Locais Interessantes"
             android:textSize="22sp"
             android:textStyle="bold" />
 

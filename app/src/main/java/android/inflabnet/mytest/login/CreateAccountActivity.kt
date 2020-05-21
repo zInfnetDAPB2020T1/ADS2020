@@ -83,7 +83,7 @@ class CreateAccountActivity : AppCompatActivity() {
                     }
                 }
         } else {
-            Toast.makeText(this, "Enter all details", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Entre todos os dados", Toast.LENGTH_SHORT).show()
         }
 
 
