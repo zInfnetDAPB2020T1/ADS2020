@@ -25,7 +25,7 @@ class MembrosAdapter(val toMembros: MutableList<MembroLocal>, private val itemCl
         fun bindForecast(membro: MembroLocal) {
             with(membro) {
                 itemView.txtPessoa.text = membro.user
-                if (membro.location.equals("Sem Local")){
+                if (!membro.location.equals("Sem Local")){
                     itemView.btnLocali.visibility = View.VISIBLE
                     itemView.btnLocali.setOnClickListener { itemClick(this) }
                 }

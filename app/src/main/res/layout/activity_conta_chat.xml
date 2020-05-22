@@ -24,12 +24,11 @@
         android:id="@+id/txtMesaConta"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="8dp"
         android:fontFamily="sans-serif-condensed-light"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toTopOf="@+id/txtp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView11" />
+        android:textSize="20sp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/textView36"
+        app:layout_constraintStart_toEndOf="@+id/textView36" />
 
     <TextView
         android:id="@+id/txtp"
@@ -47,9 +46,9 @@
         android:id="@+id/txtProprit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:textSize="18sp"
+        android:layout_marginStart="8dp"
+        android:fontFamily="sans-serif-condensed-light"
+        android:textSize="20sp"
         app:layout_constraintBaseline_toBaselineOf="@+id/txtp"
         app:layout_constraintStart_toEndOf="@+id/txtp" />
 
@@ -125,29 +124,17 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvSairam"
         android:layout_width="210dp"
-        android:layout_height="87dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:background="@color/ic_launcher_background"
+        android:layout_height="0dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="16dp"
+        android:background="@color/places_ui_default_primary"
         android:elevation="2dp"
         android:fadeScrollbars="true"
         android:outlineProvider="bounds"
-        app:layout_constraintStart_toEndOf="@+id/textView14"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/rvConta" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvMembros"
-        android:layout_width="35dp"
-        android:layout_height="23dp"
-        android:background="@color/colorAccent"
-        android:elevation="4dp"
-        android:fadeScrollbars="true"
-        android:outlineProvider="bounds"
-        android:visibility="gone"
-        tools:layout_editor_absoluteX="16dp"
-        tools:layout_editor_absoluteY="150dp">
-
-    </androidx.recyclerview.widget.RecyclerView>
 
     <View
         android:id="@+id/divider"
@@ -160,14 +147,19 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvConta"
-        android:layout_width="375dp"
+        android:layout_width="0dp"
         android:layout_height="211dp"
         android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginTop="3dp"
+        android:layout_marginEnd="24dp"
+        android:background="@color/places_ui_default_primary"
+        android:elevation="2dp"
+        android:fadeScrollbars="true"
+        android:outlineProvider="bounds"
         android:scrollbars="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtPendencia" />
+        app:layout_constraintTop_toBottomOf="@+id/textView37" />
 
     <Button
         android:id="@+id/btnOk"
@@ -189,7 +181,7 @@
         android:layout_marginLeft="16dp"
         android:layout_marginTop="8dp"
         android:fontFamily="sans-serif-condensed-light"
-        android:text="Total Conta: "
+        android:text="Conta em Aberto: "
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/divider3" />
@@ -255,14 +247,15 @@
 
     <TextView
         android:id="@+id/textView14"
-        android:layout_width="wrap_content"
+        android:layout_width="75dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="24dp"
         android:fontFamily="sans-serif-condensed-light"
         android:text="Já saíram:"
         android:textSize="18sp"
-        app:layout_constraintStart_toStartOf="parent"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@+id/rvSairam"
         app:layout_constraintTop_toBottomOf="@+id/rvConta" />
 
     <Button
@@ -280,13 +273,19 @@
 
     <TextView
         android:id="@+id/txtPendencia"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_width="100dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="8dp"
+        android:fontFamily="sans-serif-condensed-light"
+        android:inputType="textMultiLine"
+        android:textAlignment="textEnd"
         android:textColor="@color/red"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnFinalizar" />
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/rvSairam"
+        app:layout_constraintTop_toBottomOf="@+id/textView14" />
 
     <TextView
         android:id="@+id/textView34"
@@ -309,5 +308,50 @@
         android:textStyle="bold"
         app:layout_constraintBaseline_toBaselineOf="@+id/txtTotEuText"
         app:layout_constraintStart_toEndOf="@+id/txtTotEuText" />
+
+    <TextView
+        android:id="@+id/textView36"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="6dp"
+        android:layout_marginBottom="1dp"
+        android:fontFamily="sans-serif-condensed-light"
+        android:text="Mesa:"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/txtp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView11" />
+
+    <TextView
+        android:id="@+id/textView37"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="3dp"
+        android:fontFamily="sans-serif-condensed-medium"
+        android:text="Quem"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnFinalizar" />
+
+    <TextView
+        android:id="@+id/textView38"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="110dp"
+        android:fontFamily="sans-serif-condensed-medium"
+        android:text="O que"
+        app:layout_constraintBaseline_toBaselineOf="@+id/textView37"
+        app:layout_constraintStart_toEndOf="@+id/textView37" />
+
+    <TextView
+        android:id="@+id/textView39"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="52dp"
+        android:fontFamily="sans-serif-condensed-medium"
+        android:text="Valor"
+        app:layout_constraintBaseline_toBaselineOf="@+id/textView38"
+        app:layout_constraintStart_toEndOf="@+id/textView38" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -31,6 +31,7 @@ import kotlinx.android.synthetic.main.activity_conta_chat.*
 import kotlinx.android.synthetic.main.alert_compartilha_item.view.*
 import kotlinx.android.synthetic.main.escolhe_membro_mesa.view.*
 import java.util.*
+import java.util.function.Predicate
 import kotlin.collections.ArrayList
 
 class ContaActivity : AppCompatActivity() {
@@ -44,7 +45,8 @@ class ContaActivity : AppCompatActivity() {
     private var user: String? = null
     lateinit var pathStr: String
 
-
+    //já pega a lista de membros para não termos problemas de delay com resposta assíncrona
+    val toMembros: MutableList<MembroLocal> = mutableListOf()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -88,26 +90,29 @@ class ContaActivity : AppCompatActivity() {
         itemADividirListener()
         //verificar se há solicitações de compartilhamento não atendidas. Caso positivo, desabilita o botão para não compartilhar mais nada
         verificaSolicitComart()
+        //já cria a lista de participantes/membros da mesa para depois ser usado na localização
+        setUpMembrosAlert(mesaData.nameMesa)
         btnParticipantes.setOnClickListener {
-			setUpMembrosAlert(mesaData.nameMesa)
+            setUpRVMemrosLocal(toMembros)
         }
     }
 
 
-
     //Criar lista com os membros da mesa
     private fun setUpMembrosAlert(mesa: String) {
-        val toMembros: MutableList<MembroLocal> = mutableListOf()
+
         val membroListener = object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 //varre a lista membros do FBase procurando o nome da mesa
                 //se encontrar adiciona o membro no RV
                 dataSnapshot.children.forEach{
                     if(it.getValue(MembrosMesa::class.java)?.nomeMesa.toString() == mesa ){
-                        toMembros.add(MembroLocal(it.getValue(MembrosMesa::class.java)?.membro.toString(),"Sem Local"))
+                        toMembros.add(MembroLocal(it.getValue(MembrosMesa::class.java)?.membro.toString().replace(".",""),"Sem Local"))
                     }
                 }
-                setUpRVMemrosLocal(toMembros)
+                //não monta automaticamente. O RV será montado no btnParticipantes, pois iremos fazer o batimento com quem tem localização
+                //para apresentar o botão somente para quem tem localização
+                //setUpRVMemrosLocal(toMembros)
             }
             override fun onCancelled(p0: DatabaseError) {
                 Toast.makeText(applicationContext, "Errroooo",Toast.LENGTH_SHORT ).show()
@@ -116,38 +121,59 @@ class ContaActivity : AppCompatActivity() {
         mDatabaseReference!!.child("Membros").addValueEventListener(membroListener)
     }
 
-
     //criar o Alert Dialog com RV
     private fun setUpRVMemrosLocal(toMembrosLoc: MutableList<MembroLocal>) {
 
+        //extraindo somente os nomes dos membros da mesa. Depois acerto isso na geração da tomembrosLoc
+        val listNames: MutableList<String> = mutableListOf()
+        toMembrosLoc.forEach {
+            it.user?.let { it1 -> listNames.add(it1.replace(".","")) }
+            //Log.i("Mesa 1", it.user)
+        }
 
-        val mDialogView = LayoutInflater.from(this).inflate(R.layout.escolhe_membro_mesa, null)
-        val mBuilder = AlertDialog.Builder(this)
-            .setView(mDialogView)
-            .setTitle("Participantes da Mesa:")
-        val  mAlertDialog = mBuilder.show()
-        val linearLayoutManager = LinearLayoutManager(applicationContext)
-        mDialogView.rvMembros.layoutManager = linearLayoutManager
-        mDialogView.rvMembros.scrollToPosition(toMembrosLoc.size)
-        mDialogView.rvMembros.adapter = MembrosAdapter(toMembrosLoc)
-        {
+        val toMembrosLoc1: MutableList<MembroLocal> = toMembrosLoc
 
-            val dialogBuilder = AlertDialog.Builder(mDialogView.context)
-            dialogBuilder.setMessage("Gostaria de localizar ${it.user}?")
-                .setCancelable(false)
-                .setPositiveButton("Sim"){_, _ ->
-                    val pessoaLoc : String = it.user!!.replace(".","")
-                    var locationStr : String? = null
-                    val localListener = object : ValueEventListener {
-                        override fun onDataChange(dataSnapshot: DataSnapshot) {
-                            //varre a lista membros do FBase procurando o nome e localização
-                            //se encontrar adiciona o membro no txtMembros
-                            dataSnapshot.children.forEach{
-                                if(it.getValue(UserLocation::class.java)?.user == pessoaLoc )
-                                    locationStr = it.getValue(UserLocation::class.java)?.location.toString()
-                            }
-                            if(locationStr != null){
-                                val addressUri = Uri.parse("geo:0,0?q=$locationStr")
+        //val pessoaLoc : String = it.user!!.replace(".","")
+        var newtoMembrosLoc: MutableList<MembroLocal> = mutableListOf()
+        var locationStr : String? = null
+        val localListener = object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                //varre a lista membros do FBase procurando o nome e localização
+                //se encontrar adiciona o membro no txtMembros
+
+                dataSnapshot.children.forEach {
+                    val userName = it.getValue(UserLocation::class.java)?.user?.replace(".","")
+                    val locationCord = it.getValue(UserLocation::class.java)?.location
+                    val theFirstBatman = listNames.find { actor -> userName.equals(actor) }
+                    if(!theFirstBatman.isNullOrBlank()){
+                        //Log.i("Mesa 2", theFirstBatman)
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                            toMembrosLoc1.removeIf { it.user == userName }
+                        }
+                        toMembrosLoc1.add(MembroLocal(userName,locationCord))
+                    }
+
+                }
+                toMembrosLoc1.sortBy { MembroLocal ->
+                    MembroLocal.user
+                }
+                val mDialogView = LayoutInflater.from(this@ContaActivity).inflate(R.layout.escolhe_membro_mesa, null)
+                val mBuilder = AlertDialog.Builder(this@ContaActivity)
+                    .setView(mDialogView)
+                    .setTitle("Participantes da Mesa:\n \u27A2 ${txtMesaConta.text}")
+                val  mAlertDialog = mBuilder.show()
+                val linearLayoutManager = LinearLayoutManager(applicationContext)
+                mDialogView.rvMembros.layoutManager = linearLayoutManager
+                mDialogView.rvMembros.scrollToPosition(toMembrosLoc1.size)
+                mDialogView.rvMembros.adapter = MembrosAdapter(toMembrosLoc1)
+                {
+                    val dialogBuilder = AlertDialog.Builder(mDialogView.context)
+                    dialogBuilder.setMessage("Gostaria de localizar ${it.user}?")
+                        .setCancelable(false)
+                        .setPositiveButton("Sim"){_, _ ->
+                            val localOnde = it.location
+                            if(localOnde != null){
+                                val addressUri = Uri.parse("geo:0,0?q=$localOnde")
                                 val intent = Intent(Intent.ACTION_VIEW, addressUri)
                                 // Find an activity to handle the intent, and start that activity.
                                 if (intent.resolveActivity(packageManager) != null) {
@@ -156,29 +182,31 @@ class ContaActivity : AppCompatActivity() {
                                     Log.d("ImplicitIntents", "Não é possível abrir mapa!")
                                 }
                             }else{
-                                Toast.makeText(applicationContext,"${pessoaLoc} sem localização disponível", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(applicationContext,"sem localização disponível", Toast.LENGTH_SHORT).show()
                             }
                         }
-                        override fun onCancelled(p0: DatabaseError) {
-                            Toast.makeText(applicationContext, "Errroooo",Toast.LENGTH_SHORT ).show()
+
+                        .setNegativeButton("Não") { _, _ ->
+
                         }
-                    }
-                    mDatabaseReference!!.child("UserLocations").addValueEventListener(localListener)
+                        .setNeutralButton("Cancelar") {_, _ ->
 
+                        }
+                    val alert = dialogBuilder.create()
+                    alert.setTitle("Localizar Membro")
+                    alert.show()
                 }
-                .setNegativeButton("Não") { _, _ ->
+                mDialogView.btnVoltar.setOnClickListener {
+                    mAlertDialog.dismiss()
+                }
 
-                }
-                .setNeutralButton("Cancelar") {_, _ ->
 
+            }
+                override fun onCancelled(p0: DatabaseError) {
+                    Toast.makeText(applicationContext, "Errroooo",Toast.LENGTH_SHORT ).show()
                 }
-            val alert = dialogBuilder.create()
-            alert.setTitle("Localizar Membro")
-            alert.show()
-        }
-        mDialogView.btnVoltar.setOnClickListener {
-            mAlertDialog.dismiss()
-        }
+            }
+            mDatabaseReference!!.child("UserLocations").addValueEventListener(localListener)
 
     }
 
@@ -253,7 +281,7 @@ class ContaActivity : AppCompatActivity() {
                             val item = it.getValue<ItemDividirAlert>(ItemDividirAlert::class.java)?.itemAdividir.toString()
                             val valor = it.getValue<ItemDividirAlert>(ItemDividirAlert::class.java)?.itemValor.toString()
                             btnCompartilhar.visibility = View.GONE
-                            val textParaPendencia = "${item} - aguardando autorização de ${dest} - valor: ${valor}"
+                            val textParaPendencia = "${item}\n aguardando autorização de\n${dest} - valor: ${valor}"
                             txtPendencia.text = textParaPendencia
                     }else{
                         btnCompartilhar.visibility = View.VISIBLE
