@@ -1,34 +1,34 @@
 {
   "project_info": {
-    "project_number": "422454797263",
-    "firebase_url": "https://mytest-fcab2.firebaseio.com",
-    "project_id": "mytest-fcab2",
-    "storage_bucket": "mytest-fcab2.appspot.com"
+    "project_number": "1049395869316",
+    "firebase_url": "https://project-fd172.firebaseio.com",
+    "project_id": "project-fd172",
+    "storage_bucket": "project-fd172.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:422454797263:android:828b5f342af25bdd20a8ba",
+        "mobilesdk_app_id": "1:1049395869316:android:1219e2c9b4684bae9334d1",
         "android_client_info": {
-          "package_name": "android.inflabnet.mytest"
+          "package_name": "project.inflabnet.mytest"
         }
       },
       "oauth_client": [
         {
-          "client_id": "422454797263-djm5novs1apkiqcd0ogusmfssl13nv95.apps.googleusercontent.com",
+          "client_id": "1049395869316-d94qdm8bmnik5gvhsoeckf6tu6vfcig9.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCy9pcty9-eXKTg4nSf9IwFGoMm6tm84Gs"
+          "current_key": "AIzaSyBxJ9_R_txuawuYMqJRtkESaKElhjp84tA"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "422454797263-djm5novs1apkiqcd0ogusmfssl13nv95.apps.googleusercontent.com",
+              "client_id": "1049395869316-d94qdm8bmnik5gvhsoeckf6tu6vfcig9.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

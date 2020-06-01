@@ -10,11 +10,11 @@ android {
     buildToolsVersion "29.0.3"
 
     defaultConfig {
-        applicationId "android.inflabnet.mytest"
+        applicationId "project.inflabnet.mytest"
         minSdkVersion 19
         targetSdkVersion 29
-        versionCode 1
-        versionName "1.0"
+        versionCode 3
+        versionName "1.2"
         multiDexEnabled true //muitas classes
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         //Room
@@ -48,6 +48,7 @@ dependencies {
     //testes
     implementation 'com.google.android.gms:play-services-maps:17.0.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'com.google.firebase:firebase-ads:19.1.0'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
@@ -85,5 +86,7 @@ dependencies {
     kapt "androidx.room:room-compiler:$room_version"
 
     //formatar dinheiro
-    implementation  'com.cottacush:CurrencyEditText:0.0.3'
+    implementation 'com.cottacush:CurrencyEditText:0.0.3'
+    //adMob
+    implementation 'com.google.android.gms:play-services-ads:19.1.0'
 }

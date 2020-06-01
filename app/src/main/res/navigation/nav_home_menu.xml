@@ -7,22 +7,19 @@
 
     <fragment
         android:id="@+id/homeMenuFragment"
-        android:name="android.inflabnet.mytest.fragments.HomeMenuFragment"
+        android:name="project.inflabnet.mytest.fragments.HomeMenuFragment"
         android:label="fragment_home_menu"
         tools:layout="@layout/fragment_home_menu" >
         <action
             android:id="@+id/action_homeMenuFragment_to_criarSalaFragment"
             app:destination="@id/criarSalaFragment" />
         <action
-            android:id="@+id/action_homeMenuFragment_to_dividirContaFragment"
-            app:destination="@id/dividirContaFragment" />
-        <action
             android:id="@+id/action_homeMenuFragment_to_orcamentoFragment"
             app:destination="@id/orcamentoFragment" />
     </fragment>
     <fragment
         android:id="@+id/criarSalaFragment"
-        android:name="android.inflabnet.mytest.fragments.CriarSalaFragment"
+        android:name="project.inflabnet.mytest.fragments.CriarSalaFragment"
         android:label="fragment_criar_sala"
         tools:layout="@layout/fragment_criar_sala" >
         <action
@@ -30,17 +27,8 @@
             app:destination="@id/homeMenuFragment" />
     </fragment>
     <fragment
-        android:id="@+id/dividirContaFragment"
-        android:name="android.inflabnet.mytest.fragments.DividirContaFragment"
-        android:label="fragment_dividir_conta"
-        tools:layout="@layout/fragment_dividir_conta" >
-        <action
-            android:id="@+id/action_dividirContaFragment_to_homeMenuFragment"
-            app:destination="@id/homeMenuFragment" />
-    </fragment>
-    <fragment
         android:id="@+id/orcamentoFragment"
-        android:name="android.inflabnet.mytest.fragments.OrcamentoFragment"
+        android:name="project.inflabnet.mytest.fragments.OrcamentoFragment"
         android:label="fragment_orcamento"
         tools:layout="@layout/fragment_orcamento" >
         <action

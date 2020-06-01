@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="android.inflabnet.mytest">
-
+    package="project.inflabnet.mytest">
     <!--
          The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
          Google Maps Android API v2, but you must specify either coarse or fine
@@ -16,7 +15,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -28,19 +26,21 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-9349248892305112~4639953245"/>
 
         <activity
             android:name=".maps.MapaDeLocais"
             android:label="@string/title_activity_mapa_de_locais" />
-        <activity android:name=".maps.HomeMapsActivity">
-        </activity>
+        <activity android:name=".maps.HomeMapsActivity"></activity>
         <activity android:name=".mesas.activity.ContaActivity" />
         <activity
             android:name=".mesas.activity.MesaChatActivity"
             android:windowSoftInputMode="adjustResize" />
         <activity android:name=".mesas.activity.MesaActivity" />
         <activity android:name=".mesas.activity.MainActivityChat" />
-        <activity android:name=".HomeActivity" />
+        <activity android:name="project.inflabnet.mytest.HomeActivity" />
         <activity android:name=".login.DataActivity" />
         <activity android:name=".login.CreateAccountActivity" />
         <activity android:name=".login.ForgotPasswordActivity" />
@@ -54,7 +54,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".login.MainActivity" /> <!-- Firebase Service -->
-        <service android:name=".MyFCMClass">
+        <service android:name="project.inflabnet.mytest.MyFCMClass">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
