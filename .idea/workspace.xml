@@ -12,9 +12,6 @@
   <component name="ChangeListManager">
     <list default="true" id="81d720e3-0536-4740-a9b9-a1933877bc40" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_home_maps.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_home_maps.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/fragment_home_menu.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/fragment_home_menu.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/fragment_orcamento.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/fragment_orcamento.xml" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -71,7 +68,7 @@
     <property name="ExportApk.BuildVariants" value="debug&#10;release" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="ScreenshotViewer.SavePath" value="$USER_HOME$/Desktop" />
-    <property name="last_opened_file_path" value="$USER_HOME$" />
+    <property name="last_opened_file_path" value="$USER_HOME$/Documents/Projeto de Bloco Android" />
     <property name="project.structure.last.edited" value="Project" />
     <property name="project.structure.proportion" value="0.17" />
     <property name="project.structure.side.proportion" value="0.2" />
@@ -546,7 +543,14 @@
       <option name="project" value="LOCAL" />
       <updated>1591040339603</updated>
     </task>
-    <option name="localTasksCounter" value="16" />
+    <task id="LOCAL-00016" summary="AdView com versão de testes">
+      <created>1591041064015</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1591041064015</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -578,6 +582,7 @@
     <MESSAGE value="Acerto na exibição dos membros de uma mesa" />
     <MESSAGE value="Acerto na exibição dos membros de uma mesa. Agora com o botão de localização somente para os logins que possuem localização habilitada" />
     <MESSAGE value="Troca do &quot;package name&quot; pois o Google Play não aceita a palavra chave android" />
-    <option name="LAST_COMMIT_MESSAGE" value="Troca do &quot;package name&quot; pois o Google Play não aceita a palavra chave android" />
+    <MESSAGE value="AdView com versão de testes" />
+    <option name="LAST_COMMIT_MESSAGE" value="AdView com versão de testes" />
   </component>
 </project>
